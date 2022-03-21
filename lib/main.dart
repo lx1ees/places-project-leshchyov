@@ -16,9 +16,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyFirstWidget(
-        title: 'Places',
-      ),
+      home: const SizedBox(),
     );
   }
 }
