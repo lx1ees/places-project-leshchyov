@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:places/constants.dart';
+import 'package:places/ui/widget/app_bar_title.dart';
 
 class SightListScreen extends StatefulWidget {
   const SightListScreen({Key? key}) : super(key: key);
@@ -14,8 +15,6 @@ class _SightListScreenState extends State<SightListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // 🆘 ВОПРОС: нужно ли было стилизовать статус бар? В макете он отличается
-        // от того, что по-умолчанию (имеет такой же цвет как у AppBar).
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Theme.of(context).scaffoldBackgroundColor,
           statusBarIconBrightness: Brightness.dark,
@@ -26,11 +25,8 @@ class _SightListScreenState extends State<SightListScreen> {
         toolbarHeight: toolbarHeight,
         title: const Padding(
           padding: EdgeInsets.only(top: 40),
-          child: Text(
-            'Список\nинтересных мест',
-            maxLines: 2,
-            style: appBarTitleTextStyle,
-          ),
+          /// Вынес заголовок в отдельный виджет, так как сильно разросся
+          child: AppBarTitle(),
         ),
       ),
       body: const Center(
