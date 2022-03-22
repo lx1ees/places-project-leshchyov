@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/constants.dart';
-import 'package:places/my_first_widget.dart';
+import 'package:places/ui/screen/sight_list_screen.dart';
 
 void main() {
   runApp(const App());
@@ -16,9 +16,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyFirstWidget(
-        title: 'Places',
-      ),
+      home: const SightListScreen(),
     );
   }
 }
