@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:places/constants.dart';
+import 'package:places/constants/app_strings.dart';
 import 'package:places/ui/screen/sight_list_screen.dart';
 
 void main() {
@@ -12,7 +12,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: appTitle,
+      title: AppStrings.appTitle,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

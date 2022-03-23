@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:places/constants.dart';
+import 'package:places/constants/app_colors.dart';
+import 'package:places/constants/app_typography.dart';
 
 class AppBarTitle extends StatelessWidget {
   const AppBarTitle({Key? key}) : super(key: key);
@@ -8,12 +9,12 @@ class AppBarTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return RichText(
       text: TextSpan(
-        style: appBarTitleTextStyle,
+        style: AppTypography.appBarTitleTextStyle,
         children: [
           TextSpan(
             text: 'С',
-            style: appBarTitleTextStyle.copyWith(
-              color: appBarTitleFirstLetterOneColor,
+            style: AppTypography.appBarTitleTextStyle.copyWith(
+              color: AppColors.appBarTitleFirstLetterOneColor,
             ),
           ),
           const TextSpan(
@@ -21,8 +22,8 @@ class AppBarTitle extends StatelessWidget {
           ),
           TextSpan(
             text: 'и',
-            style: appBarTitleTextStyle.copyWith(
-              color: appBarTitleFirstLetterTwoColor,
+            style: AppTypography.appBarTitleTextStyle.copyWith(
+              color: AppColors.appBarTitleFirstLetterTwoColor,
             ),
           ),
           const TextSpan(
