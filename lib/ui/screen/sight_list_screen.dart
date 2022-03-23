@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/constants.dart';
-import 'package:places/ui/widget/app_bar_title.dart';
+import 'package:places/constants/app_typography.dart';
 
 class SightListScreen extends StatefulWidget {
   const SightListScreen({Key? key}) : super(key: key);
@@ -19,7 +19,10 @@ class _SightListScreenState extends State<SightListScreen> {
         toolbarHeight: toolbarHeight,
         title: const Padding(
           padding: EdgeInsets.only(top: 40),
-          child: AppBarTitle(),
+          child: Text(
+            'Список\nинтересных мест',
+            style: AppTypography.appBarTitleTextStyle,
+          ),
         ),
       ),
       body: const Center(
