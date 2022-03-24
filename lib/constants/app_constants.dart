@@ -12,7 +12,7 @@ class AppConstants {
   static const double defaultDividerThickness = 0.8;
 
   /// Цвета карточки и окна детальной информации достопримечательности
-  static const double sightCardImageHeight = 360;
+  static const double sightCardImageHeight = 96;
   static const double sightDetailsGalleryHeight = 360;
   static const double sightDetailsGalleryBackButtonSize = 32;
   static const double sightDetailsRouteButtonHeight = 48;
