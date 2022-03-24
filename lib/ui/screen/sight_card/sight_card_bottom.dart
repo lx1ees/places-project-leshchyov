@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 
+/// Виджет для отображения нижней части карточки достопримечательности
+/// с наименованием достопримечательности [name] и кратким
+/// описанием [shortDescription]
 class SightCardBottom extends StatelessWidget {
   final String name;
-  final String details;
+  final String shortDescription;
 
   const SightCardBottom({
     required this.name,
-    required this.details,
+    required this.shortDescription,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppConstants.defaultPadding),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,7 +30,7 @@ class SightCardBottom extends StatelessWidget {
             style: AppTypography.sightCardNameTextStyle,
           ),
           Text(
-            details,
+            shortDescription,
             style: AppTypography.sightCardDetailsTextStyle,
           ),
         ],

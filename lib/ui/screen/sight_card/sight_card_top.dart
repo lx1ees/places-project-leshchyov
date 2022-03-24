@@ -3,6 +3,8 @@ import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 
+/// Виджет для отображения верхней части карточки достопримечательности
+/// с информацией о типе [type] и картинкой по ссылке [url]
 class SightCardTop extends StatelessWidget {
   final String type;
   final String url;
@@ -16,17 +18,22 @@ class SightCardTop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 96,
+      height: AppConstants.sightCardImageHeight,
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: AppColors.sightCardImageMockColor,
+        color: AppColors.sightImageMockColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(AppConstants.cardBorderRadius),
           topRight: Radius.circular(AppConstants.cardBorderRadius),
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        padding: const EdgeInsets.fromLTRB(
+          AppConstants.defaultPadding,
+          AppConstants.defaultPadding,
+          AppConstants.defaultPadding,
+          0,
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,9 +47,9 @@ class SightCardTop extends StatelessWidget {
               ),
             ),
             Container(
-              height: 20,
-              width: 20,
-              color: AppColors.sightCardIconMockColor,
+              height: AppConstants.defaultIconSize,
+              width: AppConstants.defaultIconSize,
+              color: AppColors.sightButtonMockColor,
             ),
           ],
         ),
