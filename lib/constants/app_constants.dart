@@ -1,7 +1,6 @@
 class AppConstants {
   /// Константы приложения
-  static const double toolbarHeight = 115;
-  static const double appbarTopPadding = 40;
+  static const double appbarHeight = 152;
   static const double cardBorderRadius = 12.0;
   static const double defaultPaddingX0_5 = 8;
   static const double defaultPadding = 16;

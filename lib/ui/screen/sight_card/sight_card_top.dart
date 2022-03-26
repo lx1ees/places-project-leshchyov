@@ -20,6 +20,12 @@ class SightCardTop extends StatelessWidget {
     return Container(
       height: AppConstants.sightCardImageHeight,
       width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(
+        AppConstants.defaultPadding,
+        AppConstants.defaultPadding,
+        AppConstants.defaultPadding,
+        0,
+      ),
       decoration: const BoxDecoration(
         color: AppColors.sightImageMockColor,
         borderRadius: BorderRadius.only(
@@ -27,32 +33,24 @@ class SightCardTop extends StatelessWidget {
           topRight: Radius.circular(AppConstants.cardBorderRadius),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppConstants.defaultPadding,
-          AppConstants.defaultPadding,
-          AppConstants.defaultPadding,
-          0,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Text(
-                type,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.sightCardTypeTextStyle,
-              ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Text(
+              type,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.sightCardTypeTextStyle,
             ),
-            Container(
-              height: AppConstants.defaultIconSize,
-              width: AppConstants.defaultIconSize,
-              color: AppColors.sightButtonMockColor,
-            ),
-          ],
-        ),
+          ),
+          Container(
+            height: AppConstants.defaultIconSize,
+            width: AppConstants.defaultIconSize,
+            color: AppColors.sightButtonMockColor,
+          ),
+        ],
       ),
     );
   }

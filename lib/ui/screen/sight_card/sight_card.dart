@@ -16,24 +16,28 @@ class SightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.sightCardBackgroundColor,
-      margin: EdgeInsets.zero,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
-      ),
-      child: Column(
-        children: [
-          SightCardTop(
-            type: sight.type,
-            url: sight.url,
-          ),
-          SightCardBottom(
-            name: sight.name,
-            shortDescription: sight.shortDescription,
-          ),
-        ],
+    return AspectRatio(
+      aspectRatio: 3 / 2,
+      child: Card(
+        color: AppColors.sightCardBackgroundColor,
+        margin: EdgeInsets.zero,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
+        ),
+        child: Column(
+          children: [
+            SightCardTop(
+              type: sight.type,
+              url: sight.url,
+            ),
+            const SizedBox(height: AppConstants.defaultPadding),
+            SightCardBottom(
+              name: sight.name,
+              shortDescription: sight.details,
+            ),
+          ],
+        ),
       ),
     );
   }
