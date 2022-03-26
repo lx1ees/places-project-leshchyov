@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/sight.dart';
@@ -29,52 +30,64 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            const SightDetailsImageGallery(),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppConstants.defaultPadding,
-                  vertical: AppConstants.defaultPaddingX1_5,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SightDetailsTitle(
-                      name: sight.name,
-                      type: sight.type,
-
-                      /// 🆘 ВОПРОС: в модельке нет подходящего поля, появится позже?
-                      shortDescription: AppStrings.sightShortDescriptionMock,
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SightDetailsImageGallery(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppConstants.defaultPadding,
+                      vertical: AppConstants.defaultPaddingX1_5,
                     ),
-                    const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                    SightDetailsDescription(description: sight.details),
-                    const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                    const SightDetailsRouteButton(),
-                    const SizedBox(height: AppConstants.defaultPadding),
-                    const Divider(
-                      thickness: AppConstants.defaultDividerThickness,
-                      height: AppConstants.defaultPadding,
-                    ),
-
-                    /// 🆘 ВОПРОС: Здесь же наоборот - сделал кнопки 'Запланировать' и 'В Избранное'
-                    /// фиксированной ширины и расположил по центру рядом друг с другом. В прототипе
-                    /// не совсем понятно, должны ли они располагатсья так или быть выравнены относительно
-                    /// краёв слева и справа.
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        SightDetailsActionButton(
-                          title: AppStrings.sightDetailsPlanActionButtonTitle,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SightDetailsTitle(
+                          name: sight.name,
+                          type: sight.type,
+                          shortDescription:
+                              AppStrings.sightShortDescriptionMock,
                         ),
-                        SightDetailsActionButton(
-                          title: AppStrings.sightDetailsInFavActionButtonTitle,
+                        const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                        SightDetailsDescription(description: sight.details),
+                        const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                        const SightDetailsRouteButton(),
+                        const SizedBox(height: AppConstants.defaultPadding),
+                        const Divider(
+                          thickness: AppConstants.defaultDividerThickness,
+                          height: AppConstants.defaultPadding,
+                        ),
+                        Row(
+                          children: const [
+                            Expanded(
+                              child: SightDetailsActionButton(
+                                title: AppStrings
+                                    .sightDetailsPlanActionButtonTitle,
+                              ),
+                            ),
+                            Expanded(
+                              child: SightDetailsActionButton(
+                                title: AppStrings
+                                    .sightDetailsInFavActionButtonTitle,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: AppConstants.defaultPadding,
+              top: AppConstants.defaultPaddingX2,
+              child: Container(
+                width: AppConstants.sightDetailsGalleryBackButtonSize,
+                height: AppConstants.sightDetailsGalleryBackButtonSize,
+                color: AppColors.sightButtonMockColor,
               ),
             ),
           ],

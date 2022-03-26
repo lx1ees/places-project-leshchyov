@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
-import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/ui/screen/sight_card/sight_card_bottom.dart';
 import 'package:places/ui/screen/sight_card/sight_card_top.dart';
@@ -32,9 +31,7 @@ class SightCard extends StatelessWidget {
           ),
           SightCardBottom(
             name: sight.name,
-
-            /// 🆘 ВОПРОС: в модельке нет подходящего поля, появится позже?
-            shortDescription: AppStrings.sightShortDescriptionMock,
+            shortDescription: sight.shortDescription,
           ),
         ],
       ),

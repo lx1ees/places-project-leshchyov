@@ -14,18 +14,6 @@ class SightDetailsImageGallery extends StatelessWidget {
       width: double.infinity,
       height: AppConstants.sightDetailsGalleryHeight,
       color: AppColors.sightImageMockColor,
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Container(
-          width: AppConstants.sightDetailsGalleryBackButtonSize,
-          height: AppConstants.sightDetailsGalleryBackButtonSize,
-          color: AppColors.sightButtonMockColor,
-          margin: const EdgeInsets.only(
-            left: AppConstants.defaultPadding,
-            top: AppConstants.defaultPaddingX2,
-          ),
-        ),
-      ),
     );
   }
 }

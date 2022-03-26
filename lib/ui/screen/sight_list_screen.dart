@@ -35,10 +35,6 @@ class _SightListScreenState extends State<SightListScreen> {
             children: mocks
                 .map(
                   (sight) => Padding(
-                    /// 🆘 ВОПРОС: Указал внутренние отступы родителю (Column'у),
-                    /// так как посчитал, что внешние отступы самой карточке ни к чему,
-                    /// вдруг мы захотим переиспользовать карточку с другими отступами.
-                    /// Поправьте,если неправильно мыслю.
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppConstants.defaultPadding,
                       vertical: AppConstants.defaultPaddingX0_5,

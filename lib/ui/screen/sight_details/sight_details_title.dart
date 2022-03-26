@@ -27,9 +27,6 @@ class SightDetailsTitle extends StatelessWidget {
         ),
         Row(
           children: [
-            /// Обернул текст типа достопримечательности в Flexible, чтобы
-            /// он не выходил за рамки ширины экрана и не было overflow
-            /// в случае, если он будет слишком длинный
             Flexible(
               child: Text(
                 type,
