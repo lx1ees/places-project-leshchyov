@@ -2,12 +2,15 @@ class AppConstants {
   /// Константы приложения
   static const double appbarHeight = 152;
   static const double cardBorderRadius = 12.0;
+  static const double buttonBorderRadius = 10.0;
+  static const double button2BorderRadius = 12.0;
   static const double defaultPaddingX0_5 = 8;
   static const double defaultPadding = 16;
   static const double defaultPaddingX1_5 = 24;
   static const double defaultPaddingX2 = 32;
   static const double defaultIconTextPadding = 10;
   static const double defaultIconSize = 20;
+  static const double defaultButtonIconSize = 16;
   static const double defaultDividerThickness = 0.8;
 
   /// Константы карточки и окна детальной информации достопримечательности
@@ -18,4 +21,9 @@ class AppConstants {
   static const double sightDetailsActionButtonWidth = 164;
   static const double sightDetailsActionButtonHeight = 40;
   static const double sightDetailsActionButtonIconSize = 22;
+
+  /// Константы путей ресурсов
+  static const String heartIconAssetPath = 'res/images/heart_icon.png';
+  static const String goIconAssetPath = 'res/images/go_icon.png';
+  static const String calendarIconAssetPath = 'res/images/calendar_icon.png';
 }

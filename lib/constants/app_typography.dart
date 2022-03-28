@@ -67,4 +67,11 @@ class AppTypography {
     fontWeight: FontWeight.w400,
     height: 1.286,
   );
+
+  static const TextStyle sightDetailsRouteButtonTextStyle = TextStyle(
+    color: AppColors.defaultButtonTextColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+    height: 1.286,
+  );
 }
