@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 
@@ -25,8 +26,8 @@ class SightCardTop extends StatelessWidget {
         child: SizedBox(
           height: AppConstants.sightCardImageHeight,
           width: double.infinity,
-          child: Image(
-            image: AssetImage(url),
+          child: Image.network(
+            url,
             fit: BoxFit.cover,
             loadingBuilder: (_, child, loadingProgress) {
               if (loadingProgress == null) {
@@ -64,7 +65,7 @@ class SightCardTop extends StatelessWidget {
               width: AppConstants.defaultIconSize,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(AppConstants.heartIconAssetPath),
+                  image: AssetImage(AppAssets.heartIconAssetPath),
                   fit: BoxFit.cover,
                 ),
               ),

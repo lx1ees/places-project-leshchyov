@@ -21,9 +21,4 @@ class AppConstants {
   static const double sightDetailsActionButtonWidth = 164;
   static const double sightDetailsActionButtonHeight = 40;
   static const double sightDetailsActionButtonIconSize = 22;
-
-  /// Константы путей ресурсов
-  static const String heartIconAssetPath = 'res/images/heart_icon.png';
-  static const String goIconAssetPath = 'res/images/go_icon.png';
-  static const String calendarIconAssetPath = 'res/images/calendar_icon.png';
 }

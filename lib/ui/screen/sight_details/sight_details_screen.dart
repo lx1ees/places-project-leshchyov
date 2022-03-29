@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/sight.dart';
@@ -61,14 +62,14 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                         children: const [
                           Expanded(
                             child: SightDetailsActionButton(
-                              iconUrl: AppConstants.calendarIconAssetPath,
+                              iconUrl: AppAssets.calendarIconAssetPath,
                               title:
                                   AppStrings.sightDetailsPlanActionButtonTitle,
                             ),
                           ),
                           Expanded(
                             child: SightDetailsActionButton(
-                              iconUrl: AppConstants.heartIconAssetPath,
+                              iconUrl: AppAssets.heartIconAssetPath,
                               title:
                                   AppStrings.sightDetailsInFavActionButtonTitle,
                             ),

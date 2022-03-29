@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 
 /// Виджет для отображения галереи достопримечательности
@@ -13,12 +12,11 @@ class SightDetailsImageGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: AppConstants.sightDetailsGalleryHeight,
-      color: AppColors.sightImageMockColor,
-      child: Image(
-        image: AssetImage(url),
+      child: Image.network(
+        url,
         fit: BoxFit.cover,
         loadingBuilder: (_, child, loadingProgress) {
           if (loadingProgress == null) {
