@@ -8,6 +8,7 @@ class AppColors {
       Color.fromRGBO(76, 175, 80, 1);
   static const Color appBarTitleFirstLetterTwoColor =
       Color.fromRGBO(252, 221, 61, 1);
+  static const Color defaultIconColor = Colors.black;
 
   /// Цвета карточки и окна детальной информации достопримечательности
   static const Color sightCardBackgroundColor =
@@ -15,4 +16,5 @@ class AppColors {
   static const Color sightImageMockColor = Colors.green;
   static const Color sightButtonMockColor = Colors.white;
   static const Color sightButton2MockColor = Colors.green;
+  static const Color defaultButtonTextColor = Colors.white;
 }

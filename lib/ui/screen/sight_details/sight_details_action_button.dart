@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 
@@ -6,9 +7,11 @@ import 'package:places/constants/app_typography.dart';
 /// с наименованием [title]
 class SightDetailsActionButton extends StatelessWidget {
   final String title;
+  final String iconUrl;
 
   const SightDetailsActionButton({
     required this.title,
+    required this.iconUrl,
     Key? key,
   }) : super(key: key);
 
@@ -20,15 +23,12 @@ class SightDetailsActionButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             width: AppConstants.sightDetailsActionButtonIconSize,
             height: AppConstants.sightDetailsActionButtonIconSize,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.grey,
-                width: 3,
-              ),
+            child: Image.asset(
+              iconUrl,
+              color: AppColors.defaultIconColor,
             ),
           ),
           const SizedBox(width: AppConstants.defaultIconTextPadding),
