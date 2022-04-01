@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/mocks.dart';

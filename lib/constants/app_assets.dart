@@ -1,6 +1,9 @@
 class AppAssets {
   /// Константы путей ресурсов
   static const String heartIconAssetPath = 'res/images/heart_icon.png';
+  static const String heartFullIconAssetPath = 'res/images/heart_full_icon.png';
+  static const String listIconAssetPath = 'res/images/list_icon.png';
+  static const String listFullIconAssetPath = 'res/images/list_full_icon.png';
   static const String goIconAssetPath = 'res/images/go_icon.png';
   static const String calendarIconAssetPath = 'res/images/calendar_icon.png';
   static const String shareIconAssetPath = 'res/images/share_icon.png';

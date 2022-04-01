@@ -10,6 +10,7 @@ import 'package:places/ui/screen/sight_card/sight_to_visit_card.dart';
 import 'package:places/ui/screen/sight_card/sight_visited_card.dart';
 import 'package:places/ui/screen/sight_list.dart';
 
+/// Экран со списками посещения
 class VisitingScreen extends StatefulWidget {
   const VisitingScreen({Key? key}) : super(key: key);
 
@@ -57,7 +58,7 @@ class _VisitingScreenState extends State<VisitingScreen>
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 24),
+        padding: const EdgeInsets.only(top: AppConstants.defaultPaddingX1_5),
         child: TabBarView(
           controller: _tabController,
           children: [

@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
-import 'package:places/constants/app_strings.dart';
-import 'package:places/constants/app_typography.dart';
-import 'package:places/mocks.dart';
-import 'package:places/ui/screen/custom_app_bar.dart';
 import 'package:places/ui/screen/sight_card/sight_card.dart';
-import 'package:places/ui/screen/sight_card/sight_view_card.dart';
 
 /// Виджет-список карточек достопримечательностей [sightCards]
 /// Если список пустой, выводится виджет-заглушка [emptyListPlaceholder]
