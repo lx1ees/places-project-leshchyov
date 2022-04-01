@@ -8,4 +8,9 @@ class AppStrings {
   static const String sightDetailsPlanActionButtonTitle = 'Запланировать';
   static const String sightDetailsInFavActionButtonTitle = 'В Избранное';
   static const String sightDetailsRouteButtonTitle = 'Построить маршрут';
+
+  /// Тексты окна Избранное
+  static const String favoriteScreenAppBarTitle = 'Избранное';
+  static const String favoriteWantToVisitTabTitle = 'Хочу посетить';
+  static const String favoriteVisitedTabTitle = 'Посетил';
 }

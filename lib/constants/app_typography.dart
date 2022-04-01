@@ -74,4 +74,19 @@ class AppTypography {
     fontWeight: FontWeight.w700,
     height: 1.286,
   );
+
+  /// Типография окна Избранное
+  static const TextStyle favoriteScreenAppBarTitleTextStyle = TextStyle(
+    color: AppColors.secondaryColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    height: 1.333, // = Line Height из Figma / Размер шрифта
+  );
+
+  static const TextStyle favoriteScreenTabTitleTextStyle = TextStyle(
+    color: AppColors.tabBarSelectedTitleColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+    height: 1.286, // = Line Height из Figma / Размер шрифта
+  );
 }
