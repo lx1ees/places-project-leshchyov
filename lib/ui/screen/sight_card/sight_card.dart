@@ -5,12 +5,23 @@ import 'package:places/domain/sight.dart';
 import 'package:places/ui/screen/sight_card/sight_card_bottom.dart';
 import 'package:places/ui/screen/sight_card/sight_card_top.dart';
 
-/// Виджет-карточка для отображения [sight] достопримечательности в кратком виде
-class SightCard extends StatelessWidget {
+/// Абстрактный виджет-карточка для отображения [sight] достопримечательности в кратком виде
+/// Если карточка предназначена для вывода достопримечательности в списке
+/// для посещения, то передается флаг [isVisitable] в состоянии true.
+/// Если достоиримечательность посещена, то передается флаг [isVisited] в
+/// состоянии true.
+/// [dateOfVisit] - дата визита (или запланированного, или уже состоявшегося)
+abstract class SightCard extends StatelessWidget {
   final Sight sight;
+  final bool isVisitable;
+  final bool isVisited;
+  final DateTime? dateOfVisit;
 
   const SightCard({
     required this.sight,
+    this.isVisitable = false,
+    this.isVisited = false,
+    this.dateOfVisit,
     Key? key,
   }) : super(key: key);
 
@@ -30,11 +41,16 @@ class SightCard extends StatelessWidget {
             SightCardTop(
               type: sight.type,
               url: sight.url,
+              isVisitable: isVisitable,
+              isVisited: isVisited,
             ),
             const SizedBox(height: AppConstants.defaultPadding),
             SightCardBottom(
               name: sight.name,
               shortDescription: sight.details,
+              isVisitable: isVisitable,
+              isVisited: isVisited,
+              dateOfVisit: dateOfVisit,
             ),
           ],
         ),

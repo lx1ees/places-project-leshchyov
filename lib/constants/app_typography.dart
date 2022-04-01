@@ -25,6 +25,13 @@ class AppTypography {
     height: 1.25,
   );
 
+  static const TextStyle sightCardVisitInfoTextStyle = TextStyle(
+    color: AppColors.secondary2Color,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.286,
+  );
+
   static const TextStyle sightCardDetailsTextStyle = TextStyle(
     color: AppColors.secondary2Color,
     fontSize: 14,
