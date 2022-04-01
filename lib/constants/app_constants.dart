@@ -15,6 +15,7 @@ class AppConstants {
   static const double defaultTabBorderRadius = 40;
   static const double defaultTabHeight = 40;
   static const double defaultTabVerticalPadding = 6;
+  static const double placeholderNoItemsSubtitleWidth = 200;
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;

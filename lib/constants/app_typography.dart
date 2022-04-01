@@ -10,6 +10,20 @@ class AppTypography {
     height: 1.125, // = Line Height из Figma / Размер шрифта
   );
 
+  static const TextStyle placeholderNoItemsTitleStyle = TextStyle(
+    color: AppColors.inactiveColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    height: 1.333,
+  );
+
+  static const TextStyle placeholderNoItemsSubtitleStyle = TextStyle(
+    color: AppColors.inactiveColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.286,
+  );
+
   /// Типография карточки достопримечательности
   static const TextStyle sightCardTypeTextStyle = TextStyle(
     color: Colors.white,

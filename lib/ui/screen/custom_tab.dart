@@ -64,7 +64,7 @@ class _CustomTabState extends State<CustomTab> {
               style: isTabSelected
                   ? AppTypography.favoriteScreenTabTitleTextStyle
                   : AppTypography.favoriteScreenTabTitleTextStyle.copyWith(
-                      color: AppColors.tabBarUnselectedTitleColor,
+                      color: AppColors.inactiveColor,
                     ),
             ),
           ),

@@ -5,6 +5,7 @@ class AppColors {
   static const Color secondaryColor = Color.fromRGBO(37, 40, 73, 1);
   static const Color secondary2Color = Color.fromRGBO(124, 126, 146, 1);
   static const Color backgroundColor = Color.fromRGBO(245, 245, 245, 1);
+  static const Color inactiveColor = Color.fromRGBO(124, 126, 146, 0.56);
   static const Color appBarTitleFirstLetterOneColor =
       Color.fromRGBO(76, 175, 80, 1);
   static const Color appBarTitleFirstLetterTwoColor =
@@ -22,8 +23,7 @@ class AppColors {
 
   /// Цвета в окне Избранное
   static const Color tabBarSelectedTitleColor = Colors.white;
-  static const Color tabBarUnselectedTitleColor =
-      Color.fromRGBO(124, 126, 146, 0.56);
-  static const Color tabBarSelectedBackgroundColor = Color.fromRGBO(59, 62, 91, 1);
+  static const Color tabBarSelectedBackgroundColor =
+      Color.fromRGBO(59, 62, 91, 1);
   static const Color tabBarUnselectedBackgroundColor = backgroundColor;
 }

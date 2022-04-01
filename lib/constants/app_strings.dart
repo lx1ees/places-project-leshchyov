@@ -10,6 +10,11 @@ class AppStrings {
   static const String sightDetailsRouteButtonTitle = 'Построить маршрут';
   static const String sightCardVisitedText = 'Цель достигнута';
   static const String sightCardToBeVisitedText = 'Запланировано на';
+  static const String placeholderNoItemsTitleText = 'Пусто';
+  static const String placeholderNoToVisitSightsText =
+      'Отмечайте понравившиеся места и они появятся здесь.';
+  static const String placeholderNoVisitedSightsText =
+      'Завершите маршрут, чтобы место попало сюда.';
 
   /// Тексты окна Избранное
   static const String favoriteScreenAppBarTitle = 'Избранное';

@@ -5,6 +5,7 @@ import 'package:places/constants/app_typography.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/custom_app_bar.dart';
 import 'package:places/ui/screen/sight_card/sight_view_card.dart';
+import 'package:places/ui/screen/sight_list.dart';
 
 /// Виджет, описывающий экран списка интересных мест
 class SightListScreen extends StatefulWidget {
@@ -24,24 +25,8 @@ class _SightListScreenState extends State<SightListScreen> {
           style: AppTypography.appBarTitleTextStyle,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppConstants.defaultPadding,
-          ),
-          child: Column(
-            children: mocks
-                .map(
-                  (sight) => Column(
-                    children: [
-                      SightViewCard(sight: sight),
-                      const SizedBox(height: AppConstants.defaultPadding),
-                    ],
-                  ),
-                )
-                .toList(),
-          ),
-        ),
+      body: SightList(
+        sightCards: mocks.map((sight) => SightViewCard(sight: sight)).toList(),
       ),
     );
   }

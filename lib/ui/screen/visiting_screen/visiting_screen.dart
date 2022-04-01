@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/ui/screen/visiting_screen/custom_tab_bar.dart';
+import 'package:places/mocks.dart';
+import 'package:places/ui/screen/custom_tab_bar.dart';
+import 'package:places/ui/screen/no_items_placeholder.dart';
+import 'package:places/ui/screen/sight_card/sight_to_visit_card.dart';
+import 'package:places/ui/screen/sight_card/sight_visited_card.dart';
+import 'package:places/ui/screen/sight_list.dart';
 
 class VisitingScreen extends StatefulWidget {
   const VisitingScreen({Key? key}) : super(key: key);
@@ -50,12 +56,39 @@ class _VisitingScreenState extends State<VisitingScreen>
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          Container(),
-          Container(),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 24),
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            SightList(
+              sightCards: mocks
+                  .map((sight) => SightToVisitCard(
+                        sight: sight,
+                        dateOfVisit: DateTime.now(),
+                      ))
+                  .toList(),
+              emptyListPlaceholder: const NoItemsPlaceholder(
+                iconPath: AppAssets.noToVisitSightsIcon,
+                title: AppStrings.placeholderNoItemsTitleText,
+                subtitle: AppStrings.placeholderNoToVisitSightsText,
+              ),
+            ),
+            SightList(
+              sightCards: mocks
+                  .map((sight) => SightVisitedCard(
+                        sight: sight,
+                        dateOfVisit: DateTime.now(),
+                      ))
+                  .toList(),
+              emptyListPlaceholder: const NoItemsPlaceholder(
+                iconPath: AppAssets.noVisitedSightsIcon,
+                title: AppStrings.placeholderNoItemsTitleText,
+                subtitle: AppStrings.placeholderNoVisitedSightsText,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

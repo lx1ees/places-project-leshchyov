@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
-import 'package:places/ui/screen/visiting_screen/custom_tab.dart';
+import 'package:places/ui/screen/custom_tab.dart';
 
 /// Виджет кастомного таббара с подложкой и набором табов с текстом [labelTabs]
 class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
@@ -40,7 +40,7 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
           TabBar(
             controller: controller,
             labelColor: AppColors.tabBarSelectedTitleColor,
-            unselectedLabelColor: AppColors.tabBarUnselectedTitleColor,
+            unselectedLabelColor: AppColors.inactiveColor,
             indicator: BoxDecoration(
               color: AppColors.tabBarSelectedBackgroundColor,
               borderRadius:
