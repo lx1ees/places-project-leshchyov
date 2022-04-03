@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
@@ -75,11 +76,10 @@ class SightCardTop extends StatelessWidget {
             ),
             Row(
               children: [
-                ImageIcon(
-                  AssetImage(isVisitable
-                      ? actionIconPath
-                      : AppAssets.heartIconAssetPath),
-                  size: AppConstants.defaultIconSize,
+                SvgPicture.asset(
+                  isVisitable ? actionIconPath : AppAssets.heartIconAssetPath,
+                  height: AppConstants.defaultIconSize,
+                  width: AppConstants.defaultIconSize,
                   color: Colors.white,
                 ),
                 Visibility(

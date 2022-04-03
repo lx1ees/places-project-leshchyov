@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
@@ -26,7 +27,7 @@ class SightDetailsActionButton extends StatelessWidget {
           SizedBox(
             width: AppConstants.sightDetailsActionButtonIconSize,
             height: AppConstants.sightDetailsActionButtonIconSize,
-            child: Image.asset(
+            child: SvgPicture.asset(
               iconUrl,
               color: AppColors.defaultIconColor,
             ),

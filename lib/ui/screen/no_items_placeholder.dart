@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 
@@ -33,7 +34,7 @@ class NoItemsPlaceholder extends StatelessWidget {
           child: Padding(
             padding:
                 const EdgeInsets.only(bottom: AppConstants.defaultPaddingX2),
-            child: Image.asset(iconPath ?? ''),
+            child: SvgPicture.asset(iconPath ?? ''),
           ),
         ),
         Text(

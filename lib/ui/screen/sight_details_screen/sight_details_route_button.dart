@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
@@ -25,7 +26,7 @@ class SightDetailsRouteButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(AppAssets.goIconAssetPath),
+          SvgPicture.asset(AppAssets.goIconAssetPath),
           const SizedBox(width: 10),
           Text(
             AppStrings.sightDetailsRouteButtonTitle.toUpperCase(),

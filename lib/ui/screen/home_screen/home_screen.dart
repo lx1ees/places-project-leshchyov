@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
@@ -44,20 +45,28 @@ class _HomeScreenState extends State<HomeScreen> {
             unselectedItemColor: AppColors.secondaryColor,
             currentIndex: _selectedIndex,
             onTap: _onNavigationItemTapped,
-            items: const <BottomNavigationBarItem>[
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(AppAssets.listIconAssetPath)),
-                activeIcon:
-                    ImageIcon(AssetImage(AppAssets.listFullIconAssetPath)),
+                icon: SvgPicture.asset(
+                  AppAssets.listIconAssetPath,
+                  color: AppColors.secondaryColor,
+                ),
+                activeIcon: SvgPicture.asset(
+                  AppAssets.listFullIconAssetPath,
+                  color: AppColors.secondaryColor,
+                ),
                 label: '',
-                backgroundColor: AppColors.secondaryColor,
               ),
               BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage(AppAssets.heartIconAssetPath)),
-                activeIcon:
-                    ImageIcon(AssetImage(AppAssets.heartFullIconAssetPath)),
+                icon: SvgPicture.asset(
+                  AppAssets.heartIconAssetPath,
+                  color: AppColors.secondaryColor,
+                ),
+                activeIcon: SvgPicture.asset(
+                  AppAssets.heartFullIconAssetPath,
+                  color: AppColors.secondaryColor,
+                ),
                 label: '',
-                backgroundColor: AppColors.secondaryColor,
               ),
             ],
           ),
