@@ -10,6 +10,20 @@ class AppTypography {
     height: 1.125, // = Line Height из Figma / Размер шрифта
   );
 
+  static const TextStyle placeholderNoItemsTitleStyle = TextStyle(
+    color: AppColors.inactiveColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    height: 1.333,
+  );
+
+  static const TextStyle placeholderNoItemsSubtitleStyle = TextStyle(
+    color: AppColors.inactiveColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.286,
+  );
+
   /// Типография карточки достопримечательности
   static const TextStyle sightCardTypeTextStyle = TextStyle(
     color: Colors.white,
@@ -23,6 +37,13 @@ class AppTypography {
     fontSize: 16,
     fontWeight: FontWeight.w500,
     height: 1.25,
+  );
+
+  static const TextStyle sightCardVisitInfoTextStyle = TextStyle(
+    color: AppColors.secondary2Color,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.286,
   );
 
   static const TextStyle sightCardDetailsTextStyle = TextStyle(
@@ -73,5 +94,20 @@ class AppTypography {
     fontSize: 14,
     fontWeight: FontWeight.w700,
     height: 1.286,
+  );
+
+  /// Типография окна Избранное
+  static const TextStyle favoriteScreenAppBarTitleTextStyle = TextStyle(
+    color: AppColors.secondaryColor,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    height: 1.333, // = Line Height из Figma / Размер шрифта
+  );
+
+  static const TextStyle favoriteScreenTabTitleTextStyle = TextStyle(
+    color: AppColors.tabBarSelectedTitleColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w700,
+    height: 1.286, // = Line Height из Figma / Размер шрифта
   );
 }

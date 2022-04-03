@@ -3,12 +3,12 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/sight.dart';
-import 'package:places/ui/screen/sight_details/sight_details_action_button.dart';
-import 'package:places/ui/screen/sight_details/sight_details_back_button.dart';
-import 'package:places/ui/screen/sight_details/sight_details_description.dart';
-import 'package:places/ui/screen/sight_details/sight_details_image_gallery.dart';
-import 'package:places/ui/screen/sight_details/sight_details_route_button.dart';
-import 'package:places/ui/screen/sight_details/sight_details_title.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_action_button.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_back_button.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_description.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_image_gallery.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_route_button.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_title.dart';
 
 /// Виджет-окно для отображения полной информации о [sight] достопримечательности
 /// и выполнения действий с ней

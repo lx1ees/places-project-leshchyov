@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
+import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 
 /// Виджет для отображения верхней части карточки достопримечательности
 /// с информацией о типе [type] и картинкой по ссылке [url]
+/// Если карточка предназначена для вывода достопримечательности в списке
+/// для посещения, то передается флаг [isVisitable] в состоянии true.
+/// Если достоиримечательность посещена, то передается флаг [isVisited] в
+/// состоянии true.
 class SightCardTop extends StatelessWidget {
   final String type;
   final String url;
+  final bool isVisitable;
+  final bool isVisited;
 
   const SightCardTop({
     required this.type,
     required this.url,
+    this.isVisitable = false,
+    this.isVisited = false,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final actionIconPath = isVisited
+        ? AppAssets.shareIconAssetPath
+        : AppAssets.calendarIconAssetPath;
+
     return Stack(children: [
       ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -60,15 +74,27 @@ class SightCardTop extends StatelessWidget {
                 style: AppTypography.sightCardTypeTextStyle,
               ),
             ),
-            Container(
-              height: AppConstants.defaultIconSize,
-              width: AppConstants.defaultIconSize,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppAssets.heartIconAssetPath),
-                  fit: BoxFit.cover,
+            Row(
+              children: [
+                SvgPicture.asset(
+                  isVisitable ? actionIconPath : AppAssets.heartIconAssetPath,
+                  height: AppConstants.defaultIconSize,
+                  width: AppConstants.defaultIconSize,
+                  color: Colors.white,
                 ),
-              ),
+                Visibility(
+                  visible: isVisitable,
+                  child: Row(
+                    children: const [
+                      SizedBox(width: 22),
+                      Icon(
+                        Icons.close_rounded,
+                        color: AppColors.defaultButtonIconColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
