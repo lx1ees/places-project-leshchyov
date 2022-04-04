@@ -34,12 +34,17 @@ class NoItemsPlaceholder extends StatelessWidget {
           child: Padding(
             padding:
                 const EdgeInsets.only(bottom: AppConstants.defaultPaddingX2),
-            child: SvgPicture.asset(iconPath ?? ''),
+            child: SvgPicture.asset(
+              iconPath ?? '',
+              color: Theme.of(context).colorScheme.background,
+            ),
           ),
         ),
         Text(
           title,
-          style: AppTypography.placeholderNoItemsTitleStyle,
+          style: AppTypography.subtitleTextStyle.copyWith(
+            color: Theme.of(context).colorScheme.background,
+          ),
         ),
         Visibility(
           visible: isSubtitleProvided,
@@ -50,7 +55,9 @@ class NoItemsPlaceholder extends StatelessWidget {
             child: Text(
               subtitle ?? '',
               textAlign: TextAlign.center,
-              style: AppTypography.placeholderNoItemsSubtitleStyle,
+              style: AppTypography.smallTextStyle.copyWith(
+                color: Theme.of(context).colorScheme.background,
+              ),
             ),
           ),
         ),

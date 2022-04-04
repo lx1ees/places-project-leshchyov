@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
-import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/ui/screen/sight_list_screen/sight_list_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
@@ -38,33 +37,33 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBar(
             elevation: 0,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            selectedItemColor: AppColors.secondaryColor,
-            unselectedItemColor: AppColors.secondaryColor,
+            selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+            unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
             currentIndex: _selectedIndex,
             onTap: _onNavigationItemTapped,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   AppAssets.listIconAssetPath,
-                  color: AppColors.secondaryColor,
+                  color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
                 ),
                 activeIcon: SvgPicture.asset(
                   AppAssets.listFullIconAssetPath,
-                  color: AppColors.secondaryColor,
+                  color: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   AppAssets.heartIconAssetPath,
-                  color: AppColors.secondaryColor,
+                  color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
                 ),
                 activeIcon: SvgPicture.asset(
                   AppAssets.heartFullIconAssetPath,
-                  color: AppColors.secondaryColor,
+                  color: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',
               ),

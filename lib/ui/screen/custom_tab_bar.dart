@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/ui/screen/custom_tab.dart';
 
@@ -32,20 +31,14 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             height: AppConstants.defaultTabHeight,
             decoration: BoxDecoration(
-              color: AppColors.tabBarUnselectedBackgroundColor,
+              color: Theme.of(context).primaryColorLight,
               borderRadius:
                   BorderRadius.circular(AppConstants.defaultTabBorderRadius),
             ),
           ),
           TabBar(
             controller: controller,
-            labelColor: AppColors.tabBarSelectedTitleColor,
-            unselectedLabelColor: AppColors.inactiveColor,
-            indicator: BoxDecoration(
-              color: AppColors.tabBarSelectedBackgroundColor,
-              borderRadius:
-                  BorderRadius.circular(AppConstants.defaultTabBorderRadius),
-            ),
+            indicator: Theme.of(context).tabBarTheme.indicator,
             indicatorWeight: 0,
             labelPadding: EdgeInsets.zero,
             tabs: labelTabs

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
-import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
+import 'package:places/utils/extensions.dart';
 
 /// Виджет кнопки построения маршрута
 class SightDetailsRouteButton extends StatelessWidget {
@@ -17,9 +17,9 @@ class SightDetailsRouteButton extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: AppConstants.sightDetailsRouteButtonHeight,
-      decoration: const BoxDecoration(
-        color: AppColors.sightButton2MockColor,
-        borderRadius: BorderRadius.all(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary,
+        borderRadius: const BorderRadius.all(
           Radius.circular(AppConstants.button2BorderRadius),
         ),
       ),
@@ -30,7 +30,9 @@ class SightDetailsRouteButton extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             AppStrings.sightDetailsRouteButtonTitle.toUpperCase(),
-            style: AppTypography.sightDetailsRouteButtonTextStyle,
+            style: AppTypography.buttonTextStyle.copyWith(
+              color: Theme.of(context).white,
+            ),
           ),
         ],
       ),

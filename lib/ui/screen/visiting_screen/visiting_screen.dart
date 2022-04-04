@@ -39,10 +39,12 @@ class _VisitingScreenState extends State<VisitingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
+        title: Center(
           child: Text(
             AppStrings.favoriteScreenAppBarTitle,
-            style: AppTypography.favoriteScreenAppBarTitleTextStyle,
+            style: AppTypography.subtitleTextStyle.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,

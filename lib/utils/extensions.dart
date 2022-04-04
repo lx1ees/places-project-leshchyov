@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_strings.dart';
 
 extension NullableDateTimeExtension on DateTime? {
@@ -19,5 +21,11 @@ extension NullableDateTimeExtension on DateTime? {
 extension DateTimeExtension on DateTime {
   String toFormattedString() {
     return DateFormat('d MMM yyyy', Platform.localeName).format(this);
+  }
+}
+
+extension ThemeDataExtensions on ThemeData{
+  Color get white{
+    return AppColors.whiteColor;
   }
 }

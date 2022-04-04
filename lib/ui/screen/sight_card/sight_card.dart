@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/ui/screen/sight_card/sight_card_bottom.dart';
@@ -30,7 +29,7 @@ class SightCard extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 3 / 2,
       child: Card(
-        color: AppColors.sightCardBackgroundColor,
+        color: Theme.of(context).primaryColorLight,
         margin: EdgeInsets.zero,
         elevation: 0,
         shape: RoundedRectangleBorder(

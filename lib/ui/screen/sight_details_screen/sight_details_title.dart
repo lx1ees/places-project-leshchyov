@@ -23,7 +23,9 @@ class SightDetailsTitle extends StatelessWidget {
       children: [
         Text(
           name,
-          style: AppTypography.sightDetailsNameTextStyle,
+          style: AppTypography.titleTextStyle.copyWith(
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
         Row(
           children: [
@@ -32,13 +34,17 @@ class SightDetailsTitle extends StatelessWidget {
                 type,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTypography.sightDetailsTypeTextStyle,
+                style: AppTypography.smallBoldTextStyle.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
               ),
             ),
             const SizedBox(width: AppConstants.defaultPadding),
             Text(
               shortDescription,
-              style: AppTypography.sightDetailsScheduleStyle,
+              style: AppTypography.smallTextStyle.copyWith(
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
+              ),
             ),
           ],
         ),
