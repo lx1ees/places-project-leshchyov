@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 
@@ -29,7 +28,7 @@ class SightDetailsActionButton extends StatelessWidget {
             height: AppConstants.sightDetailsActionButtonIconSize,
             child: SvgPicture.asset(
               iconUrl,
-              color: AppColors.defaultIconColor,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
           const SizedBox(width: AppConstants.defaultIconTextPadding),
@@ -38,7 +37,9 @@ class SightDetailsActionButton extends StatelessWidget {
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppTypography.sightDetailsButtonTextStyle,
+              style: AppTypography.smallTextStyle.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
           ),
         ],

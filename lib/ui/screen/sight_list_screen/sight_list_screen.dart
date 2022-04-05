@@ -18,10 +18,12 @@ class _SightListScreenState extends State<SightListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         child: Text(
           AppStrings.appBarTitle,
-          style: AppTypography.appBarTitleTextStyle,
+          style: AppTypography.largeTitleTextStyle.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
       ),
       body: SightList(

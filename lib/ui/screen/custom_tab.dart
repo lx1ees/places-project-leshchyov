@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 
@@ -62,9 +61,11 @@ class _CustomTabState extends State<CustomTab> {
             child: Text(
               widget.label,
               style: isTabSelected
-                  ? AppTypography.favoriteScreenTabTitleTextStyle
-                  : AppTypography.favoriteScreenTabTitleTextStyle.copyWith(
-                      color: AppColors.inactiveColor,
+                  ? AppTypography.smallBoldTextStyle.copyWith(
+                      color: Theme.of(context).tabBarTheme.labelColor,
+                    )
+                  : AppTypography.smallBoldTextStyle.copyWith(
+                      color: Theme.of(context).tabBarTheme.unselectedLabelColor,
                     ),
             ),
           ),

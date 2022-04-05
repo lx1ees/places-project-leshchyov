@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
-import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
+import 'package:places/ui/screen/res/themes.dart';
 
 /// Виджет для отображения верхней части карточки достопримечательности
 /// с информацией о типе [type] и картинкой по ссылке [url]
@@ -71,7 +71,8 @@ class SightCardTop extends StatelessWidget {
                 type,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTypography.sightCardTypeTextStyle,
+                style: AppTypography.smallBoldTextStyle
+                    .copyWith(color: Theme.of(context).white),
               ),
             ),
             Row(
@@ -85,11 +86,11 @@ class SightCardTop extends StatelessWidget {
                 Visibility(
                   visible: isVisitable,
                   child: Row(
-                    children: const [
-                      SizedBox(width: 22),
+                    children: [
+                      const SizedBox(width: 22),
                       Icon(
                         Icons.close_rounded,
-                        color: AppColors.defaultButtonIconColor,
+                        color: Theme.of(context).white,
                       ),
                     ],
                   ),

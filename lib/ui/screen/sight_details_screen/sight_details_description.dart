@@ -14,7 +14,9 @@ class SightDetailsDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       description,
-      style: AppTypography.sightDetailsDescriptionTextStyle,
+      style: AppTypography.smallTextStyle.copyWith(
+        color: Theme.of(context).colorScheme.onPrimary,
+      ),
     );
   }
 }
