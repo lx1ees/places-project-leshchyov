@@ -3,9 +3,8 @@ import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
 
 class AppTheme {
-
   /// Тема по-умолчанию - светлая
-  static ThemeData get customTheme {
+  static ThemeData get lightTheme {
     final theme = ThemeData.light();
 
     return theme.copyWith(
@@ -46,7 +45,7 @@ class AppTheme {
   }
 
   /// Темная тема
-  static ThemeData get customDarkTheme {
+  static ThemeData get darkTheme {
     final theme = ThemeData.dark();
 
     return theme.copyWith(
@@ -82,7 +81,16 @@ class AppTheme {
         backgroundColor: AppColors.mainDarkColor,
         selectedItemColor: AppColors.whiteColor,
         unselectedItemColor: AppColors.whiteColor,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0,
       ),
     );
+  }
+}
+
+extension ThemeDataExtension on ThemeData{
+  Color get white{
+    return AppColors.whiteColor;
   }
 }

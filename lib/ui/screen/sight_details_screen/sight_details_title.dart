@@ -18,13 +18,15 @@ class SightDetailsTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           name,
           style: AppTypography.titleTextStyle.copyWith(
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: colorScheme.onPrimary,
           ),
         ),
         Row(
@@ -35,7 +37,7 @@ class SightDetailsTitle extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.smallBoldTextStyle.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  color: colorScheme.onPrimaryContainer,
                 ),
               ),
             ),
@@ -43,7 +45,7 @@ class SightDetailsTitle extends StatelessWidget {
             Text(
               shortDescription,
               style: AppTypography.smallTextStyle.copyWith(
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
+                color: colorScheme.onSecondaryContainer,
               ),
             ),
           ],

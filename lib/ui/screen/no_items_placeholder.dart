@@ -25,6 +25,7 @@ class NoItemsPlaceholder extends StatelessWidget {
         iconPath != null && (iconPath?.isNotEmpty ?? false);
     final isSubtitleProvided =
         subtitle != null && (subtitle?.isNotEmpty ?? false);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -36,14 +37,14 @@ class NoItemsPlaceholder extends StatelessWidget {
                 const EdgeInsets.only(bottom: AppConstants.defaultPaddingX2),
             child: SvgPicture.asset(
               iconPath ?? '',
-              color: Theme.of(context).colorScheme.background,
+              color: colorScheme.background,
             ),
           ),
         ),
         Text(
           title,
           style: AppTypography.subtitleTextStyle.copyWith(
-            color: Theme.of(context).colorScheme.background,
+            color: colorScheme.background,
           ),
         ),
         Visibility(
@@ -56,7 +57,7 @@ class NoItemsPlaceholder extends StatelessWidget {
               subtitle ?? '',
               textAlign: TextAlign.center,
               style: AppTypography.smallTextStyle.copyWith(
-                color: Theme.of(context).colorScheme.background,
+                color: colorScheme.background,
               ),
             ),
           ),

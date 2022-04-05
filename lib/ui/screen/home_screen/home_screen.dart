@@ -23,6 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomNavigationBarTheme = Theme.of(context).bottomNavigationBarTheme;
+
     return Scaffold(
       body: Center(
         child: _screens.elementAt(_selectedIndex),
@@ -36,34 +38,28 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 0,
           ),
           BottomNavigationBar(
-            elevation: 0,
-            backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
-            unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
             currentIndex: _selectedIndex,
             onTap: _onNavigationItemTapped,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   AppAssets.listIconAssetPath,
-                  color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+                  color: bottomNavigationBarTheme.unselectedItemColor,
                 ),
                 activeIcon: SvgPicture.asset(
                   AppAssets.listFullIconAssetPath,
-                  color: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+                  color: bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   AppAssets.heartIconAssetPath,
-                  color: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+                  color: bottomNavigationBarTheme.unselectedItemColor,
                 ),
                 activeIcon: SvgPicture.asset(
                   AppAssets.heartFullIconAssetPath,
-                  color: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+                  color: bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',
               ),

@@ -23,9 +23,3 @@ extension DateTimeExtension on DateTime {
     return DateFormat('d MMM yyyy', Platform.localeName).format(this);
   }
 }
-
-extension ThemeDataExtensions on ThemeData{
-  Color get white{
-    return AppColors.whiteColor;
-  }
-}
