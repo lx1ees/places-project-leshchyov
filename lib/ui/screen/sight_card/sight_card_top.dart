@@ -4,6 +4,7 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/ui/screen/res/themes.dart';
+import 'package:places/ui/widgets/custom_icon_button.dart';
 
 /// Виджет для отображения верхней части карточки достопримечательности
 /// с информацией о типе [type] и картинкой по ссылке [url]
@@ -55,18 +56,16 @@ class SightCardTop extends StatelessWidget {
           ),
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppConstants.defaultPadding,
-          AppConstants.defaultPadding,
-          AppConstants.defaultPadding,
-          0,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppConstants.defaultPadding,
+              top: AppConstants.defaultPadding,
+            ),
+            child: Flexible(
               child: Text(
                 type,
                 maxLines: 1,
@@ -75,30 +74,31 @@ class SightCardTop extends StatelessWidget {
                     .copyWith(color: Theme.of(context).white),
               ),
             ),
-            Row(
-              children: [
-                SvgPicture.asset(
+          ),
+          Row(
+            children: [
+              CustomIconButton(
+                onPressed: () {},
+                icon: SvgPicture.asset(
                   isVisitable ? actionIconPath : AppAssets.heartIconAssetPath,
                   height: AppConstants.defaultIconSize,
                   width: AppConstants.defaultIconSize,
-                  color: Colors.white,
+                  color: Theme.of(context).white,
                 ),
-                Visibility(
-                  visible: isVisitable,
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 22),
-                      Icon(
-                        Icons.close_rounded,
-                        color: Theme.of(context).white,
-                      ),
-                    ],
+              ),
+              Visibility(
+                visible: isVisitable,
+                child: CustomIconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: Theme.of(context).white,
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     ]);
   }

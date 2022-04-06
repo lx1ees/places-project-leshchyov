@@ -23,7 +23,7 @@ const List<Sight> mocks = [
     name: 'Городская набережная',
     lat: 46.35408370923373,
     lon: 48.02939603968672,
-    url: 'https://russianasha.ru/files/lib/images/38/48/naberezhnaya-astrakhani-1.jpg',
+    url: 'https://prozhektor.info/wp-content/uploads/2020/05/EBCZsSbW4AEfLft.jpg',
     details:
         'Городская набережная Астрахани в нынешнем виде появилась в результате реконструкции 2007-2009 годов в предверии празднования 450-летия города на деньги корпорации «Газпром». Сейчас на набережной много туристических объектов для фотографий.',
     type: 'развлечения',

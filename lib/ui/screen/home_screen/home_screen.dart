@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
+import 'package:places/mocks.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_screen.dart';
 import 'package:places/ui/screen/sight_list_screen/sight_list_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 
@@ -14,9 +16,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const List<Widget> _screens = <Widget>[
+  static  List<Widget> _screens = <Widget>[
     SightListScreen(),
-    VisitingScreen(),
+    // VisitingScreen(),
+    SightDetailsScreen(sight: mocks[0]),
   ];
 
   int _selectedIndex = 0;
