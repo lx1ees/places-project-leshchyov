@@ -20,4 +20,12 @@ class AppStrings {
   static const String favoriteScreenAppBarTitle = 'Избранное';
   static const String favoriteWantToVisitTabTitle = 'Хочу посетить';
   static const String favoriteVisitedTabTitle = 'Посетил';
+
+  /// Тексты окна Фильтры
+  static const String cafeCategoryTitle = 'Кафе';
+  static const String hotelCategoryTitle = 'Отель';
+  static const String museumCategoryTitle = 'Музей';
+  static const String parkCategoryTitle = 'Парк';
+  static const String particularPlaceCategoryTitle = 'Особое место';
+  static const String restaurantCategoryTitle = 'Ресторан';
 }

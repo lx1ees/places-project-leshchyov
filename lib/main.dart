@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/res/themes.dart';
 
@@ -18,7 +19,8 @@ class App extends StatelessWidget {
       title: AppStrings.appTitle,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
+      home: const FiltersScreen(),
     );
   }
 }
