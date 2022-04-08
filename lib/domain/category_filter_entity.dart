@@ -1,19 +1,21 @@
 import 'package:equatable/equatable.dart';
 import 'package:places/constants/app_assets.dart';
-import 'package:places/constants/app_strings.dart';
+import 'package:places/domain/sight_type.dart';
 
+/// Класс, описывающий фильтр по категории с путем до иконки фильтра [iconPath],
+/// категорией места [sightCategory] и флагом [isSelected] состояния фильтра
 abstract class CategoryFilterEntity extends Equatable {
   final String iconPath;
-  final String label;
+  final SightCategory sightCategory;
   final bool isSelected;
 
   @override
-  List<Object?> get props => [label, iconPath];
+  List<Object?> get props => [sightCategory, iconPath];
 
   const CategoryFilterEntity({
     this.isSelected = false,
     required this.iconPath,
-    required this.label,
+    required this.sightCategory,
   });
 
   CategoryFilterEntity copyWith({required bool isSelected});
@@ -24,7 +26,7 @@ class CafeCategoryFilterEntity extends CategoryFilterEntity {
     bool isSelected = false,
   }) : super(
           iconPath: AppAssets.cafeIconAssetPath,
-          label: AppStrings.cafeCategoryTitle,
+          sightCategory: const CafeSightCategory(),
           isSelected: isSelected,
         );
 
@@ -39,7 +41,7 @@ class HotelCategoryFilterEntity extends CategoryFilterEntity {
     bool isSelected = false,
   }) : super(
           iconPath: AppAssets.hotelIconAssetPath,
-          label: AppStrings.hotelCategoryTitle,
+          sightCategory: const HotelSightCategory(),
           isSelected: isSelected,
         );
 
@@ -54,7 +56,7 @@ class MuseumCategoryFilterEntity extends CategoryFilterEntity {
     bool isSelected = false,
   }) : super(
           iconPath: AppAssets.museumIconAssetPath,
-          label: AppStrings.museumCategoryTitle,
+          sightCategory: const MuseumSightCategory(),
           isSelected: isSelected,
         );
 
@@ -71,7 +73,7 @@ class ParkCategoryFilterEntity extends CategoryFilterEntity {
     bool isSelected = false,
   }) : super(
           iconPath: AppAssets.parkIconAssetPath,
-          label: AppStrings.parkCategoryTitle,
+          sightCategory: const ParkSightCategory(),
           isSelected: isSelected,
         );
 
@@ -86,7 +88,7 @@ class ParticularPlaceCategoryFilterEntity extends CategoryFilterEntity {
     bool isSelected = false,
   }) : super(
           iconPath: AppAssets.particularPlaceIconAssetPath,
-          label: AppStrings.particularPlaceCategoryTitle,
+          sightCategory: const ParticularPlaceSightCategory(),
           isSelected: isSelected,
         );
 
@@ -103,7 +105,7 @@ class RestaurantCategoryFilterEntity extends CategoryFilterEntity {
     bool isSelected = false,
   }) : super(
           iconPath: AppAssets.restaurantIconAssetPath,
-          label: AppStrings.restaurantCategoryTitle,
+          sightCategory: const RestaurantSightCategory(),
           isSelected: isSelected,
         );
 

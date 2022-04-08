@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static  List<Widget> _screens = <Widget>[
     SightListScreen(),
     // VisitingScreen(),
-    SightDetailsScreen(sight: mocks[0]),
+    SightDetailsScreen(sight: sightsMock[0]),
   ];
 
   int _selectedIndex = 0;

@@ -1,24 +1,24 @@
+import 'package:places/domain/location_point.dart';
+import 'package:places/domain/sight_type.dart';
+
 /// Класс, описывающий модель данных достопримечательности
 /// [name] - наименование достопримечательности
-/// [lat] - широта в кординатах достопримечательности
-/// [lon] - долгота в координатах достопримечательности
+/// [point] - кордината достопримечательности
 /// [url] - путь на картинку достопримечательности в интернете
 /// [details] - полное описание достопримечательности
-/// [type] - тип достопримечательности
+/// [category] - категория достопримечательности
 class Sight {
   final String name;
-  final double lat;
-  final double lon;
+  final LocationPoint point;
   final String url;
   final String details;
-  final String type;
+  final SightCategory category;
   
   const Sight({
     required this.name,
-    required this.lat,
-    required this.lon,
+    required this.point,
     required this.url,
     required this.details,
-    required this.type,
+    required this.category,
   });
 }

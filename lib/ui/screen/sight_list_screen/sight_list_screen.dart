@@ -27,7 +27,7 @@ class _SightListScreenState extends State<SightListScreen> {
         ),
       ),
       body: SightList(
-        sightCards: mocks.map((sight) => SightViewCard(sight: sight)).toList(),
+        sightCards: sightsMock.map((sight) => SightViewCard(sight: sight)).toList(),
       ),
     );
   }

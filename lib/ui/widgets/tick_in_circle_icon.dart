@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
+import 'package:places/constants/app_constants.dart';
 
+/// Виджет-иконка галочки в залитом круге
 class TickInCircleIcon extends StatelessWidget {
   const TickInCircleIcon({
     Key? key,
@@ -20,8 +22,8 @@ class TickInCircleIcon extends StatelessWidget {
           allowDrawingOutsideViewBox: true,
           color: Theme.of(context).primaryColor,
           fit: BoxFit.cover,
-          height: 16,
-          width: 16,
+          height: AppConstants.defaultMiniIconSize,
+          width: AppConstants.defaultMiniIconSize,
         ),
       ),
     );

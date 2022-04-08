@@ -48,7 +48,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                     children: [
                       SightDetailsTitle(
                         name: sight.name,
-                        type: sight.type,
+                        type: sight.category.name,
                         shortDescription: AppStrings.sightShortDescriptionMock,
                       ),
                       const SizedBox(height: AppConstants.defaultPaddingX1_5),

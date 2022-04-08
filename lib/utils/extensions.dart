@@ -21,3 +21,9 @@ extension DateTimeExtension on DateTime {
     return DateFormat('d MMM yyyy', Platform.localeName).format(this);
   }
 }
+
+extension NumExtensions on num {
+  double toPrecision(int n) => double.parse(toStringAsFixed(n));
+
+  bool get isWhole => this is int || this == roundToDouble();
+}

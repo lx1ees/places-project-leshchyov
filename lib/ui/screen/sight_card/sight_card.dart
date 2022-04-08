@@ -38,7 +38,7 @@ class SightCard extends StatelessWidget {
         child: Column(
           children: [
             SightCardTop(
-              type: sight.type,
+              type: sight.category.name,
               url: sight.url,
               isVisitable: isVisitable,
               isVisited: isVisited,

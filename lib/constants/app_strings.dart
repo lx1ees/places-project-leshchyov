@@ -2,6 +2,10 @@ class AppStrings {
   /// Тексты приложения
   static const String appTitle = 'Places';
   static const String appBarTitle = 'Список\nинтересных мест';
+  static const String prepositionFrom = 'от';
+  static const String prepositionTo = 'до';
+  static const String meter = 'м';
+  static const String km = 'км';
 
   /// Тексты карточки и окна детальной информации достопримечательности
   static const String sightShortDescriptionMock = 'Закрыто до 9:00';
@@ -28,4 +32,8 @@ class AppStrings {
   static const String parkCategoryTitle = 'Парк';
   static const String particularPlaceCategoryTitle = 'Особое место';
   static const String restaurantCategoryTitle = 'Ресторан';
+  static const String clearFiltersButtonTitle = 'Очистить';
+  static const String categoryFiltersTitle = 'КАТЕГОРИИ';
+  static const String distanceFilterTitle = 'Расстояние';
+  static const String showFiltered = 'ПОКАЗАТЬ';
 }

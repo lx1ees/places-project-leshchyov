@@ -65,7 +65,7 @@ class _VisitingScreenState extends State<VisitingScreen>
           controller: _tabController,
           children: [
             SightList(
-              sightCards: mocks
+              sightCards: sightsMock
                   .map((sight) => SightToVisitCard(
                         sight: sight,
                         dateOfVisit: DateTime.now(),
@@ -78,7 +78,7 @@ class _VisitingScreenState extends State<VisitingScreen>
               ),
             ),
             SightList(
-              sightCards: mocks
+              sightCards: sightsMock
                   .map((sight) => SightVisitedCard(
                         sight: sight,
                         dateOfVisit: DateTime.now(),
