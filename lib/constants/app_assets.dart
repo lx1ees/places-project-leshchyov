@@ -18,4 +18,7 @@ class AppAssets {
   static const String particularPlaceIconAssetPath = 'res/images/particular_place_icon.svg';
   static const String restaurantIconAssetPath = 'res/images/restaurant_icon.svg';
   static const String tickIconAssetPath = 'res/images/tick_icon.svg';
+  static const String settingsIconAssetPath = 'res/images/settings_icon.svg';
+  static const String settingsFullIconAssetPath = 'res/images/settings_full_icon.svg';
+  static const String infoIconAssetPath = 'res/images/info_icon.svg';
 }

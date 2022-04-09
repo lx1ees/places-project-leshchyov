@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
-import 'package:places/constants/app_constants.dart';
-import 'package:places/mocks.dart';
-import 'package:places/ui/screen/sight_details_screen/sight_details_screen.dart';
+import 'package:places/ui/screen/settings_screen/settings_screen.dart';
 import 'package:places/ui/screen/sight_list_screen/sight_list_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
+import 'package:places/ui/widgets/custom_divider.dart';
 
 /// Стартовый экран с навигацией
 class HomeScreen extends StatefulWidget {
@@ -16,10 +15,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static  List<Widget> _screens = <Widget>[
+  static const List<Widget> _screens = <Widget>[
     SightListScreen(),
-    // VisitingScreen(),
-    SightDetailsScreen(sight: sightsMock[0]),
+    VisitingScreen(),
+    SettingsScreen(),
   ];
 
   int _selectedIndex = 0;
@@ -36,10 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Divider(
-            thickness: AppConstants.defaultDividerThickness,
-            height: 0,
-          ),
+          const CustomDivider(),
           BottomNavigationBar(
             currentIndex: _selectedIndex,
             onTap: _onNavigationItemTapped,
@@ -62,6 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 activeIcon: SvgPicture.asset(
                   AppAssets.heartFullIconAssetPath,
+                  color: bottomNavigationBarTheme.selectedItemColor,
+                ),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  AppAssets.settingsIconAssetPath,
+                  color: bottomNavigationBarTheme.unselectedItemColor,
+                ),
+                activeIcon: SvgPicture.asset(
+                  AppAssets.settingsFullIconAssetPath,
                   color: bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',

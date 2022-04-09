@@ -27,6 +27,7 @@ class AppConstants {
   static const double sightCardImageHeight = 96;
   static const double sightDetailsGalleryHeight = 360;
   static const double sightDetailsGalleryBackButtonSize = 32;
+  static const double cardAspectRatio = 3 / 2;
 
   /// Константы окна с фильтрами
   static const double distanceFilterMinValue = 100;
@@ -35,4 +36,7 @@ class AppConstants {
   static const double categoryFilterIconSize = 64;
   static const double categoryFilterIconRadius = categoryFilterIconSize / 2;
   static const double categoryFilterRunSpace = 40;
+
+  /// Константы окна с настройками
+  static const double infoIconPadding = 10;
 }

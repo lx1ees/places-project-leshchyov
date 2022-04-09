@@ -36,4 +36,9 @@ class AppStrings {
   static const String categoryFiltersTitle = 'КАТЕГОРИИ';
   static const String distanceFilterTitle = 'Расстояние';
   static const String showFiltered = 'ПОКАЗАТЬ';
+
+  /// Тексты окна с настройками
+  static const String settingsScreenAppBarTitle = 'Настройки';
+  static const String darkThemeOption = 'Тёмная тема';
+  static const String watchTutorialOption = 'Смотреть туториал';
 }

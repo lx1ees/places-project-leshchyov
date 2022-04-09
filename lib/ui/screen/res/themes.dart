@@ -40,6 +40,9 @@ class AppTheme {
         backgroundColor: AppColors.whiteColor,
         selectedItemColor: AppColors.mainColor,
         unselectedItemColor: AppColors.secondaryColor,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0,
       ),
       sliderTheme: theme.sliderTheme.copyWith(
         thumbColor: AppColors.whiteColor,
@@ -113,7 +116,7 @@ class AppTheme {
   }
 }
 
-/// Кстомный RectangularRangeSliderTrackShape для слайдера с нулевыми отступами
+/// Кастомный RectangularRangeSliderTrackShape для слайдера с нулевыми отступами
 class CustomRangeTrackShape extends RectangularRangeSliderTrackShape {
   const CustomRangeTrackShape();
 

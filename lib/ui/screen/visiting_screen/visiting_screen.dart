@@ -69,6 +69,9 @@ class _VisitingScreenState extends State<VisitingScreen>
                   .map((sight) => SightToVisitCard(
                         sight: sight,
                         dateOfVisit: DateTime.now(),
+                        onPlanPressed: () {},
+                        onDeletePressed: () {},
+                        onCardTapped: () {},
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
@@ -82,6 +85,9 @@ class _VisitingScreenState extends State<VisitingScreen>
                   .map((sight) => SightVisitedCard(
                         sight: sight,
                         dateOfVisit: DateTime.now(),
+                        onSharePressed: () {},
+                        onDeletePressed: () {},
+                        onCardTapped: () {},
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(

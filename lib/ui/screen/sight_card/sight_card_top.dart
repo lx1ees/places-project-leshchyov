@@ -1,37 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/ui/screen/res/themes.dart';
-import 'package:places/ui/widgets/custom_icon_button.dart';
 
 /// Виджет для отображения верхней части карточки достопримечательности
 /// с информацией о типе [type] и картинкой по ссылке [url]
-/// Если карточка предназначена для вывода достопримечательности в списке
-/// для посещения, то передается флаг [isVisitable] в состоянии true.
-/// Если достоиримечательность посещена, то передается флаг [isVisited] в
-/// состоянии true.
 class SightCardTop extends StatelessWidget {
   final String type;
   final String url;
-  final bool isVisitable;
-  final bool isVisited;
 
   const SightCardTop({
     required this.type,
     required this.url,
-    this.isVisitable = false,
-    this.isVisited = false,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final actionIconPath = isVisited
-        ? AppAssets.shareIconAssetPath
-        : AppAssets.calendarIconAssetPath;
-
     return Stack(children: [
       ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -74,29 +59,6 @@ class SightCardTop extends StatelessWidget {
                     .copyWith(color: Theme.of(context).white),
               ),
             ),
-          ),
-          Row(
-            children: [
-              CustomIconButton(
-                onPressed: () {},
-                icon: SvgPicture.asset(
-                  isVisitable ? actionIconPath : AppAssets.heartIconAssetPath,
-                  height: AppConstants.defaultIconSize,
-                  width: AppConstants.defaultIconSize,
-                  color: Theme.of(context).white,
-                ),
-              ),
-              Visibility(
-                visible: isVisitable,
-                child: CustomIconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.close_rounded,
-                    color: Theme.of(context).white,
-                  ),
-                ),
-              ),
-            ],
           ),
         ],
       ),
