@@ -1,6 +1,6 @@
 import 'package:places/constants/app_constants.dart';
 import 'package:places/domain/category_filter_entity.dart';
-import 'package:places/domain/sight_type.dart';
+import 'package:places/domain/sight_category.dart';
 import 'package:places/mocks.dart';
 
 /// Класс, который содержит информацию о фильтрах по категории [_categoryFilters],

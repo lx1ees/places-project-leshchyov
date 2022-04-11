@@ -26,12 +26,13 @@ class AppStrings {
   static const String favoriteVisitedTabTitle = 'Посетил';
 
   /// Тексты окна Фильтры
-  static const String cafeCategoryTitle = 'Кафе';
-  static const String hotelCategoryTitle = 'Отель';
-  static const String museumCategoryTitle = 'Музей';
-  static const String parkCategoryTitle = 'Парк';
-  static const String particularPlaceCategoryTitle = 'Особое место';
-  static const String restaurantCategoryTitle = 'Ресторан';
+  static const String cafeCategoryName = 'Кафе';
+  static const String hotelCategoryName = 'Отель';
+  static const String museumCategoryName = 'Музей';
+  static const String parkCategoryName = 'Парк';
+  static const String particularPlaceCategoryName = 'Особое место';
+  static const String restaurantCategoryName = 'Ресторан';
+  static const String unknownCategoryName = 'Неизвестное место';
   static const String clearFiltersButtonTitle = 'Очистить';
   static const String categoryFiltersTitle = 'КАТЕГОРИИ';
   static const String distanceFilterTitle = 'Расстояние';
@@ -41,4 +42,13 @@ class AppStrings {
   static const String settingsScreenAppBarTitle = 'Настройки';
   static const String darkThemeOption = 'Тёмная тема';
   static const String watchTutorialOption = 'Смотреть туториал';
+
+  /// Тексты сущности Sight
+  static const String particularPlaceCategoryId = 'particular_place';
+  static const String hotelCategoryId = 'hotel';
+  static const String restaurantCategoryId = 'restaurant';
+  static const String parkCategoryId = 'park';
+  static const String museumCategoryId = 'museum';
+  static const String cafeCategoryId = 'cafe';
+  static const String unknownCategoryId = 'unknown';
 }

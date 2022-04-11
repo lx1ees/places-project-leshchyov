@@ -1,5 +1,5 @@
 import 'package:places/domain/location_point.dart';
-import 'package:places/domain/sight_type.dart';
+import 'package:places/domain/sight_category.dart';
 
 /// Класс, описывающий модель данных достопримечательности
 /// [name] - наименование достопримечательности
@@ -13,7 +13,7 @@ class Sight {
   final String url;
   final String details;
   final SightCategory category;
-  
+
   const Sight({
     required this.name,
     required this.point,
