@@ -49,4 +49,8 @@ class AppTypography {
     letterSpacing: 0.3,
     height: 1.286,
   );
+
+  static final TextStyle textRegularTextStyle = textTextStyle.copyWith(
+    fontWeight: FontWeight.w400,
+  );
 }

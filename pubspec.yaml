@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   dart_code_metrics: ^4.13.0
+  equatable: ^2.0.3
   flutter:
     sdk: flutter
   flutter_svg: ^1.0.3

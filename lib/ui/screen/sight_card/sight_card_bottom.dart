@@ -24,6 +24,8 @@ class SightCardBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Expanded(
       child: Container(
         padding: const EdgeInsets.fromLTRB(
@@ -41,7 +43,7 @@ class SightCardBottom extends StatelessWidget {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: AppTypography.textTextStyle.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: colorScheme.onPrimary,
               ),
             ),
             Visibility(
@@ -57,11 +59,10 @@ class SightCardBottom extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: isVisited
                       ? AppTypography.smallTextStyle.copyWith(
-                          color:
-                              Theme.of(context).colorScheme.secondaryContainer,
+                          color: colorScheme.secondaryContainer,
                         )
                       : AppTypography.smallTextStyle.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: colorScheme.secondary,
                         ),
                 ),
               ),
@@ -72,7 +73,7 @@ class SightCardBottom extends StatelessWidget {
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.smallTextStyle.copyWith(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  color: colorScheme.secondaryContainer,
                 ),
               ),
             ),

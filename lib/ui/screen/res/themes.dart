@@ -40,6 +40,21 @@ class AppTheme {
         backgroundColor: AppColors.whiteColor,
         selectedItemColor: AppColors.mainColor,
         unselectedItemColor: AppColors.secondaryColor,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0,
+      ),
+      sliderTheme: theme.sliderTheme.copyWith(
+        thumbColor: AppColors.whiteColor,
+        inactiveTrackColor: AppColors.inactiveBlackColor,
+        activeTrackColor: AppColors.greenColor,
+        rangeTrackShape: const CustomRangeTrackShape(),
+        trackHeight: 2,
+        rangeThumbShape: const RoundRangeSliderThumbShape(
+          elevation: 6,
+          enabledThumbRadius: 8,
+        ),
+        // overlayShape: SliderComponentShape.noO,
       ),
     );
   }
@@ -85,12 +100,45 @@ class AppTheme {
         showUnselectedLabels: false,
         elevation: 0,
       ),
+      sliderTheme: theme.sliderTheme.copyWith(
+        thumbColor: AppColors.whiteColor,
+        inactiveTrackColor: AppColors.inactiveBlackColor,
+        activeTrackColor: AppColors.greenDarkColor,
+        rangeTrackShape: const CustomRangeTrackShape(),
+        trackHeight: 2,
+        rangeThumbShape: const RoundRangeSliderThumbShape(
+          elevation: 6,
+          enabledThumbRadius: 8,
+        ),
+        // overlayShape: SliderComponentShape.noOverlay,
+      ),
     );
   }
 }
 
-extension ThemeDataExtension on ThemeData{
-  Color get white{
+/// Кастомный RectangularRangeSliderTrackShape для слайдера с нулевыми отступами
+class CustomRangeTrackShape extends RectangularRangeSliderTrackShape {
+  const CustomRangeTrackShape();
+
+  @override
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final trackHeight = sliderTheme.trackHeight!;
+    final trackLeft = offset.dx;
+    final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final trackWidth = parentBox.size.width;
+
+    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+  }
+}
+
+extension ThemeDataExtension on ThemeData {
+  Color get white {
     return AppColors.whiteColor;
   }
 }

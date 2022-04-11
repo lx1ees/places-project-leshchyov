@@ -65,10 +65,13 @@ class _VisitingScreenState extends State<VisitingScreen>
           controller: _tabController,
           children: [
             SightList(
-              sightCards: mocks
+              sightCards: sightsMock
                   .map((sight) => SightToVisitCard(
                         sight: sight,
                         dateOfVisit: DateTime.now(),
+                        onPlanPressed: () {},
+                        onDeletePressed: () {},
+                        onCardTapped: () {},
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
@@ -78,10 +81,13 @@ class _VisitingScreenState extends State<VisitingScreen>
               ),
             ),
             SightList(
-              sightCards: mocks
+              sightCards: sightsMock
                   .map((sight) => SightVisitedCard(
                         sight: sight,
                         dateOfVisit: DateTime.now(),
+                        onSharePressed: () {},
+                        onDeletePressed: () {},
+                        onCardTapped: () {},
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
