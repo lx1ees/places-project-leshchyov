@@ -18,7 +18,7 @@ class TickInCircleIcon extends StatelessWidget {
       ),
       child: Center(
         child: SvgPicture.asset(
-          AppAssets.tickIconAssetPath,
+          AppAssets.tickIcon,
           allowDrawingOutsideViewBox: true,
           color: Theme.of(context).primaryColor,
           fit: BoxFit.cover,

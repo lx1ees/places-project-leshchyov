@@ -35,8 +35,8 @@ class _AppState extends State<App> {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeModeHolder.currentThemeMode,
       // home: SightDetailsScreen(sight: sightsMock[2],),
-      home: const HomeScreen(),
-      // home: const FiltersScreen(),
+      // home: const HomeScreen(),
+      home: const FiltersScreen(),
     );
   }
 

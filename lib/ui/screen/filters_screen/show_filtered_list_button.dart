@@ -17,6 +17,8 @@ class ShowFilteredListButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isNothingToShow = affectedSightsCount == 0;
+
     return Container(
       height: AppConstants.defaultPaddingX4,
       padding: const EdgeInsets.symmetric(
@@ -25,7 +27,7 @@ class ShowFilteredListButton extends StatelessWidget {
       child: Center(
         child: CustomElevatedButton(
           label: '${AppStrings.showFiltered} ($affectedSightsCount)',
-          onPressed: onShow,
+          onPressed: !isNothingToShow ? onShow : null,
         ),
       ),
     );

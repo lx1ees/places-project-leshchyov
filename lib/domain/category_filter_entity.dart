@@ -25,7 +25,7 @@ class CafeCategoryFilterEntity extends CategoryFilterEntity {
   const CafeCategoryFilterEntity({
     bool isSelected = false,
   }) : super(
-          iconPath: AppAssets.cafeIconAssetPath,
+          iconPath: AppAssets.cafeIcon,
           sightCategory: const CafeSightCategory(),
           isSelected: isSelected,
         );
@@ -40,7 +40,7 @@ class HotelCategoryFilterEntity extends CategoryFilterEntity {
   const HotelCategoryFilterEntity({
     bool isSelected = false,
   }) : super(
-          iconPath: AppAssets.hotelIconAssetPath,
+          iconPath: AppAssets.hotelIcon,
           sightCategory: const HotelSightCategory(),
           isSelected: isSelected,
         );
@@ -55,7 +55,7 @@ class MuseumCategoryFilterEntity extends CategoryFilterEntity {
   const MuseumCategoryFilterEntity({
     bool isSelected = false,
   }) : super(
-          iconPath: AppAssets.museumIconAssetPath,
+          iconPath: AppAssets.museumIcon,
           sightCategory: const MuseumSightCategory(),
           isSelected: isSelected,
         );
@@ -72,7 +72,7 @@ class ParkCategoryFilterEntity extends CategoryFilterEntity {
   const ParkCategoryFilterEntity({
     bool isSelected = false,
   }) : super(
-          iconPath: AppAssets.parkIconAssetPath,
+          iconPath: AppAssets.parkIcon,
           sightCategory: const ParkSightCategory(),
           isSelected: isSelected,
         );
@@ -87,7 +87,7 @@ class ParticularPlaceCategoryFilterEntity extends CategoryFilterEntity {
   const ParticularPlaceCategoryFilterEntity({
     bool isSelected = false,
   }) : super(
-          iconPath: AppAssets.particularPlaceIconAssetPath,
+          iconPath: AppAssets.particularPlaceIcon,
           sightCategory: const ParticularPlaceSightCategory(),
           isSelected: isSelected,
         );
@@ -104,7 +104,7 @@ class RestaurantCategoryFilterEntity extends CategoryFilterEntity {
   const RestaurantCategoryFilterEntity({
     bool isSelected = false,
   }) : super(
-          iconPath: AppAssets.restaurantIconAssetPath,
+          iconPath: AppAssets.restaurantIcon,
           sightCategory: const RestaurantSightCategory(),
           isSelected: isSelected,
         );

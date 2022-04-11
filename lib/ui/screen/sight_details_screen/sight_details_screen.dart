@@ -57,7 +57,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                       CustomElevatedButton(
                         onPressed: () {},
                         label: AppStrings.sightDetailsRouteButtonTitle,
-                        icon: SvgPicture.asset(AppAssets.goIconAssetPath),
+                        icon: SvgPicture.asset(AppAssets.goIcon),
                       ),
                       const SizedBox(height: AppConstants.defaultPadding),
                       const Divider(
@@ -71,7 +71,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                               label:
                                   AppStrings.sightDetailsPlanActionButtonTitle,
                               icon: SvgPicture.asset(
-                                AppAssets.calendarIconAssetPath,
+                                AppAssets.calendarIcon,
                                 color: colorScheme.onPrimary,
                               ),
                             ),
@@ -81,7 +81,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                               label:
                                   AppStrings.sightDetailsInFavActionButtonTitle,
                               icon: SvgPicture.asset(
-                                AppAssets.heartIconAssetPath,
+                                AppAssets.heartIcon,
                                 color: colorScheme.onPrimary,
                               ),
                             ),

@@ -27,7 +27,7 @@ class SightToVisitCardActionButtons extends SightCardActionButtons {
         CustomIconButton(
           onPressed: onPlanPressed,
           icon: SvgPicture.asset(
-            AppAssets.calendarIconAssetPath,
+            AppAssets.calendarIcon,
             height: AppConstants.defaultIconSize,
             width: AppConstants.defaultIconSize,
             color: Theme.of(context).white,
@@ -62,7 +62,7 @@ class SightVisitedCardActionButtons extends SightCardActionButtons {
         CustomIconButton(
           onPressed: onSharePressed,
           icon: SvgPicture.asset(
-            AppAssets.shareIconAssetPath,
+            AppAssets.shareIcon,
             height: AppConstants.defaultIconSize,
             width: AppConstants.defaultIconSize,
             color: Theme.of(context).white,
@@ -93,7 +93,7 @@ class SightViewCardActionButtons extends SightCardActionButtons {
     return CustomIconButton(
       onPressed: onFavoritePressed,
       icon: SvgPicture.asset(
-        AppAssets.heartIconAssetPath,
+        AppAssets.heartIcon,
         height: AppConstants.defaultIconSize,
         width: AppConstants.defaultIconSize,
         color: Theme.of(context).white,

@@ -52,7 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: Padding(
               padding: const EdgeInsets.all(AppConstants.infoIconPadding),
               child: SvgPicture.asset(
-                AppAssets.infoIconAssetPath,
+                AppAssets.infoIcon,
                 color: colorScheme.secondary,
               ),
             ),

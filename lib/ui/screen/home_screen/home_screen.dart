@@ -42,33 +42,33 @@ class _HomeScreenState extends State<HomeScreen> {
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
-                  AppAssets.listIconAssetPath,
+                  AppAssets.listIcon,
                   color: bottomNavigationBarTheme.unselectedItemColor,
                 ),
                 activeIcon: SvgPicture.asset(
-                  AppAssets.listFullIconAssetPath,
+                  AppAssets.listFullIcon,
                   color: bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
-                  AppAssets.heartIconAssetPath,
+                  AppAssets.heartIcon,
                   color: bottomNavigationBarTheme.unselectedItemColor,
                 ),
                 activeIcon: SvgPicture.asset(
-                  AppAssets.heartFullIconAssetPath,
+                  AppAssets.heartFullIcon,
                   color: bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',
               ),
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
-                  AppAssets.settingsIconAssetPath,
+                  AppAssets.settingsIcon,
                   color: bottomNavigationBarTheme.unselectedItemColor,
                 ),
                 activeIcon: SvgPicture.asset(
-                  AppAssets.settingsFullIconAssetPath,
+                  AppAssets.settingsFullIcon,
                   color: bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',

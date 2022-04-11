@@ -45,12 +45,12 @@ class SightCardTop extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              left: AppConstants.defaultPadding,
-              top: AppConstants.defaultPadding,
-            ),
-            child: Flexible(
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: AppConstants.defaultPadding,
+                top: AppConstants.defaultPadding,
+              ),
               child: Text(
                 type,
                 maxLines: 1,
