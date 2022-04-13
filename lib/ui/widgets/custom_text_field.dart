@@ -60,6 +60,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _focusManager = FocusManagerHolder.of(context)?.focusManager;
     _focusManager?.registerFocusNode(focusNode);
     _controller.addListener(_textChangesListener);
+    _focusNode.addListener(_onFocusChanged);
   }
 
   @override
@@ -67,7 +68,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _controller
       ..removeListener(_textChangesListener)
       ..dispose();
-    _focusNode.dispose();
+    _focusNode
+      ..removeListener(_onFocusChanged)
+      ..dispose();
     _focusManager?.unregisterFocusNode(focusNode);
     super.dispose();
   }
@@ -203,6 +206,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
     if (onTextChangeListener != null) {
       onTextChangeListener(value);
     }
+    setState(() {});
+  }
+
+  void _onFocusChanged() {
     setState(() {});
   }
 }
