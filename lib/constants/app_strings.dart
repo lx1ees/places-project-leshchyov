@@ -6,6 +6,14 @@ class AppStrings {
   static const String prepositionTo = 'до';
   static const String meter = 'м';
   static const String km = 'км';
+  static const String save = 'Сохранить';
+  static const String create = 'Создать';
+  static const String cancel = 'Отмена';
+  static const String enterTextHint = 'введите текст';
+
+  /// Тексты ошибок
+  static const String errorNotFilled = 'Поле должно быть заполненным';
+  static const String errorIncorrect = 'Некорректное значение';
 
   /// Тексты карточки и окна детальной информации достопримечательности
   static const String sightShortDescriptionMock = 'Закрыто до 9:00';
@@ -51,4 +59,14 @@ class AppStrings {
   static const String museumCategoryId = 'museum';
   static const String cafeCategoryId = 'cafe';
   static const String unknownCategoryId = 'unknown';
+
+  /// Тексты окна добавления нового места
+  static const String categoryNotSelected = 'Не выбрано';
+  static const String categoryTitle = 'Категория';
+  static const String newPlaceTitle = 'Новое место';
+  static const String placeNameTitle = 'НАЗВАНИЕ';
+  static const String placeLatTitle = 'ШИРОТА';
+  static const String placeLonTitle = 'ДОЛГОТА';
+  static const String placeDetailsTitle = 'ОПИСАНИЕ';
+  static const String pointLocationOnMap = 'Указать на карте';
 }

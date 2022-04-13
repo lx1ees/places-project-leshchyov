@@ -21,4 +21,7 @@ class AppAssets {
   static const String settingsIcon = 'res/images/settings_icon.svg';
   static const String settingsFullIcon = 'res/images/settings_full_icon.svg';
   static const String infoIcon = 'res/images/info_icon.svg';
+  static const String clearIcon = 'res/images/clear_icon.svg';
+  static const String plusIcon = 'res/images/plus_icon.svg';
+  static const String imagePlaceholderUrl = 'https://wiki.dave.eu/images/4/47/Placeholder.png';
 }
