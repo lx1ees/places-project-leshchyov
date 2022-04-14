@@ -10,6 +10,7 @@ class AppStrings {
   static const String create = 'Создать';
   static const String cancel = 'Отмена';
   static const String enterTextHint = 'введите текст';
+  static const String error = 'Ошибка';
 
   /// Тексты ошибок
   static const String errorNotFilled = 'Поле должно быть заполненным';
@@ -69,4 +70,12 @@ class AppStrings {
   static const String placeLonTitle = 'ДОЛГОТА';
   static const String placeDetailsTitle = 'ОПИСАНИЕ';
   static const String pointLocationOnMap = 'Указать на карте';
+
+  /// Тексты окна поиска мест
+  static const String searchTitle = 'Поиск';
+  static const String noSearchResultsPlaceholder = 'Ничего не найдено.';
+  static const String noSearchResultsPlaceholderHint = 'Попробуйте изменить параметры\nпоиска';
+  static const String historyTitle = 'ВЫ ИСКАЛИ';
+  static const String clearHistory = 'Очистить историю';
+
 }

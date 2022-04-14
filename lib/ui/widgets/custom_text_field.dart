@@ -5,8 +5,7 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/ui/widgets/custom_focus_manager.dart';
 import 'package:places/ui/widgets/focus_manager_holder.dart';
-
-typedef OnTextChange = void Function(String value);
+import 'package:places/utils/typedefs.dart';
 
 /// Кастомный виджет TextField с заголовком [title] над полем ввода, подсказкой
 /// [hint], обработчиком ввода текста [onTextChange], кнопкой подтверждения ввода
@@ -16,7 +15,7 @@ typedef OnTextChange = void Function(String value);
 class CustomTextField extends StatefulWidget {
   final String title;
   final String? hint;
-  final OnTextChange? onTextChange;
+  final OnTextChanged? onTextChange;
   final TextInputAction? textInputAction;
   final bool isMultiline;
   final TextInputType textInputType;
@@ -44,7 +43,7 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  final TextEditingController _controller = TextEditingController();
+  late final TextEditingController _controller;
   final FocusNode _focusNode = FocusNode();
   late final CustomFocusManager? _focusManager;
   String? errorText;
@@ -59,7 +58,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     /// для обеспечения перемещения фокуса к следующему CustomTextField
     _focusManager = FocusManagerHolder.of(context)?.focusManager;
     _focusManager?.registerFocusNode(focusNode);
-    _controller.addListener(_textChangesListener);
+    _controller = TextEditingController()..addListener(_textChangesListener);
     _focusNode.addListener(_onFocusChanged);
   }
 
@@ -200,7 +199,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _textChangesHandler(widget.onTextChange);
   }
 
-  void _textChangesHandler(OnTextChange? onTextChangeListener) {
+  void _textChangesHandler(OnTextChanged? onTextChangeListener) {
     final value = _controller.text;
     errorText = null;
     if (onTextChangeListener != null) {

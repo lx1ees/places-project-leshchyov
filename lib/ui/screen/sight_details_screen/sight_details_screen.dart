@@ -103,7 +103,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                 size: AppConstants.defaultButtonIconSize,
                 color: colorScheme.onPrimary,
               ),
-              onPressed: () {},
+              onPressed: () => Navigator.pop(context),
             ),
           ),
         ],

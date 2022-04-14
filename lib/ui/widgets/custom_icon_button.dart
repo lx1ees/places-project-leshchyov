@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class CustomIconButton extends StatelessWidget {
   final Widget icon;
   final VoidCallback onPressed;
+  final EdgeInsets? padding;
 
   const CustomIconButton({
     required this.icon,
     required this.onPressed,
+    this.padding,
     Key? key,
   }) : super(key: key);
 
@@ -20,6 +22,7 @@ class CustomIconButton extends StatelessWidget {
       child: IconButton(
         onPressed: onPressed,
         icon: icon,
+        padding: padding ?? const EdgeInsets.all(8),
       ),
     );
   }

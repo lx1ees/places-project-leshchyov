@@ -7,6 +7,7 @@ class AppConstants {
   static const double button3BorderRadius = 24.0;
   static const double extendedFabHorizontalPadding = 22.0;
   static const double textFieldBorderRadius = 8.0;
+  static const double textField2BorderRadius = 12.0;
   static const double textFieldContentPadding = 10.0;
   static const double defaultPaddingX0_25 = 4;
   static const double defaultPaddingX0_5 = 8;
@@ -19,6 +20,9 @@ class AppConstants {
   static const double defaultButtonHorizontalPadding = 12;
   static const double defaultIconSize = 20;
   static const double defaultIcon2Size = 18;
+  static const double defaultIcon3Size = 22;
+  static const double defaultIcon4Size = 24;
+  static const double defaultIconBigSize = 64;
   static const double defaultMiniIconSize = 16;
   static const double defaultButtonIconSize = 16;
   static const double defaultTextFieldIconSize = 24;
@@ -30,7 +34,6 @@ class AppConstants {
   static const double defaultElevatedButtonHeight = 48;
   static const double defaultTextButtonHeight = 40;
   static const double defaultAppBarButtonLeadingWidth = 90;
-
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;
@@ -48,4 +51,8 @@ class AppConstants {
 
   /// Константы окна с настройками
   static const double infoIconPadding = 10;
+
+  /// Константы окна поиска
+  static const double searchTileImageSize = 56;
+  static const double separatorStartIndent = 88;
 }

@@ -24,4 +24,7 @@ class AppAssets {
   static const String clearIcon = 'res/images/clear_icon.svg';
   static const String plusIcon = 'res/images/plus_icon.svg';
   static const String imagePlaceholderUrl = 'https://wiki.dave.eu/images/4/47/Placeholder.png';
+  static const String searchIcon = 'res/images/search_icon.svg';
+  static const String filterIcon = 'res/images/filter_icon.svg';
+  static const String deleteIcon = 'res/images/delete_icon.svg';
 }
