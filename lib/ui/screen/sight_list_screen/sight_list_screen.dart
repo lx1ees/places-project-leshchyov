@@ -104,6 +104,8 @@ class _SightListScreenState extends State<SightListScreen> {
       ),
     );
 
+    _applyFilters(filtersManager);
+
     setState(() {});
   }
 
