@@ -5,7 +5,6 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/ui/widgets/custom_icon_button.dart';
-import 'package:places/utils/typedefs.dart';
 
 /// Виджет поискового бара
 /// [isBlocked] - флаг, указывающий, блокировать ли поле на ввод значений;
@@ -20,7 +19,7 @@ class SearchBar extends StatefulWidget {
   final TextEditingController? controller;
   final VoidCallback? onOpenFiltersPressed;
   final VoidCallback? onTap;
-  final OnTextChanged? onSearch;
+  final ValueChanged<String>? onSearch;
 
   const SearchBar({
     this.controller,
@@ -149,7 +148,7 @@ class _SearchBarState extends State<SearchBar> {
     }
   }
 
-  void _textChangesHandler(OnTextChanged? onTextChangeListener) {
+  void _textChangesHandler(ValueChanged<String>? onTextChangeListener) {
     final value = widget.controller?.text;
     if (onTextChangeListener != null) {
       onTextChangeListener(value ?? '');

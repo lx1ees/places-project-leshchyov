@@ -8,13 +8,12 @@ import 'package:places/domain/search_history_manager.dart';
 import 'package:places/ui/widgets/custom_divider.dart';
 import 'package:places/ui/widgets/custom_icon_button.dart';
 import 'package:places/ui/widgets/custom_text_button.dart';
-import 'package:places/utils/typedefs.dart';
 
 /// Виджет, отображающий список историю поиска с обработчиком нажатия [onHistoryPressed]
 /// [searchHistoryManager] - менеджер истории поиска
 class SightSearchHistoryList extends StatefulWidget {
   final SearchHistoryManager searchHistoryManager;
-  final OnTextPressed onHistoryPressed;
+  final ValueChanged<String> onHistoryPressed;
 
   const SightSearchHistoryList({
     required this.searchHistoryManager,
@@ -28,11 +27,13 @@ class SightSearchHistoryList extends StatefulWidget {
 
 class _SightSearchHistoryListState extends State<SightSearchHistoryList> {
   late final ScrollController _scrollController;
+  late final SearchHistoryManager _searchHistoryManager;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    _searchHistoryManager = widget.searchHistoryManager;
   }
 
   @override
@@ -44,8 +45,7 @@ class _SightSearchHistoryListState extends State<SightSearchHistoryList> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final searchHistoryManager = widget.searchHistoryManager;
-    final history = searchHistoryManager.load();
+    final history = _searchHistoryManager.load();
 
     if (history.isNotEmpty) {
       return Padding(
@@ -88,7 +88,7 @@ class _SightSearchHistoryListState extends State<SightSearchHistoryList> {
                         ),
                         padding: EdgeInsets.zero,
                         onPressed: () {
-                          searchHistoryManager.remove(history[index]);
+                          _searchHistoryManager.remove(history[index]);
                           setState(() {});
                         },
                       ),
@@ -109,7 +109,7 @@ class _SightSearchHistoryListState extends State<SightSearchHistoryList> {
                 label: AppStrings.clearHistory,
                 foregroundColor: colorScheme.secondary,
                 onPressed: () {
-                  searchHistoryManager.clearHistory();
+                  _searchHistoryManager.clearHistory();
                   setState(() {});
                 },
               ),

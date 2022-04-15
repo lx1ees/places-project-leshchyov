@@ -5,7 +5,6 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/ui/widgets/custom_focus_manager.dart';
 import 'package:places/ui/widgets/focus_manager_holder.dart';
-import 'package:places/utils/typedefs.dart';
 
 /// Кастомный виджет TextField с заголовком [title] над полем ввода, подсказкой
 /// [hint], обработчиком ввода текста [onTextChange], кнопкой подтверждения ввода
@@ -15,7 +14,7 @@ import 'package:places/utils/typedefs.dart';
 class CustomTextField extends StatefulWidget {
   final String title;
   final String? hint;
-  final OnTextChanged? onTextChange;
+  final ValueChanged<String>? onTextChange;
   final TextInputAction? textInputAction;
   final bool isMultiline;
   final TextInputType textInputType;
@@ -199,7 +198,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _textChangesHandler(widget.onTextChange);
   }
 
-  void _textChangesHandler(OnTextChanged? onTextChangeListener) {
+  void _textChangesHandler(ValueChanged<String>? onTextChangeListener) {
     final value = _controller.text;
     errorText = null;
     if (onTextChangeListener != null) {

@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/ui/screen/res/themes.dart';
+import 'package:places/ui/widgets/image_placeholder.dart';
 
 /// Виджет для отображения верхней части карточки достопримечательности
 /// с информацией о типе [type] и картинкой по ссылке [url]
 class SightCardTop extends StatelessWidget {
   final String type;
-  final String url;
+  final String? url;
 
   const SightCardTop({
     required this.type,
-    required this.url,
+    this.url,
     Key? key,
   }) : super(key: key);
 
@@ -26,19 +27,24 @@ class SightCardTop extends StatelessWidget {
         child: SizedBox(
           height: AppConstants.sightCardImageHeight,
           width: double.infinity,
-          child: Image.network(
-            url,
-            fit: BoxFit.cover,
-            loadingBuilder: (_, child, loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }
+          child: url != null
+              ? Image.network(
+                  url ?? '',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) {
+                    return const ImagePlaceholder();
+                  },
+                  loadingBuilder: (_, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
 
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                )
+              : const ImagePlaceholder(),
         ),
       ),
       Row(

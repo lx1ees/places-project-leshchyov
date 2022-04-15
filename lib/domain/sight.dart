@@ -1,4 +1,3 @@
-import 'package:places/constants/app_assets.dart';
 import 'package:places/domain/location_point.dart';
 import 'package:places/domain/sight_category.dart';
 
@@ -11,7 +10,7 @@ import 'package:places/domain/sight_category.dart';
 class Sight {
   final String name;
   final LocationPoint point;
-  final String url;
+  final String? url;
   final String details;
   final SightCategory category;
 
@@ -20,6 +19,6 @@ class Sight {
     required this.point,
     required this.details,
     required this.category,
-    String? url,
-  }) : url = url ?? AppAssets.imagePlaceholderUrl;
+    this.url,
+  });
 }

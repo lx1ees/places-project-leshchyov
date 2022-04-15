@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/sight.dart';
+import 'package:places/ui/widgets/image_placeholder.dart';
 import 'package:places/utils/string_utils.dart';
 
 /// Виджет плитки найденного места для окна поиска мест
@@ -40,19 +41,24 @@ class SightSearchTile extends StatelessWidget {
               child: SizedBox(
                 width: AppConstants.searchTileImageSize,
                 height: AppConstants.searchTileImageSize,
-                child: Image.network(
-                  sight.url,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (_, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
+                child: sight.url != null
+                    ? Image.network(
+                        sight.url ?? '',
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) {
+                          return const ImagePlaceholder();
+                        },
+                        loadingBuilder: (_, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
 
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      )
+                    : const ImagePlaceholder(),
               ),
             ),
             const SizedBox(width: AppConstants.defaultPadding),
