@@ -3,6 +3,7 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
+import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/custom_tab_bar.dart';
 import 'package:places/ui/screen/no_items_placeholder.dart';
@@ -20,11 +21,15 @@ class VisitingScreen extends StatefulWidget {
 
 class _VisitingScreenState extends State<VisitingScreen>
     with TickerProviderStateMixin {
-  late TabController _tabController;
+  late final TabController _tabController;
+  final List<Sight> _toVisitSights = [];
+  final List<Sight> _visitedSights = [];
 
   @override
   void initState() {
     super.initState();
+    _toVisitSights.addAll(sightsMock.take(3));
+    _visitedSights.addAll(sightsMock.reversed.take(3));
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() => setState(() {}));
   }
@@ -65,12 +70,16 @@ class _VisitingScreenState extends State<VisitingScreen>
           controller: _tabController,
           children: [
             SightList(
-              sightCards: sightsMock
+              sightCards: _toVisitSights
                   .map((sight) => SightToVisitCard(
+                        key: ObjectKey(sight),
                         sight: sight,
                         dateOfVisit: DateTime.now(),
                         onPlanPressed: () {},
-                        onDeletePressed: () {},
+                        onDeletePressed: () => _deleteSight(
+                          sightToRemove: sight,
+                          source: _toVisitSights,
+                        ),
                         onCardTapped: () {},
                       ))
                   .toList(),
@@ -81,12 +90,16 @@ class _VisitingScreenState extends State<VisitingScreen>
               ),
             ),
             SightList(
-              sightCards: sightsMock
+              sightCards: _visitedSights
                   .map((sight) => SightVisitedCard(
+                        key: ObjectKey(sight),
                         sight: sight,
                         dateOfVisit: DateTime.now(),
                         onSharePressed: () {},
-                        onDeletePressed: () {},
+                        onDeletePressed: () => _deleteSight(
+                          sightToRemove: sight,
+                          source: _visitedSights,
+                        ),
                         onCardTapped: () {},
                       ))
                   .toList(),
@@ -100,5 +113,14 @@ class _VisitingScreenState extends State<VisitingScreen>
         ),
       ),
     );
+  }
+
+  void _deleteSight({
+    required Sight sightToRemove,
+    required List<Sight> source,
+  }) {
+    setState(() {
+      source.removeWhere((sight) => sight == sightToRemove);
+    });
   }
 }
