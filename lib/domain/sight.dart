@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:places/domain/location_point.dart';
 import 'package:places/domain/sight_category.dart';
 
@@ -7,12 +8,15 @@ import 'package:places/domain/sight_category.dart';
 /// [url] - путь на картинку достопримечательности в интернете
 /// [details] - полное описание достопримечательности
 /// [category] - категория достопримечательности
-class Sight {
+class Sight extends Equatable{
   final String name;
   final LocationPoint point;
   final String? url;
   final String details;
   final SightCategory category;
+
+  @override
+  List<Object?> get props => [name, point, url, details, category];
 
   const Sight({
     required this.name,
