@@ -11,11 +11,13 @@ class NoItemsPlaceholder extends StatelessWidget {
   final String? iconPath;
   final String title;
   final String? subtitle;
+  final bool isBigIcon;
 
   const NoItemsPlaceholder({
     required this.title,
     this.subtitle,
     this.iconPath,
+    this.isBigIcon = true,
     Key? key,
   }) : super(key: key);
 
@@ -34,10 +36,13 @@ class NoItemsPlaceholder extends StatelessWidget {
           visible: isIconPathProvided,
           child: Padding(
             padding:
-                const EdgeInsets.only(bottom: AppConstants.defaultPaddingX2),
+                const EdgeInsets.only(bottom: AppConstants.defaultPaddingX1_5),
             child: SvgPicture.asset(
               iconPath ?? '',
               color: colorScheme.background,
+              width: isBigIcon
+                  ? AppConstants.defaultIconBigSize
+                  : AppConstants.defaultIconSize,
             ),
           ),
         ),
@@ -49,8 +54,7 @@ class NoItemsPlaceholder extends StatelessWidget {
         ),
         Visibility(
           visible: isSubtitleProvided,
-          child: Container(
-            width: AppConstants.placeholderNoItemsSubtitleWidth,
+          child: Padding(
             padding:
                 const EdgeInsets.only(top: AppConstants.defaultPaddingX0_5),
             child: Text(

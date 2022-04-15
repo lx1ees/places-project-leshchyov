@@ -21,4 +21,10 @@ class AppAssets {
   static const String settingsIcon = 'res/images/settings_icon.svg';
   static const String settingsFullIcon = 'res/images/settings_full_icon.svg';
   static const String infoIcon = 'res/images/info_icon.svg';
+  static const String clearIcon = 'res/images/clear_icon.svg';
+  static const String plusIcon = 'res/images/plus_icon.svg';
+  static const String searchIcon = 'res/images/search_icon.svg';
+  static const String filterIcon = 'res/images/filter_icon.svg';
+  static const String deleteIcon = 'res/images/delete_icon.svg';
+  static const String photoIcon = 'res/images/photo_icon.svg';
 }

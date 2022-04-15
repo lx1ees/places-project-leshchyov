@@ -22,7 +22,9 @@ class FilterScreenAppBar extends StatelessWidget
   Widget build(BuildContext context) {
     return AppBar(
       leading: CustomIconButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pop(context);
+        },
         icon: const Icon(
           Icons.arrow_back_ios_rounded,
           size: AppConstants.defaultIcon2Size,

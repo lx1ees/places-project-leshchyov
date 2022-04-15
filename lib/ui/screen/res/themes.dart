@@ -14,6 +14,7 @@ class AppTheme {
       colorScheme: theme.colorScheme.copyWith(
         background: AppColors.inactiveBlackColor,
         secondary: AppColors.greenColor,
+        surfaceVariant: AppColors.yellowColor,
         secondaryContainer: AppColors.secondary2Color,
         onPrimary: AppColors.secondaryColor,
         primary: AppColors.mainColor,
@@ -54,8 +55,10 @@ class AppTheme {
           elevation: 6,
           enabledThumbRadius: 8,
         ),
-        // overlayShape: SliderComponentShape.noO,
       ),
+      // inputDecorationTheme: theme.inputDecorationTheme.copyWith(
+      //   isDense:
+      // )
     );
   }
 
@@ -70,6 +73,7 @@ class AppTheme {
       colorScheme: theme.colorScheme.copyWith(
         background: AppColors.inactiveBlackColor,
         secondary: AppColors.greenDarkColor,
+        surfaceVariant: AppColors.yellowDarkColor,
         secondaryContainer: AppColors.secondary2Color,
         onPrimary: AppColors.whiteColor,
         primary: AppColors.whiteColor,
@@ -110,7 +114,6 @@ class AppTheme {
           elevation: 6,
           enabledThumbRadius: 8,
         ),
-        // overlayShape: SliderComponentShape.noOverlay,
       ),
     );
   }

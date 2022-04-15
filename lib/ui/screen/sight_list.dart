@@ -34,8 +34,8 @@ class SightList extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.defaultPadding,
         ),
-        child: Column(
-          children: sightCards
+        child: Column(children: [
+          ...sightCards
               .map(
                 (sightCard) => Column(
                   children: [
@@ -45,7 +45,8 @@ class SightList extends StatelessWidget {
                 ),
               )
               .toList(),
-        ),
+          const SizedBox(height: AppConstants.defaultPaddingX4),
+        ]),
       ),
     );
   }

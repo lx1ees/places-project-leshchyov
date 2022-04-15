@@ -9,7 +9,7 @@ import 'package:places/ui/screen/sight_details_screen/sight_details_image_galler
 import 'package:places/ui/screen/sight_details_screen/sight_details_title.dart';
 import 'package:places/ui/widgets/custom_elevated_button.dart';
 import 'package:places/ui/widgets/custom_icon_with_background_button.dart';
-import 'package:places/ui/widgets/custom_text_button.dart';
+import 'package:places/ui/widgets/custom_text_icon_button.dart';
 
 /// Виджет-окно для отображения полной информации о [sight] достопримечательности
 /// и выполнения действий с ней
@@ -67,7 +67,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: CustomTextButton(
+                            child: CustomTextIconButton(
                               label:
                                   AppStrings.sightDetailsPlanActionButtonTitle,
                               icon: SvgPicture.asset(
@@ -77,7 +77,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                             ),
                           ),
                           Expanded(
-                            child: CustomTextButton(
+                            child: CustomTextIconButton(
                               label:
                                   AppStrings.sightDetailsInFavActionButtonTitle,
                               icon: SvgPicture.asset(
@@ -103,7 +103,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                 size: AppConstants.defaultButtonIconSize,
                 color: colorScheme.onPrimary,
               ),
-              onPressed: () {},
+              onPressed: () => Navigator.pop(context),
             ),
           ),
         ],

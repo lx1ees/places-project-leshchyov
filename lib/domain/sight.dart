@@ -10,15 +10,15 @@ import 'package:places/domain/sight_category.dart';
 class Sight {
   final String name;
   final LocationPoint point;
-  final String url;
+  final String? url;
   final String details;
   final SightCategory category;
 
   const Sight({
     required this.name,
     required this.point,
-    required this.url,
     required this.details,
     required this.category,
+    this.url,
   });
 }
