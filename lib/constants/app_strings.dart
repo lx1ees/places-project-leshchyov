@@ -11,6 +11,7 @@ class AppStrings {
   static const String cancel = 'Отмена';
   static const String enterTextHint = 'введите текст';
   static const String error = 'Ошибка';
+  static const String delete = 'Удалить';
 
   /// Тексты ошибок
   static const String errorNotFilled = 'Поле должно быть заполненным';

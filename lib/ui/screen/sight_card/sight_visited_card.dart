@@ -11,13 +11,14 @@ class SightVisitedCard extends SightCard {
     required DateTime dateOfVisit,
     required VoidCallback onDeletePressed,
     required VoidCallback onSharePressed,
+    required Key key,
     VoidCallback? onCardTapped,
-    Key? key,
   }) : super(
           sight: sight,
           isVisitable: true,
           isVisited: true,
           dateOfVisit: dateOfVisit,
+          onDelete: onDeletePressed,
           actionButtons: SightVisitedCardActionButtons(
             onDeletePressed: onDeletePressed,
             onSharePressed: onSharePressed,

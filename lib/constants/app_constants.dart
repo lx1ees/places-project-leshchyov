@@ -34,6 +34,8 @@ class AppConstants {
   static const double defaultElevatedButtonHeight = 48;
   static const double defaultTextButtonHeight = 40;
   static const double defaultAppBarButtonLeadingWidth = 90;
+  static const double cardDragFeedbackWidth = 300;
+  static const double cardDragFeedbackHeight = 200;
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;
@@ -55,4 +57,7 @@ class AppConstants {
   /// Константы окна поиска
   static const double searchTileImageSize = 56;
   static const double separatorStartIndent = 88;
+
+  /// Константы добавления нового места
+  static const double addNewSightImageSize = 72;
 }
