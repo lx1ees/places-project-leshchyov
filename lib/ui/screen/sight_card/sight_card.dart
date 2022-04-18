@@ -45,11 +45,6 @@ class SightCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppConstants.defaultPadding),
       child: Stack(
         children: [
-          /// Пришлось сделать костыльный бэкграунд, иначе средставми стандартного
-          /// background у Dismissible у меня не получилось сделать так, чтобы
-          /// учитывались закругленные углы. С таким решением бэкграунд не схлопывается
-          /// с анимацией как стандартный background, но если это критично, то
-          /// сделаю свою анимацию схлопывания.
           const SightCardDismissBackground(),
           Dismissible(
             key: key ?? UniqueKey(),
