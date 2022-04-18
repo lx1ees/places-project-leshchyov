@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
@@ -20,25 +22,30 @@ class AddImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
+    final scrollPhysics = Platform.isAndroid
+        ? const ClampingScrollPhysics()
+        : const BouncingScrollPhysics();
+
+    return SizedBox(
+      height: AppConstants.addNewSightImageSize,
+      child: ListView(
+        shrinkWrap: true,
+        physics: scrollPhysics,
+        scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.only(
           left: AppConstants.defaultPadding,
         ),
-        child: Row(
-          children: [
-            NewImagePlusCard(onPressed: onAddImagePressed),
-            const SizedBox(width: AppConstants.defaultPadding),
-            ...images
-                .mapIndexed((index, path) => NewImageCard(
-                      key: UniqueKey(),
-                      path: path,
-                      onDelete: () => onDeleteImagePressed(index),
-                    ))
-                .toList(),
-          ],
-        ),
+        children: [
+          NewImagePlusCard(onPressed: onAddImagePressed),
+          const SizedBox(width: AppConstants.defaultPadding),
+          ...images
+              .mapIndexed((index, path) => NewImageCard(
+                    key: UniqueKey(),
+                    path: path,
+                    onDelete: () => onDeleteImagePressed(index),
+                  ))
+              .toList(),
+        ],
       ),
     );
   }

@@ -1,4 +1,5 @@
-import 'package:collection/collection.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/ui/screen/sight_card/sight_card.dart';
@@ -25,6 +26,9 @@ class SightList extends StatelessWidget {
     final isEmptyListPlaceholderProvided = emptyListPlaceholder != null;
     final isDraggable = onDragComplete != null;
     final onDragAccepted = onDragComplete ?? (_, __) {};
+    final scrollPhysics = Platform.isAndroid
+        ? const ClampingScrollPhysics()
+        : const BouncingScrollPhysics();
 
     if (isListEmpty) {
       if (isEmptyListPlaceholderProvided) {
@@ -36,59 +40,46 @@ class SightList extends StatelessWidget {
       return const SizedBox();
     }
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.defaultPadding,
-        ),
-        child: Builder(
-          builder: (context) {
-            if (!isDraggable) {
-              return Column(children: [
-                ...sightCards
-                    .map(
-                      (sightCard) => sightCard,
-                    )
-                    .toList(),
-                const SizedBox(height: AppConstants.defaultPaddingX4),
-              ]);
-            }
-
-            return Column(children: [
-              ...sightCards
-                  .mapIndexed(
-                    (index, sightCard) => LongPressDraggable<int>(
-                      data: index,
-                      feedback: SizedBox(
-                        height: AppConstants.cardDragFeedbackHeight,
-                        width: AppConstants.cardDragFeedbackWidth,
-                        child: sightCard,
-                      ),
-                      maxSimultaneousDrags: 1,
-                      childWhenDragging: const SizedBox.shrink(),
-                      child: DragTarget<int>(
-                        onAccept: (fromIndex) =>
-                            onDragAccepted(fromIndex, index),
-                        onWillAccept: (fromIndex) {
-                          return fromIndex != index;
-                        },
-                        builder: (
-                          context,
-                          candidateData,
-                          rejectedData,
-                        ) {
-                          return sightCard;
-                        },
-                        // child: sightCard,
-                      ),
-                    ),
-                  )
-                  .toList(),
-              const SizedBox(height: AppConstants.defaultPaddingX4),
-            ]);
-          },
-        ),
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(
+        AppConstants.defaultPadding,
+        0,
+        AppConstants.defaultPadding,
+        AppConstants.defaultPaddingX4,
       ),
+      itemCount: sightCards.length,
+      physics: scrollPhysics,
+      itemBuilder: (context, index) {
+        final currentSightCard = sightCards[index];
+        if (!isDraggable) {
+          return currentSightCard;
+        }
+
+        return LongPressDraggable<int>(
+          data: index,
+          feedback: SizedBox(
+            height: AppConstants.cardDragFeedbackHeight,
+            width: AppConstants.cardDragFeedbackWidth,
+            child: currentSightCard,
+          ),
+          maxSimultaneousDrags: 1,
+          childWhenDragging: const SizedBox.shrink(),
+          child: DragTarget<int>(
+            onAccept: (fromIndex) => onDragAccepted(fromIndex, index),
+            onWillAccept: (fromIndex) {
+              return fromIndex != index;
+            },
+            builder: (
+              context,
+              candidateData,
+              rejectedData,
+            ) {
+              return currentSightCard;
+            },
+            // child: sightCard,
+          ),
+        );
+      },
     );
   }
 }

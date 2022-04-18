@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
@@ -46,6 +48,9 @@ class _SightSearchHistoryListState extends State<SightSearchHistoryList> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final history = _searchHistoryManager.load();
+    final scrollPhysics = Platform.isAndroid
+        ? const ClampingScrollPhysics()
+        : const BouncingScrollPhysics();
 
     if (history.isNotEmpty) {
       return Padding(
@@ -70,6 +75,7 @@ class _SightSearchHistoryListState extends State<SightSearchHistoryList> {
                 child: ListView.separated(
                   itemCount: history.length,
                   shrinkWrap: true,
+                  physics: scrollPhysics,
                   controller: _scrollController,
                   itemBuilder: (_, index) {
                     return ListTile(

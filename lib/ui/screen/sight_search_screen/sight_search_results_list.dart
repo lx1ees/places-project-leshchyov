@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/domain/sight.dart';
@@ -20,10 +22,15 @@ class SightSearchResultsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scrollPhysics = Platform.isAndroid
+        ? const ClampingScrollPhysics()
+        : const BouncingScrollPhysics();
+
     return Padding(
       padding: const EdgeInsets.only(top: AppConstants.defaultPaddingX2),
       child: ListView.separated(
         itemCount: results.length,
+        physics: scrollPhysics,
         itemBuilder: (_, index) {
           return SightSearchTile(
             sight: results[index],
