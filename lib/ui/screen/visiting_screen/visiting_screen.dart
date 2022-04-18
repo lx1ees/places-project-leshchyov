@@ -22,14 +22,10 @@ class VisitingScreen extends StatefulWidget {
 class _VisitingScreenState extends State<VisitingScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  final List<Sight> _toVisitSights = [];
-  final List<Sight> _visitedSights = [];
 
   @override
   void initState() {
     super.initState();
-    _toVisitSights.addAll(sightsMock.take(3));
-    _visitedSights.addAll(sightsMock.reversed.take(3));
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() => setState(() {}));
   }
@@ -70,7 +66,14 @@ class _VisitingScreenState extends State<VisitingScreen>
           controller: _tabController,
           children: [
             SightList(
-              sightCards: _toVisitSights
+              onDragComplete: (fromIndex, toIndex) {
+                _moveSight(
+                  index: toIndex,
+                  sightToMove: toVisitSights[fromIndex],
+                  source: toVisitSights,
+                );
+              },
+              sightCards: toVisitSights
                   .map((sight) => SightToVisitCard(
                         key: ObjectKey(sight),
                         sight: sight,
@@ -78,7 +81,7 @@ class _VisitingScreenState extends State<VisitingScreen>
                         onPlanPressed: () {},
                         onDeletePressed: () => _deleteSight(
                           sightToRemove: sight,
-                          source: _toVisitSights,
+                          source: toVisitSights,
                         ),
                         onCardTapped: () {},
                       ))
@@ -90,7 +93,14 @@ class _VisitingScreenState extends State<VisitingScreen>
               ),
             ),
             SightList(
-              sightCards: _visitedSights
+              onDragComplete: (fromIndex, toIndex) {
+                _moveSight(
+                  index: toIndex,
+                  sightToMove: visitedSights[fromIndex],
+                  source: visitedSights,
+                );
+              },
+              sightCards: visitedSights
                   .map((sight) => SightVisitedCard(
                         key: ObjectKey(sight),
                         sight: sight,
@@ -98,7 +108,7 @@ class _VisitingScreenState extends State<VisitingScreen>
                         onSharePressed: () {},
                         onDeletePressed: () => _deleteSight(
                           sightToRemove: sight,
-                          source: _visitedSights,
+                          source: visitedSights,
                         ),
                         onCardTapped: () {},
                       ))
@@ -121,6 +131,21 @@ class _VisitingScreenState extends State<VisitingScreen>
   }) {
     setState(() {
       source.removeWhere((sight) => sight == sightToRemove);
+    });
+  }
+
+  /// Метод перемещения картчочки в списке
+  /// [index] - позиция, куда переместить
+  /// [sightToMove] - объект перемещения
+  /// [source] - список, где производится перемещение
+  void _moveSight({
+    required int index,
+    required Sight sightToMove,
+    required List<Sight> source,
+  }) {
+    setState(() {
+      _deleteSight(sightToRemove: sightToMove, source: source);
+      source.insert(index, sightToMove);
     });
   }
 }

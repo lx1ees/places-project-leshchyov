@@ -78,6 +78,9 @@ List<Sight> sightsMock = [
   ),
 ];
 
+final List<Sight> toVisitSights = [...sightsMock.take(3)];
+final List<Sight> visitedSights = [...sightsMock.reversed.take(3)];
+
 const List<SightCategory> categoriesMock = [
   SightCategory(
     id: AppStrings.hotelCategoryId,

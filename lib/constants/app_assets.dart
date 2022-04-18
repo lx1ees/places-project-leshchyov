@@ -27,4 +27,8 @@ class AppAssets {
   static const String filterIcon = 'res/images/filter_icon.svg';
   static const String deleteIcon = 'res/images/delete_icon.svg';
   static const String photoIcon = 'res/images/photo_icon.svg';
+  static const String newImageMock = 'res/images/new_image_mock.jpg';
+  static const String newImageMock2 = 'res/images/new_image_mock_2.jpg';
+  static const String newImageMock3 = 'res/images/new_image_mock_3.jpg';
+  static const String bucketIcon = 'res/images/bucket_icon.svg';
 }

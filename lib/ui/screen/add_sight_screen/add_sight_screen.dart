@@ -1,10 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/location_point.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/domain/sight_category.dart';
 import 'package:places/mocks.dart';
+import 'package:places/ui/screen/add_sight_screen/add_image_section.dart';
 import 'package:places/ui/screen/add_sight_screen/add_new_sight_button.dart';
 import 'package:places/ui/screen/add_sight_screen/add_sight_screen_app_bar.dart';
 import 'package:places/ui/screen/add_sight_screen/select_category_screen.dart';
@@ -24,6 +28,7 @@ class AddSightScreen extends StatefulWidget {
 
 class _AddSightScreenState extends State<AddSightScreen> {
   final _formKey = GlobalKey<FormState>();
+  final List<String> _imagePaths = [];
   SightCategory? _category;
   String? _name;
   double? _lat;
@@ -48,6 +53,20 @@ class _AddSightScreenState extends State<AddSightScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                    AddImageSection(
+                      images: _imagePaths,
+                      onAddImagePressed: () {
+                        setState(() {
+                          _imagePaths.add(_randomImage());
+                        });
+                      },
+                      onDeleteImagePressed: (index) {
+                        setState(() {
+                          _imagePaths.removeAt(index);
+                        });
+                      },
+                    ),
                     const SizedBox(height: AppConstants.defaultPaddingX1_5),
                     SelectCategorySection(
                       selectedCategoryName: _category?.name,
@@ -253,5 +272,16 @@ class _AddSightScreenState extends State<AddSightScreen> {
     );
 
     return result;
+  }
+
+  /// Временный метод, который возвращает рандомную заглушку картинки места
+  String _randomImage() {
+    final images = [
+      AppAssets.newImageMock,
+      AppAssets.newImageMock2,
+      AppAssets.newImageMock3,
+    ];
+
+    return images[Random().nextInt(images.length)];
   }
 }
