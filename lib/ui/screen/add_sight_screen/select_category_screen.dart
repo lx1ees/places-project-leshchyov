@@ -41,9 +41,6 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final scrollPhysics = Platform.isAndroid
-        ? const ClampingScrollPhysics()
-        : const BouncingScrollPhysics();
 
     return WillPopScope(
       onWillPop: () {
@@ -78,7 +75,6 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
               padding:
                   const EdgeInsets.only(top: AppConstants.defaultPaddingX1_5),
               child: ListView.separated(
-                physics: scrollPhysics,
                 itemBuilder: (_, index) {
                   return Padding(
                     padding: EdgeInsets.only(

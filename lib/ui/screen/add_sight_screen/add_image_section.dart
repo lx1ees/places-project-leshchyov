@@ -22,15 +22,10 @@ class AddImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scrollPhysics = Platform.isAndroid
-        ? const ClampingScrollPhysics()
-        : const BouncingScrollPhysics();
-
     return SizedBox(
       height: AppConstants.addNewSightImageSize,
       child: ListView(
         shrinkWrap: true,
-        physics: scrollPhysics,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.only(
           left: AppConstants.defaultPadding,

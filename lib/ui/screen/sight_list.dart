@@ -26,9 +26,6 @@ class SightList extends StatelessWidget {
     final isEmptyListPlaceholderProvided = emptyListPlaceholder != null;
     final isDraggable = onDragComplete != null;
     final onDragAccepted = onDragComplete ?? (_, __) {};
-    final scrollPhysics = Platform.isAndroid
-        ? const ClampingScrollPhysics()
-        : const BouncingScrollPhysics();
 
     if (isListEmpty) {
       if (isEmptyListPlaceholderProvided) {
@@ -48,7 +45,6 @@ class SightList extends StatelessWidget {
         AppConstants.defaultPaddingX4,
       ),
       itemCount: sightCards.length,
-      physics: scrollPhysics,
       itemBuilder: (context, index) {
         final currentSightCard = sightCards[index];
         if (!isDraggable) {
