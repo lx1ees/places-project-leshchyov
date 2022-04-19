@@ -37,7 +37,7 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                SightDetailsImageGallery(url: sight.url),
+                SightDetailsImageGallery(urls: sight.urls),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppConstants.defaultPadding,
