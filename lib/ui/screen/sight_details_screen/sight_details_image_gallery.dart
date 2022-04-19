@@ -50,11 +50,12 @@ class _SightDetailsImageGalleryState extends State<SightDetailsImageGallery> {
       child: widget.urls.isNotEmpty
           ? Stack(
               children: [
-                PageView(
+                PageView.builder(
                   controller: _pageController,
-                  children: widget.urls.map((url) {
+                  itemCount: widget.urls.length,
+                  itemBuilder: (context, index) {
                     return Image.network(
-                      url,
+                      widget.urls[index],
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) {
                         return const ImagePlaceholder();
@@ -69,7 +70,7 @@ class _SightDetailsImageGalleryState extends State<SightDetailsImageGallery> {
                         );
                       },
                     );
-                  }).toList(),
+                  },
                 ),
                 Positioned(
                   bottom: 0,

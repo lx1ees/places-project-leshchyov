@@ -85,7 +85,7 @@ List<Sight> sightsMock = [
     name: 'Дом купца Тетюшинова Г.В.',
     point: const LocationPoint(lat: 46.35500666438446, lon: 48.04372892883719),
     urls: const [
-      // 'https://prousadbi.ru/wp-content/uploads/2014/03/113c2c15557d.jpg',
+      'https://prousadbi.ru/wp-content/uploads/2014/03/113c2c15557d.jpg',
     ],
     details:
         'Музейно-культурный центр "Дом купца Тетюшинова" расположился в резном деревянном тереме по ул. Коммунистической. Это единственный образец деревянного зодчества XIX века, сохранившийся во всем Нижнем Поволжье.',

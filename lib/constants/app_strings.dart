@@ -12,6 +12,7 @@ class AppStrings {
   static const String enterTextHint = 'введите текст';
   static const String error = 'Ошибка';
   static const String delete = 'Удалить';
+  static const String skip = 'Пропустить';
 
   /// Тексты ошибок
   static const String errorNotFilled = 'Поле должно быть заполненным';
@@ -75,8 +76,20 @@ class AppStrings {
   /// Тексты окна поиска мест
   static const String searchTitle = 'Поиск';
   static const String noSearchResultsPlaceholder = 'Ничего не найдено.';
-  static const String noSearchResultsPlaceholderHint = 'Попробуйте изменить параметры\nпоиска';
+  static const String noSearchResultsPlaceholderHint =
+      'Попробуйте изменить параметры\nпоиска';
   static const String historyTitle = 'ВЫ ИСКАЛИ';
   static const String clearHistory = 'Очистить историю';
 
+  /// Тексты окна онбординга
+  static const String tutorial1Title = 'Добро пожаловать\nв Путеводитель';
+  static const String tutorial2Title = 'Построй маршрут\nи отправляйся в путь';
+  static const String tutorial3Title = 'Добавляй места,\nкоторые нашёл сам';
+  static const String tutorial1Subtitle =
+      'Ищи новые локации и сохраняй\nсамые любимые.';
+  static const String tutorial2Subtitle =
+      'Достигай цели максимально\nбыстро и комфортно.';
+  static const String tutorial3Subtitle =
+      'Делись самыми интересными\nи помоги нам стать лучше!';
+  static const String startButtonTitle = 'НА СТАРТ';
 }

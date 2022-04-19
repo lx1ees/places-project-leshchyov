@@ -62,4 +62,9 @@ class AppConstants {
 
   /// Константы добавления нового места
   static const double addNewSightImageSize = 72;
+
+  /// Константы онбординга
+  static const double onboardingIconBottomMargin = 40;
+  static const double onboardingActiveIndicatorWidth = 24;
+  static const double indicatorStartIndent = 88;
 }
