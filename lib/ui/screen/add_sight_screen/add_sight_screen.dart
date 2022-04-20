@@ -44,151 +44,153 @@ class _AddSightScreenState extends State<AddSightScreen> {
       appBar: AddSightScreenAppBar(
         onCancel: () => Navigator.pop(context),
       ),
-      body: Stack(
-        children: [
-          Form(
-            key: _formKey,
-            child: FocusManagerHolder(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                    AddImageSection(
-                      images: _imagePaths,
-                      onAddImagePressed: () {
-                        setState(() {
-                          _imagePaths.add(_randomImage());
-                        });
-                      },
-                      onDeleteImagePressed: (index) {
-                        setState(() {
-                          _imagePaths.removeAt(index);
-                        });
-                      },
-                    ),
-                    const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                    SelectCategorySection(
-                      selectedCategoryName: _category?.name,
-                      onSelectCategoryPressed: () async {
-                        final selectedSightCategory =
-                            await _openCategorySelectionScreenAndGetCategory(
-                          context,
-                        );
-                        setState(() {
-                          _category = selectedSightCategory;
-                        });
-                      },
-                    ),
-                    const CustomDivider(hasIndent: true),
-                    const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.defaultPadding,
-                      ),
-                      child: CustomTextField(
-                        title: AppStrings.placeNameTitle,
-                        textInputAction: TextInputAction.go,
-                        onTextChange: (value) {
-                          _name = value;
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Form(
+              key: _formKey,
+              child: FocusManagerHolder(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                      AddImageSection(
+                        images: _imagePaths,
+                        onAddImagePressed: () {
+                          setState(() {
+                            _imagePaths.add(_randomImage());
+                          });
                         },
-                        validator: _validateText,
-                      ),
-                    ),
-                    const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.defaultPadding,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: CustomTextField(
-                              title: AppStrings.placeLatTitle,
-                              textInputType: TextInputType.number,
-                              textInputAction: TextInputAction.go,
-                              onTextChange: (value) {
-                                _lat = double.tryParse(value);
-                              },
-                              validator: _validateNumber,
-                            ),
-                          ),
-                          const SizedBox(width: AppConstants.defaultPadding),
-                          Expanded(
-                            child: CustomTextField(
-                              title: AppStrings.placeLonTitle,
-                              textInputType: TextInputType.number,
-                              textInputAction: TextInputAction.go,
-                              onTextChange: (value) {
-                                _lon = double.tryParse(value);
-                              },
-                              validator: _validateNumber,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.defaultPadding,
-                      ),
-                      child: CustomTextButton(
-                        label: AppStrings.pointLocationOnMap,
-                        foregroundColor: colorScheme.secondary,
-                        onPressed: () {},
-                      ),
-                    ),
-                    const SizedBox(height: AppConstants.defaultPaddingX2_25),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.defaultPadding,
-                      ),
-                      child: CustomTextField(
-                        title: AppStrings.placeDetailsTitle,
-                        isMultiline: true,
-                        hint: AppStrings.enterTextHint,
-                        onTextChange: (value) {
-                          _details = value;
+                        onDeleteImagePressed: (index) {
+                          setState(() {
+                            _imagePaths.removeAt(index);
+                          });
                         },
-                        validator: _validateText,
                       ),
-                    ),
-                    const SizedBox(height: AppConstants.defaultPaddingX4),
-                  ],
+                      const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                      SelectCategorySection(
+                        selectedCategoryName: _category?.name,
+                        onSelectCategoryPressed: () async {
+                          final selectedSightCategory =
+                              await _openCategorySelectionScreenAndGetCategory(
+                            context,
+                          );
+                          setState(() {
+                            _category = selectedSightCategory;
+                          });
+                        },
+                      ),
+                      const CustomDivider(hasIndent: true),
+                      const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.defaultPadding,
+                        ),
+                        child: CustomTextField(
+                          title: AppStrings.placeNameTitle,
+                          textInputAction: TextInputAction.go,
+                          onTextChange: (value) {
+                            _name = value;
+                          },
+                          validator: _validateText,
+                        ),
+                      ),
+                      const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.defaultPadding,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: CustomTextField(
+                                title: AppStrings.placeLatTitle,
+                                textInputType: TextInputType.number,
+                                textInputAction: TextInputAction.go,
+                                onTextChange: (value) {
+                                  _lat = double.tryParse(value);
+                                },
+                                validator: _validateNumber,
+                              ),
+                            ),
+                            const SizedBox(width: AppConstants.defaultPadding),
+                            Expanded(
+                              child: CustomTextField(
+                                title: AppStrings.placeLonTitle,
+                                textInputType: TextInputType.number,
+                                textInputAction: TextInputAction.go,
+                                onTextChange: (value) {
+                                  _lon = double.tryParse(value);
+                                },
+                                validator: _validateNumber,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.defaultPadding,
+                        ),
+                        child: CustomTextButton(
+                          label: AppStrings.pointLocationOnMap,
+                          foregroundColor: colorScheme.secondary,
+                          onPressed: () {},
+                        ),
+                      ),
+                      const SizedBox(height: AppConstants.defaultPaddingX2_25),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.defaultPadding,
+                        ),
+                        child: CustomTextField(
+                          title: AppStrings.placeDetailsTitle,
+                          isMultiline: true,
+                          hint: AppStrings.enterTextHint,
+                          onTextChange: (value) {
+                            _details = value;
+                          },
+                          validator: _validateText,
+                        ),
+                      ),
+                      const SizedBox(height: AppConstants.defaultPaddingX4),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Visibility(
-            visible: !isKeyboardOpened,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: BottomScreenSubmitButton(
-                label: AppStrings.create,
-                onAddPressed: () {
-                  if ((_formKey.currentState?.validate() ?? false) &&
-                      _isAllFieldsFilledAndCorrect(
-                        category: _category,
-                        name: _name,
-                        lat: _lat,
-                        lon: _lon,
-                        details: _details,
-                      )) {
-                    _addNewPlace(
-                      category: _category!,
-                      name: _name!,
-                      lon: _lon!,
-                      lat: _lat!,
-                      details: _details!,
-                    );
-                    Navigator.pop(context);
-                  }
-                },
+            Visibility(
+              visible: !isKeyboardOpened,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: BottomScreenSubmitButton(
+                  label: AppStrings.create,
+                  onAddPressed: () {
+                    if ((_formKey.currentState?.validate() ?? false) &&
+                        _isAllFieldsFilledAndCorrect(
+                          category: _category,
+                          name: _name,
+                          lat: _lat,
+                          lon: _lon,
+                          details: _details,
+                        )) {
+                      _addNewPlace(
+                        category: _category!,
+                        name: _name!,
+                        lon: _lon!,
+                        lat: _lat!,
+                        details: _details!,
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

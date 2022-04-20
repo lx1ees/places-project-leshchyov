@@ -67,64 +67,66 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
         ),
-        body: Stack(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: AppConstants.defaultPaddingX1_5),
-              child: ListView.separated(
-                itemBuilder: (_, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      bottom: index == categoriesMock.length - 1
-                          ? AppConstants.defaultPaddingX4
-                          : 0,
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        categoriesMock[index].name,
-                        style: AppTypography.textRegularTextStyle.copyWith(
-                          color: colorScheme.primary,
-                        ),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: AppConstants.defaultPaddingX1_5),
+                child: ListView.separated(
+                  itemBuilder: (_, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: index == categoriesMock.length - 1
+                            ? AppConstants.defaultPaddingX4
+                            : 0,
                       ),
-                      trailing:
-                          newSelectedCategory?.id == categoriesMock[index].id
-                              ? Icon(
-                                  Icons.check_rounded,
-                                  color: colorScheme.secondary,
-                                  size: AppConstants.defaultIcon2Size,
-                                )
-                              : null,
-                      onTap: () {
-                        setState(() {
-                          newSelectedCategory = newSelectedCategory?.id ==
-                                  categoriesMock[index].id
-                              ? null
-                              : categoriesMock[index];
-                        });
-                      },
-                    ),
-                  );
-                },
-                separatorBuilder: (_, index) => const CustomDivider(
-                  hasIndent: true,
+                      child: ListTile(
+                        title: Text(
+                          categoriesMock[index].name,
+                          style: AppTypography.textRegularTextStyle.copyWith(
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                        trailing:
+                            newSelectedCategory?.id == categoriesMock[index].id
+                                ? Icon(
+                                    Icons.check_rounded,
+                                    color: colorScheme.secondary,
+                                    size: AppConstants.defaultIcon2Size,
+                                  )
+                                : null,
+                        onTap: () {
+                          setState(() {
+                            newSelectedCategory = newSelectedCategory?.id ==
+                                    categoriesMock[index].id
+                                ? null
+                                : categoriesMock[index];
+                          });
+                        },
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, index) => const CustomDivider(
+                    hasIndent: true,
+                  ),
+                  itemCount: categoriesMock.length,
                 ),
-                itemCount: categoriesMock.length,
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: BottomScreenSubmitButton(
-                label: AppStrings.save,
-                onAddPressed: newSelectedCategory != null
-                    ? () {
-                        selectedCategory = newSelectedCategory;
-                        Navigator.pop(context, selectedCategory);
-                      }
-                    : null,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: BottomScreenSubmitButton(
+                  label: AppStrings.save,
+                  onAddPressed: newSelectedCategory != null
+                      ? () {
+                          selectedCategory = newSelectedCategory;
+                          Navigator.pop(context, selectedCategory);
+                        }
+                      : null,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

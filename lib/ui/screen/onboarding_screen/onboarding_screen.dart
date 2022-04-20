@@ -57,80 +57,82 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
       ),
-      body: Stack(
-        children: [
-          PageView.builder(
-            itemCount: _onboardingItems.length,
-            onPageChanged: (pageNumber) => setState(() {
-              _currentPage = pageNumber;
-            }),
-            itemBuilder: (context, index) {
-              final onboardingItem = _onboardingItems[index];
+      body: SafeArea(
+        child: Stack(
+          children: [
+            PageView.builder(
+              itemCount: _onboardingItems.length,
+              onPageChanged: (pageNumber) => setState(() {
+                _currentPage = pageNumber;
+              }),
+              itemBuilder: (context, index) {
+                final onboardingItem = _onboardingItems[index];
 
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        onboardingItem.iconPath,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(
-                        height: AppConstants.onboardingIconBottomMargin,
-                      ),
-                      Text(
-                        onboardingItem.title,
-                        textAlign: TextAlign.center,
-                        style: AppTypography.titleTextStyle.copyWith(
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          onboardingItem.iconPath,
                           color: colorScheme.primary,
                         ),
-                      ),
-                      const SizedBox(height: AppConstants.defaultPaddingX0_5),
-                      Text(
-                        onboardingItem.subtitle,
-                        textAlign: TextAlign.center,
-                        style: AppTypography.smallTextStyle.copyWith(
-                          color: colorScheme.secondaryContainer,
+                        const SizedBox(
+                          height: AppConstants.onboardingIconBottomMargin,
                         ),
-                      ),
-                    ],
-                  ),
-                  Visibility(
-                    visible: index == _onboardingItems.length - 1,
-                    child: Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppConstants.defaultPaddingX0_5,
-                            horizontal: AppConstants.defaultPadding,
+                        Text(
+                          onboardingItem.title,
+                          textAlign: TextAlign.center,
+                          style: AppTypography.titleTextStyle.copyWith(
+                            color: colorScheme.primary,
                           ),
-                          child: CustomElevatedButton(
-                            label: AppStrings.startButtonTitle,
-                            onPressed: () => Navigator.of(context).pop(),
+                        ),
+                        const SizedBox(height: AppConstants.defaultPaddingX0_5),
+                        Text(
+                          onboardingItem.subtitle,
+                          textAlign: TextAlign.center,
+                          style: AppTypography.smallTextStyle.copyWith(
+                            color: colorScheme.secondaryContainer,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Visibility(
+                      visible: index == _onboardingItems.length - 1,
+                      child: Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppConstants.defaultPaddingX0_5,
+                              horizontal: AppConstants.defaultPadding,
+                            ),
+                            child: CustomElevatedButton(
+                              label: AppStrings.startButtonTitle,
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
-          ),
-          Positioned(
-            bottom: AppConstants.indicatorStartIndent,
-            left: 0,
-            right: 0,
-            child: OnboardingIndicatorLine(
-              currentPage: _currentPage,
-              numberOfSegments: _onboardingItems.length,
+                  ],
+                );
+              },
             ),
-          ),
-        ],
+            Positioned(
+              bottom: AppConstants.indicatorStartIndent,
+              left: 0,
+              right: 0,
+              child: OnboardingIndicatorLine(
+                currentPage: _currentPage,
+                numberOfSegments: _onboardingItems.length,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
