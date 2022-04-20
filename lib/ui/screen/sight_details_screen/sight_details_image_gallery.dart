@@ -46,7 +46,6 @@ class _SightDetailsImageGalleryState extends State<SightDetailsImageGallery> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: AppConstants.sightDetailsGalleryHeight,
       child: widget.urls.isNotEmpty
           ? Stack(
               children: [

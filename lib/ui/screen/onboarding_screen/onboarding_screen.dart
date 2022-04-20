@@ -43,7 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const SizedBox.shrink(),
+        automaticallyImplyLeading: false,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: AppConstants.defaultPadding),

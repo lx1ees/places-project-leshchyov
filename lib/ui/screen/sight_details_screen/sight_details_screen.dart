@@ -1,15 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/sight.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_description.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_image_gallery.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_screen_sliver_app_bar.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_title.dart';
 import 'package:places/ui/widgets/custom_elevated_button.dart';
 import 'package:places/ui/widgets/custom_icon_with_background_button.dart';
 import 'package:places/ui/widgets/custom_text_icon_button.dart';
+import 'package:places/utils/extensions.dart';
 
 /// Виджет-окно для отображения полной информации о [sight] достопримечательности
 /// и выполнения действий с ней
@@ -26,6 +31,14 @@ class SightDetailsScreen extends StatefulWidget {
 }
 
 class _SightDetailsScreenState extends State<SightDetailsScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final sight = widget.sight;
@@ -34,18 +47,21 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                SightDetailsImageGallery(urls: sight.urls),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.defaultPadding,
-                    vertical: AppConstants.defaultPaddingX1_5,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+          CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              SightDetailsScreenSliverAppBar(
+                sight: sight,
+                scrollController: _scrollController,
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.defaultPadding,
+                  vertical: AppConstants.defaultPaddingX1_5,
+                ),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
                       SightDetailsTitle(
                         name: sight.name,
                         type: sight.category.name,
@@ -91,11 +107,11 @@ class _SightDetailsScreenState extends State<SightDetailsScreen> {
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Positioned(
-            top: AppConstants.defaultPaddingX2,
+            top: AppConstants.defaultPaddingX3 + 4,
             left: AppConstants.defaultPaddingX0_5,
             child: CustomIconWithBackgroundButton(
               icon: Icon(

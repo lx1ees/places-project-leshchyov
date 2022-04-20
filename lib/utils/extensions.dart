@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:intl/intl.dart';
+import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 
 extension NullableDateTimeExtension on DateTime? {
@@ -26,4 +27,11 @@ extension NumExtensions on num {
   double toPrecision(int n) => double.parse(toStringAsFixed(n));
 
   bool get isWhole => this is int || this == roundToDouble();
+}
+
+extension StringExtensions on String {
+  /// Убирает все nbsp, для прерывания внутри слов при overflow текста
+  String get nbsp {
+    return replaceAll(AppConstants.space, AppConstants.nbsp);
+  }
 }

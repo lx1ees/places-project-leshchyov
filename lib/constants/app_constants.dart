@@ -1,6 +1,7 @@
 class AppConstants {
   /// Константы приложения
   static const double appbarHeight = 152;
+  static const double appbarHorizontalPadding = 72;
   static const double cardBorderRadius = 12.0;
   static const double buttonBorderRadius = 10.0;
   static const double button2BorderRadius = 12.0;
@@ -18,6 +19,8 @@ class AppConstants {
   static const double defaultPaddingX1_5 = 24;
   static const double defaultPaddingX2 = 32;
   static const double defaultPaddingX2_25 = 36;
+  static const double defaultPaddingX2_5 = 40;
+  static const double defaultPaddingX3 = 48;
   static const double defaultPaddingX4 = 64;
   static const double defaultButtonHorizontalPadding = 12;
   static const double defaultIconSize = 20;
@@ -38,6 +41,8 @@ class AppConstants {
   static const double defaultAppBarButtonLeadingWidth = 90;
   static const double cardDragFeedbackWidth = 300;
   static const double cardDragFeedbackHeight = 200;
+  static const String nbsp = '\u00A0';
+  static const String space = ' ';
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;
