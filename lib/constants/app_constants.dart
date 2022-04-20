@@ -7,6 +7,8 @@ class AppConstants {
   static const double button3BorderRadius = 24.0;
   static const double extendedFabHorizontalPadding = 22.0;
   static const double textFieldBorderRadius = 8.0;
+  static const double indicatorBorderRadius = 8.0;
+  static const double indicatorHeight = 8.0;
   static const double textField2BorderRadius = 12.0;
   static const double textFieldContentPadding = 10.0;
   static const double defaultPaddingX0_25 = 4;
@@ -60,4 +62,9 @@ class AppConstants {
 
   /// Константы добавления нового места
   static const double addNewSightImageSize = 72;
+
+  /// Константы онбординга
+  static const double onboardingIconBottomMargin = 40;
+  static const double onboardingActiveIndicatorWidth = 24;
+  static const double indicatorStartIndent = 88;
 }

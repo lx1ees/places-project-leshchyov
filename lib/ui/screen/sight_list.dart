@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/ui/screen/sight_card/sight_card.dart';

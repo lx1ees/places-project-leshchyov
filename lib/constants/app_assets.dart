@@ -15,7 +15,8 @@ class AppAssets {
   static const String hotelIcon = 'res/images/hotel_icon.svg';
   static const String museumIcon = 'res/images/museum_icon.svg';
   static const String parkIcon = 'res/images/park_icon.svg';
-  static const String particularPlaceIcon = 'res/images/particular_place_icon.svg';
+  static const String particularPlaceIcon =
+      'res/images/particular_place_icon.svg';
   static const String restaurantIcon = 'res/images/restaurant_icon.svg';
   static const String tickIcon = 'res/images/tick_icon.svg';
   static const String settingsIcon = 'res/images/settings_icon.svg';
@@ -31,4 +32,7 @@ class AppAssets {
   static const String newImageMock2 = 'res/images/new_image_mock_2.jpg';
   static const String newImageMock3 = 'res/images/new_image_mock_3.jpg';
   static const String bucketIcon = 'res/images/bucket_icon.svg';
+  static const String tutorial1Icon = 'res/images/tutorial_1_icon.svg';
+  static const String tutorial2Icon = 'res/images/tutorial_2_icon.svg';
+  static const String tutorial3Icon = 'res/images/tutorial_3_icon.svg';
 }

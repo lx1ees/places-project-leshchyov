@@ -40,6 +40,7 @@ class SightCard extends StatelessWidget {
         BorderRadius.circular(AppConstants.cardBorderRadius);
     final isDeletable = onDelete != null;
     final onDismiss = onDelete ?? () {};
+    final imageUrl = sight.urls.isNotEmpty ? sight.urls[0] : null;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppConstants.defaultPadding),
@@ -64,7 +65,7 @@ class SightCard extends StatelessWidget {
                       children: [
                         SightCardTop(
                           type: sight.category.name,
-                          url: sight.url,
+                          url: imageUrl,
                         ),
                         const SizedBox(height: AppConstants.defaultPadding),
                         SightCardBottom(

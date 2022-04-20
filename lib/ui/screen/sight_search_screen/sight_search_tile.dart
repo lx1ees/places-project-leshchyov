@@ -24,6 +24,7 @@ class SightSearchTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final imageUrl = sight.urls.isNotEmpty ? sight.urls[0] : null;
 
     return InkWell(
       onTap: onTap,
@@ -41,9 +42,9 @@ class SightSearchTile extends StatelessWidget {
               child: SizedBox(
                 width: AppConstants.searchTileImageSize,
                 height: AppConstants.searchTileImageSize,
-                child: sight.url != null
+                child: imageUrl != null
                     ? Image.network(
-                        sight.url ?? '',
+                        imageUrl,
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) {
                           return const ImagePlaceholder();

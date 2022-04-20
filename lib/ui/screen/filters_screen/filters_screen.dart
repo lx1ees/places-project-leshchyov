@@ -53,62 +53,64 @@ class _FiltersScreenState extends State<FiltersScreen> {
           setState(() {});
         },
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppConstants.defaultPadding,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                  CategoryFilterSection(
-                    onCategoryFilterTapped: (categoryFilterEntity, index) {
-                      localFiltersManager.updateCategoryFilter(
-                        index: index,
-                        categoryFilterEntity: categoryFilterEntity,
-                      );
-                      _filteredSights = localFiltersManager.applyFilters(
-                        sights: sightsMock,
-                      );
-                      setState(() {});
-                    },
-                    filtersManager: localFiltersManager,
-                  ),
-                  const SizedBox(height: AppConstants.defaultPaddingX2),
-                  DistanceFilterSection(
-                    filtersManager: localFiltersManager,
-                    onDistanceChanged: (values) {
-                      localFiltersManager
-                        ..distanceLeftThreshold = values.start
-                        ..distanceRightThreshold = values.end;
-                      setState(() {});
-                    },
-                    onDistanceChangeEnded: (values) {
-                      _filteredSights = localFiltersManager.applyFilters(
-                        sights: sightsMock,
-                      );
-                      setState(() {});
-                    },
-                  ),
-                  const SizedBox(height: AppConstants.defaultPaddingX4),
-                ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.defaultPadding,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                    CategoryFilterSection(
+                      onCategoryFilterTapped: (categoryFilterEntity, index) {
+                        localFiltersManager.updateCategoryFilter(
+                          index: index,
+                          categoryFilterEntity: categoryFilterEntity,
+                        );
+                        _filteredSights = localFiltersManager.applyFilters(
+                          sights: sightsMock,
+                        );
+                        setState(() {});
+                      },
+                      filtersManager: localFiltersManager,
+                    ),
+                    const SizedBox(height: AppConstants.defaultPaddingX2),
+                    DistanceFilterSection(
+                      filtersManager: localFiltersManager,
+                      onDistanceChanged: (values) {
+                        localFiltersManager
+                          ..distanceLeftThreshold = values.start
+                          ..distanceRightThreshold = values.end;
+                        setState(() {});
+                      },
+                      onDistanceChangeEnded: (values) {
+                        _filteredSights = localFiltersManager.applyFilters(
+                          sights: sightsMock,
+                        );
+                        setState(() {});
+                      },
+                    ),
+                    const SizedBox(height: AppConstants.defaultPaddingX4),
+                  ],
+                ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ShowFilteredListButton(
-              affectedSightsCount: _filteredSights.length,
-              onShow: () {
-                widget.filtersManager.updateWith(localFiltersManager);
-                Navigator.pop(context);
-              },
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ShowFilteredListButton(
+                affectedSightsCount: _filteredSights.length,
+                onShow: () {
+                  widget.filtersManager.updateWith(localFiltersManager);
+                  Navigator.pop(context);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

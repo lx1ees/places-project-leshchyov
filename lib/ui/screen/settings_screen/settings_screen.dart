@@ -6,6 +6,7 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/theme_mode_holder.dart';
+import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/widgets/custom_divider.dart';
 
 /// Экран с настройками
@@ -59,10 +60,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppConstants.defaultPadding,
             ),
+            onTap: () => _openOnboardingScreen(context),
           ),
           const CustomDivider(hasIndent: true),
         ],
       ),
     );
+  }
+
+  /// Метод открытия окна  с онбордингом
+  Future<void> _openOnboardingScreen(
+    BuildContext context,
+  ) async {
+    await Navigator.push<void>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const OnboardingScreen(),
+      ),
+    );
+
+    setState(() {});
   }
 }
