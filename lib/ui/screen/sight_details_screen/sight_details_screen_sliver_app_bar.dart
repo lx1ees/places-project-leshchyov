@@ -3,6 +3,7 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_image_gallery.dart';
+import 'package:places/ui/widgets/custom_icon_with_background_button.dart';
 import 'package:places/utils/extensions.dart';
 
 /// Аппбар для экрана деталей о месте
@@ -44,7 +45,15 @@ class _SightDetailsScreenSliverAppBarState
       pinned: true,
       stretch: true,
       elevation: 0,
-      leading: const SizedBox.shrink(),
+      // leading: const SizedBox.shrink(),
+      leading: CustomIconWithBackgroundButton(
+        icon: Icon(
+          Icons.arrow_back_ios_rounded,
+          size: AppConstants.defaultButtonIconSize,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
       expandedHeight: AppConstants.sightDetailsGalleryHeight,
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.only(
