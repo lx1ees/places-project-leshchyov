@@ -8,7 +8,6 @@ import 'package:places/ui/screen/sight_details_screen/sight_details_description.
 import 'package:places/ui/screen/sight_details_screen/sight_details_screen_sliver_app_bar.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_title.dart';
 import 'package:places/ui/widgets/custom_elevated_button.dart';
-import 'package:places/ui/widgets/custom_icon_with_background_button.dart';
 import 'package:places/ui/widgets/custom_text_icon_button.dart';
 
 /// Виджет-окно для отображения полной информации о [sight] достопримечательности
