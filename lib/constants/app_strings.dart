@@ -1,7 +1,6 @@
 class AppStrings {
   /// Тексты приложения
   static const String appTitle = 'Places';
-  static const String appBarTitle = 'Список\nинтересных мест';
   static const String prepositionFrom = 'от';
   static const String prepositionTo = 'до';
   static const String meter = 'м';
@@ -92,4 +91,10 @@ class AppStrings {
   static const String tutorial3Subtitle =
       'Делись самыми интересными\nи помоги нам стать лучше!';
   static const String startButtonTitle = 'НА СТАРТ';
+
+  /// Тексты окна со списком мест
+  static const String sightListAppBarTwoLineTitle = 'Список\nинтересных мест';
+  static const String sightListAppBarOneLineTitle = 'Список интересных мест';
+  static const String sightListAppBarFirstLineTitle = 'Список ';
+  static const String sightListAppBarSecondLineTitle = 'интересных мест';
 }

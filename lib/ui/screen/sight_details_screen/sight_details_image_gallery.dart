@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:places/constants/app_constants.dart';
 import 'package:places/ui/screen/sight_details_screen/indicator_line.dart';
 import 'package:places/ui/widgets/gallery_indicator.dart';
 import 'package:places/ui/widgets/image_placeholder.dart';

@@ -57,4 +57,10 @@ class AppTypography {
   static final TextStyle superSmallBoldTextStyle = superSmallTextStyle.copyWith(
     fontWeight: FontWeight.w500,
   );
+
+  static final TextStyle subtitleBoldTextStyle = subtitleTextStyle.copyWith(
+    fontWeight: FontWeight.w700,
+  );
+
+
 }

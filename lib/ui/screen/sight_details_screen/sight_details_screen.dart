@@ -1,20 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
-import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/sight.dart';
-import 'package:places/main.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_description.dart';
-import 'package:places/ui/screen/sight_details_screen/sight_details_image_gallery.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_screen_sliver_app_bar.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_title.dart';
 import 'package:places/ui/widgets/custom_elevated_button.dart';
 import 'package:places/ui/widgets/custom_icon_with_background_button.dart';
 import 'package:places/ui/widgets/custom_text_icon_button.dart';
-import 'package:places/utils/extensions.dart';
 
 /// Виджет-окно для отображения полной информации о [sight] достопримечательности
 /// и выполнения действий с ней
