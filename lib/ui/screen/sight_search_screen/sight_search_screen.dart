@@ -60,8 +60,8 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _searchStream.close();
+    super.dispose();
   }
 
   @override

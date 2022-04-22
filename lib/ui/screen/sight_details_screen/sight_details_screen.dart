@@ -5,10 +5,9 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_description.dart';
-import 'package:places/ui/screen/sight_details_screen/sight_details_image_gallery.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_screen_sliver_app_bar.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_title.dart';
 import 'package:places/ui/widgets/custom_elevated_button.dart';
-import 'package:places/ui/widgets/custom_icon_with_background_button.dart';
 import 'package:places/ui/widgets/custom_text_icon_button.dart';
 
 /// Виджет-окно для отображения полной информации о [sight] достопримечательности
@@ -26,84 +25,77 @@ class SightDetailsScreen extends StatefulWidget {
 }
 
 class _SightDetailsScreenState extends State<SightDetailsScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final sight = widget.sight;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                SightDetailsImageGallery(urls: sight.urls),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.defaultPadding,
-                    vertical: AppConstants.defaultPaddingX1_5,
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          SightDetailsScreenSliverAppBar(
+            sight: sight,
+            scrollController: _scrollController,
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppConstants.defaultPadding,
+              vertical: AppConstants.defaultPaddingX1_5,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  SightDetailsTitle(
+                    name: sight.name,
+                    type: sight.category.name,
+                    shortDescription: AppStrings.sightShortDescriptionMock,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                  SightDetailsDescription(description: sight.details),
+                  const SizedBox(height: AppConstants.defaultPaddingX1_5),
+                  CustomElevatedButton(
+                    onPressed: () {},
+                    label: AppStrings.sightDetailsRouteButtonTitle,
+                    icon: SvgPicture.asset(AppAssets.goIcon),
+                  ),
+                  const SizedBox(height: AppConstants.defaultPadding),
+                  const Divider(
+                    thickness: AppConstants.defaultDividerThickness,
+                    height: AppConstants.defaultPadding,
+                  ),
+                  Row(
                     children: [
-                      SightDetailsTitle(
-                        name: sight.name,
-                        type: sight.category.name,
-                        shortDescription: AppStrings.sightShortDescriptionMock,
-                      ),
-                      const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                      SightDetailsDescription(description: sight.details),
-                      const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                      CustomElevatedButton(
-                        onPressed: () {},
-                        label: AppStrings.sightDetailsRouteButtonTitle,
-                        icon: SvgPicture.asset(AppAssets.goIcon),
-                      ),
-                      const SizedBox(height: AppConstants.defaultPadding),
-                      const Divider(
-                        thickness: AppConstants.defaultDividerThickness,
-                        height: AppConstants.defaultPadding,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomTextIconButton(
-                              label:
-                                  AppStrings.sightDetailsPlanActionButtonTitle,
-                              icon: SvgPicture.asset(
-                                AppAssets.calendarIcon,
-                                color: colorScheme.onPrimary,
-                              ),
-                            ),
+                      Expanded(
+                        child: CustomTextIconButton(
+                          label: AppStrings.sightDetailsPlanActionButtonTitle,
+                          icon: SvgPicture.asset(
+                            AppAssets.calendarIcon,
+                            color: colorScheme.onPrimary,
                           ),
-                          Expanded(
-                            child: CustomTextIconButton(
-                              label:
-                                  AppStrings.sightDetailsInFavActionButtonTitle,
-                              icon: SvgPicture.asset(
-                                AppAssets.heartIcon,
-                                color: colorScheme.onPrimary,
-                              ),
-                            ),
+                        ),
+                      ),
+                      Expanded(
+                        child: CustomTextIconButton(
+                          label: AppStrings.sightDetailsInFavActionButtonTitle,
+                          icon: SvgPicture.asset(
+                            AppAssets.heartIcon,
+                            color: colorScheme.onPrimary,
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: AppConstants.defaultPaddingX2,
-            left: AppConstants.defaultPaddingX0_5,
-            child: CustomIconWithBackgroundButton(
-              icon: Icon(
-                Icons.arrow_back_ios_rounded,
-                size: AppConstants.defaultButtonIconSize,
-                color: colorScheme.onPrimary,
+                ],
               ),
-              onPressed: () => Navigator.pop(context),
             ),
           ),
         ],
