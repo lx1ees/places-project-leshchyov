@@ -1,4 +1,4 @@
-class AppStrings {
+abstract class AppStrings {
   /// Тексты приложения
   static const String appTitle = 'Places';
   static const String prepositionFrom = 'от';
