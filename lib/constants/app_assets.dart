@@ -1,4 +1,4 @@
-class AppAssets {
+abstract class AppAssets {
   /// Константы путей ресурсов
   static const String heartIcon = 'res/images/heart_icon.svg';
   static const String heartFullIcon = 'res/images/heart_full_icon.svg';
@@ -35,4 +35,5 @@ class AppAssets {
   static const String tutorial1Icon = 'res/images/tutorial_1_icon.svg';
   static const String tutorial2Icon = 'res/images/tutorial_2_icon.svg';
   static const String tutorial3Icon = 'res/images/tutorial_3_icon.svg';
+  static const String splashLogo = 'res/images/splash_logo.svg';
 }

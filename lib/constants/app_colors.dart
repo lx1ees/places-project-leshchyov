@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppColors {
+abstract class AppColors {
   /// Цвета светлой темы и общие
   static const Color greenColor = Color.fromRGBO(76, 175, 80, 1);
   static const Color yellowColor = Color.fromRGBO(252, 221, 61, 1);

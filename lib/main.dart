@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/theme_mode_holder.dart';
-import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/res/themes.dart';
+import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 
 void main() {
   initializeDateFormatting();
@@ -31,7 +31,8 @@ class _AppState extends State<App> {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeModeHolder.currentThemeMode,
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 

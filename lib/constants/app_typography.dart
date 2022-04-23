@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppTypography {
+abstract class AppTypography {
   static const TextStyle largeTitleTextStyle = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.w700,
@@ -61,6 +61,4 @@ class AppTypography {
   static final TextStyle subtitleBoldTextStyle = subtitleTextStyle.copyWith(
     fontWeight: FontWeight.w700,
   );
-
-
 }
