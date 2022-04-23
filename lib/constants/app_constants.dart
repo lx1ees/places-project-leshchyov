@@ -44,7 +44,7 @@ abstract class AppConstants {
   static const String nbsp = '\u00A0';
   static const String space = ' ';
   static const double splashLogoSize = 160;
-  static const int minSplashTimeInSec = 2;
+  static const int minSplashTimeInSec = 4;
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;
