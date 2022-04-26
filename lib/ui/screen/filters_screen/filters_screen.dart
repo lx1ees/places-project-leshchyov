@@ -11,6 +11,7 @@ import 'package:places/ui/screen/filters_screen/show_filtered_list_button.dart';
 /// Экран с фильтрами по категории и дистанции от текущего местоположения
 /// [filtersManager] - менеджер фильтров, хранит информацию о примененных фильтрах
 class FiltersScreen extends StatefulWidget {
+  static const String routeName = '/filters';
   final FiltersManager filtersManager;
 
   const FiltersScreen({

@@ -6,11 +6,13 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/theme_mode_holder.dart';
-import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widgets/custom_divider.dart';
 
 /// Экран с настройками
 class SettingsScreen extends StatefulWidget {
+  static const String routeName = '/settings';
+
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(
           child: Text(
             AppStrings.settingsScreenAppBarTitle,
@@ -72,13 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _openOnboardingScreen(
     BuildContext context,
   ) async {
-    await Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const OnboardingScreen(),
-      ),
-    );
-
+    await AppRoutes.navigateToOnboardingScreen(context: context);
     setState(() {});
   }
 }

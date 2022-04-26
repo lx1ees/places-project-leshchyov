@@ -10,6 +10,7 @@ import 'package:places/ui/widgets/custom_elevated_button.dart';
 import 'package:places/ui/widgets/custom_text_button.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  static const String routeName = '/onboarding';
   const OnboardingScreen({Key? key}) : super(key: key);
 
   @override

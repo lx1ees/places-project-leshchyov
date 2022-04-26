@@ -10,9 +10,9 @@ List<Sight> sightsMock = [
     name: 'Астраханский кремль',
     point: const LocationPoint(lat: 46.34916573351107, lon: 48.03225584602448),
     urls: const [
-      'https://media-cdn.tripadvisor.com/media/photo-s/06/a5/5e/a4/caption.jpg',
-      'https://media-cdn.tripadvisor.com/media/photo-s/06/a5/5e/a4/caption.jpg',
-      'https://media-cdn.tripadvisor.com/media/photo-s/06/a5/5e/a4/caption.jpg',
+      'http://ic.pics.livejournal.com/astkraeved/50753361/113492/113492_original.jpg',
+      'http://ic.pics.livejournal.com/astkraeved/50753361/113492/113492_original.jpg',
+      'http://ic.pics.livejournal.com/astkraeved/50753361/113492/113492_original.jpg',
     ],
     details:
         'Целостный ансамбль памятников оборонного зодчества, культовой и гражданской архитектуры.',

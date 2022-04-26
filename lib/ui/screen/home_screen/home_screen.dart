@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
-import 'package:places/ui/screen/settings_screen/settings_screen.dart';
-import 'package:places/ui/screen/sight_list_screen/sight_list_screen.dart';
-import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widgets/custom_divider.dart';
 
 /// Стартовый экран с навигацией
 class HomeScreen extends StatefulWidget {
+  static const String routeName = '/home';
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -15,12 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const List<Widget> _screens = <Widget>[
-    SightListScreen(),
-    VisitingScreen(),
-    SettingsScreen(),
-  ];
-
   int _selectedIndex = 0;
 
   @override
@@ -28,8 +22,21 @@ class _HomeScreenState extends State<HomeScreen> {
     final bottomNavigationBarTheme = Theme.of(context).bottomNavigationBarTheme;
 
     return Scaffold(
-      body: Center(
-        child: _screens.elementAt(_selectedIndex),
+      body: Navigator(
+        key: AppRoutes.navigators[AppRoutes.bottomNavigatorKey],
+        initialRoute: AppRoutes.bottomNavigationRoutes.keys.elementAt(0),
+        onGenerateRoute: (settings) {
+          final builder = AppRoutes.bottomNavigationRoutes[settings.name];
+
+          return PageRouteBuilder<void>(
+            pageBuilder: (context, __, ___) {
+              return builder != null
+                  ? builder(context)
+                  : const SizedBox.shrink();
+            },
+            transitionDuration: Duration.zero,
+          );
+        },
       ),
       bottomNavigationBar: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -81,6 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onNavigationItemTapped(int index) {
+    if (_selectedIndex == index) return;
+    final route = AppRoutes.bottomNavigationRoutes.keys.elementAt(index);
+    final navigator = AppRoutes.navigators[AppRoutes.bottomNavigatorKey];
+    AppRoutes.navigateTo(route, navigator);
     setState(() {
       _selectedIndex = index;
     });

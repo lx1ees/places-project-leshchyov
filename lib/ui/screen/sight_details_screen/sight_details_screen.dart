@@ -13,6 +13,7 @@ import 'package:places/ui/widgets/custom_text_icon_button.dart';
 /// Виджет-окно для отображения полной информации о [sight] достопримечательности
 /// и выполнения действий с ней
 class SightDetailsScreen extends StatefulWidget {
+  static const String routeName = '/sightDetails';
   final Sight sight;
 
   const SightDetailsScreen({

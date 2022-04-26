@@ -6,18 +6,19 @@ import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/search_history_manager.dart';
 import 'package:places/domain/sight.dart';
+import 'package:places/domain/sight_search_screen_route_arguments.dart';
 import 'package:places/mocks.dart';
-import 'package:places/ui/screen/add_sight_screen/add_sight_screen.dart';
-import 'package:places/ui/screen/filters_screen/filters_screen.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/sight_card/sight_view_card.dart';
 import 'package:places/ui/screen/sight_list.dart';
 import 'package:places/ui/screen/sight_list_screen/sight_list_screen_sliver_app_bar.dart';
-import 'package:places/ui/screen/sight_search_screen/sight_search_screen.dart';
 import 'package:places/ui/widgets/gradient_extended_fab.dart';
 import 'package:places/ui/widgets/search_bar.dart';
 
 /// Виджет, описывающий экран списка интересных мест
 class SightListScreen extends StatefulWidget {
+  static const String routeName = '/sightList';
+
   const SightListScreen({Key? key}) : super(key: key);
 
   @override
@@ -87,7 +88,8 @@ class _SightListScreenState extends State<SightListScreen> {
                     .map((sight) => SightViewCard(
                           sight: sight,
                           onFavoritePressed: () {},
-                          onCardTapped: () {},
+                          onCardTapped: () =>
+                              _openSightDetailsScreen(context, sight),
                         ))
                     .toList(),
               ),
@@ -98,19 +100,24 @@ class _SightListScreenState extends State<SightListScreen> {
     );
   }
 
+  /// Метод открытия окна детальной информации о месте
+  Future<void> _openSightDetailsScreen(
+    BuildContext context,
+    Sight sight,
+  ) async {
+    await AppRoutes.navigateToSightDetailsScreen(
+      context: context,
+      sight: sight,
+    );
+    setState(() {});
+  }
+
   /// Метод открытия окна добавления нового места
   Future<void> _openAddNewPlaceScreen(
     BuildContext context,
   ) async {
-    await Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const AddSightScreen(),
-      ),
-    );
-
+    await AppRoutes.navigateToAddNewPlaceScreen(context: context);
     _applyFilters(filtersManager);
-
     setState(() {});
   }
 
@@ -118,17 +125,11 @@ class _SightListScreenState extends State<SightListScreen> {
   Future<void> _openFiltersScreen(
     BuildContext context,
   ) async {
-    await Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FiltersScreen(
-          filtersManager: filtersManager,
-        ),
-      ),
+    await AppRoutes.navigateToFiltersScreen(
+      context: context,
+      filtersManager: filtersManager,
     );
-
     _applyFilters(filtersManager);
-
     setState(() {});
   }
 
@@ -136,16 +137,13 @@ class _SightListScreenState extends State<SightListScreen> {
   Future<void> _openSearchScreen(
     BuildContext context,
   ) async {
-    await Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SightSearchScreen(
-          filtersManager: filtersManager,
-          searchHistoryManager: searchHistoryManager,
-        ),
+    await AppRoutes.navigateToSearchScreen(
+      context: context,
+      arguments: SightSearchScreenRouteArguments(
+        filtersManager: filtersManager,
+        searchHistoryManager: searchHistoryManager,
       ),
     );
-
     setState(() {});
   }
 
