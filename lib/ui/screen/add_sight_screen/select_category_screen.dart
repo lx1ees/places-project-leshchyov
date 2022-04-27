@@ -11,6 +11,7 @@ import 'package:places/ui/widgets/custom_icon_button.dart';
 /// Экран выбора категории при создании нового места
 /// [selectedSightCategory] - текущая выбранная категория
 class SelectCategoryScreen extends StatefulWidget {
+  static const String routeName = '/selectCategory';
   final SightCategory? selectedSightCategory;
 
   const SelectCategoryScreen({

@@ -7,7 +7,7 @@ import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/search_history_manager.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
-import 'package:places/ui/screen/sight_details_screen/sight_details_screen.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/sight_search_screen/sight_search_error_placeholder.dart';
 import 'package:places/ui/screen/sight_search_screen/sight_search_history_list.dart';
 import 'package:places/ui/screen/sight_search_screen/sight_search_loading_indicator.dart';
@@ -21,6 +21,7 @@ import 'package:rxdart/rxdart.dart';
 /// [filtersManager] - менеджер фильтров
 /// [searchHistoryManager] - менеджер истории поиска
 class SightSearchScreen extends StatefulWidget {
+  static const String routeName = '/search';
   final FiltersManager filtersManager;
   final SearchHistoryManager searchHistoryManager;
 
@@ -172,15 +173,10 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
     BuildContext context,
     Sight sight,
   ) async {
-    await Navigator.push<void>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SightDetailsScreen(
-          sight: sight,
-        ),
-      ),
+    await AppRoutes.navigateToSightDetailsScreen(
+      context: context,
+      sight: sight,
     );
-
     setState(() {});
   }
 

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/theme_mode_holder.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/res/themes.dart';
-import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 
 void main() {
   initializeDateFormatting();
@@ -31,8 +31,16 @@ class _AppState extends State<App> {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeModeHolder.currentThemeMode,
-      // home: const HomeScreen(),
-      home: const SplashScreen(),
+      navigatorKey: AppRoutes.navigators[AppRoutes.mainNavigatorKey],
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute<Object?>(
+          builder: AppRoutes.routeBuilder(
+            route: settings.name,
+            arguments: settings.arguments,
+          ),
+          settings: settings,
+        );
+      },
     );
   }
 

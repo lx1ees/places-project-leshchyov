@@ -1,14 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_colors.dart';
 import 'package:places/constants/app_constants.dart';
+import 'package:places/ui/screen/res/routes.dart';
 
 /// Сплеш-экран
 class SplashScreen extends StatefulWidget {
+  static const String routeName = '/';
+
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
@@ -62,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
               .contains(false);
 
       if (isNavigationAllowed) {
-        debugPrint('Переход на следующий экран');
+        await AppRoutes.navigateToHomeScreen(context: context);
       }
     } on Exception catch (_) {
       /// Обработка ошибки выполнения Future

@@ -11,8 +11,8 @@ import 'package:places/mocks.dart';
 import 'package:places/ui/screen/add_sight_screen/add_image_section.dart';
 import 'package:places/ui/screen/add_sight_screen/add_new_sight_button.dart';
 import 'package:places/ui/screen/add_sight_screen/add_sight_screen_app_bar.dart';
-import 'package:places/ui/screen/add_sight_screen/select_category_screen.dart';
 import 'package:places/ui/screen/add_sight_screen/select_category_section.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widgets/custom_divider.dart';
 import 'package:places/ui/widgets/custom_text_button.dart';
 import 'package:places/ui/widgets/custom_text_field.dart';
@@ -20,6 +20,7 @@ import 'package:places/ui/widgets/focus_manager_holder.dart';
 
 /// Экран добавления нового места
 class AddSightScreen extends StatefulWidget {
+  static const String routeName = '/addSight';
   const AddSightScreen({Key? key}) : super(key: key);
 
   @override
@@ -264,16 +265,12 @@ class _AddSightScreenState extends State<AddSightScreen> {
   Future<SightCategory?> _openCategorySelectionScreenAndGetCategory(
     BuildContext context,
   ) async {
-    final result = await Navigator.push<SightCategory?>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SelectCategoryScreen(
-          selectedSightCategory: _category,
-        ),
-      ),
+    final result = await AppRoutes.navigateToCategoriesScreen(
+      context: context,
+      selectedCategory: _category,
     );
 
-    return result;
+    return result as SightCategory?;
   }
 
   /// Временный метод, который возвращает рандомную заглушку картинки места

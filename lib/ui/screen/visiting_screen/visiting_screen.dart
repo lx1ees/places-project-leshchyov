@@ -7,12 +7,15 @@ import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/custom_tab_bar.dart';
 import 'package:places/ui/screen/no_items_placeholder.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/sight_card/sight_to_visit_card.dart';
 import 'package:places/ui/screen/sight_card/sight_visited_card.dart';
 import 'package:places/ui/screen/sight_list.dart';
 
 /// Экран со списками посещения
 class VisitingScreen extends StatefulWidget {
+  static const String routeName = '/visiting';
+
   const VisitingScreen({Key? key}) : super(key: key);
 
   @override
@@ -40,6 +43,7 @@ class _VisitingScreenState extends State<VisitingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(
           child: Text(
             AppStrings.favoriteScreenAppBarTitle,
@@ -83,7 +87,8 @@ class _VisitingScreenState extends State<VisitingScreen>
                           sightToRemove: sight,
                           source: toVisitSights,
                         ),
-                        onCardTapped: () {},
+                        onCardTapped: () =>
+                            _openSightDetailsScreen(context, sight),
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
@@ -110,7 +115,8 @@ class _VisitingScreenState extends State<VisitingScreen>
                           sightToRemove: sight,
                           source: visitedSights,
                         ),
-                        onCardTapped: () {},
+                        onCardTapped: () =>
+                            _openSightDetailsScreen(context, sight),
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
@@ -147,5 +153,17 @@ class _VisitingScreenState extends State<VisitingScreen>
       _deleteSight(sightToRemove: sightToMove, source: source);
       source.insert(index, sightToMove);
     });
+  }
+
+  /// Метод открытия окна детальной информации о месте
+  Future<void> _openSightDetailsScreen(
+    BuildContext context,
+    Sight sight,
+  ) async {
+    await AppRoutes.navigateToSightDetailsScreen(
+      context: context,
+      sight: sight,
+    );
+    setState(() {});
   }
 }
