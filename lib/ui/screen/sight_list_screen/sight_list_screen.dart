@@ -10,6 +10,7 @@ import 'package:places/domain/sight_search_screen_route_arguments.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/sight_card/sight_view_card.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_bottom_sheet.dart';
 import 'package:places/ui/screen/sight_list.dart';
 import 'package:places/ui/screen/sight_list_screen/sight_list_screen_sliver_app_bar.dart';
 import 'package:places/ui/widgets/gradient_extended_fab.dart';
@@ -88,8 +89,8 @@ class _SightListScreenState extends State<SightListScreen> {
                     .map((sight) => SightViewCard(
                           sight: sight,
                           onFavoritePressed: () {},
-                          onCardTapped: () =>
-                              _openSightDetailsScreen(context, sight),
+                          onCardTapped: () => _openSightDetailsBottomSheet(context, sight),
+                          // _openSightDetailsScreen(context, sight),
                         ))
                     .toList(),
               ),
@@ -101,15 +102,20 @@ class _SightListScreenState extends State<SightListScreen> {
   }
 
   /// Метод открытия окна детальной информации о месте
-  Future<void> _openSightDetailsScreen(
+  Future<void> _openSightDetailsBottomSheet(
     BuildContext context,
     Sight sight,
   ) async {
-    await AppRoutes.navigateToSightDetailsScreen(
+    await showModalBottomSheet<void>(
       context: context,
-      sight: sight,
+      backgroundColor: Colors.transparent,
+      barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.24),
+      isScrollControlled: true,
+      useRootNavigator: true,
+      builder: (_) {
+        return SightDetailsBottomSheet(sight: sight);
+      },
     );
-    setState(() {});
   }
 
   /// Метод открытия окна добавления нового места

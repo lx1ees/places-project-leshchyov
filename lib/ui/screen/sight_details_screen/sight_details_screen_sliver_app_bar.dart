@@ -10,10 +10,12 @@ import 'package:places/utils/extensions.dart';
 class SightDetailsScreenSliverAppBar extends StatefulWidget {
   final Sight sight;
   final ScrollController scrollController;
+  final bool isBackButtonVisible;
 
   const SightDetailsScreenSliverAppBar({
     required this.sight,
     required this.scrollController,
+    this.isBackButtonVisible = false,
     Key? key,
   }) : super(key: key);
 
@@ -45,15 +47,16 @@ class _SightDetailsScreenSliverAppBarState
       pinned: true,
       stretch: true,
       elevation: 0,
-      // leading: const SizedBox.shrink(),
-      leading: CustomIconWithBackgroundButton(
-        icon: Icon(
-          Icons.arrow_back_ios_rounded,
-          size: AppConstants.defaultButtonIconSize,
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
+      leading: widget.isBackButtonVisible
+          ? CustomIconWithBackgroundButton(
+              icon: Icon(
+                Icons.arrow_back_ios_rounded,
+                size: AppConstants.defaultButtonIconSize,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+              onPressed: () => Navigator.pop(context),
+            )
+          : const SizedBox.shrink(),
       expandedHeight: AppConstants.sightDetailsGalleryHeight,
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.only(

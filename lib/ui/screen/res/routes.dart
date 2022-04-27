@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/sight.dart';
 import 'package:places/domain/sight_category.dart';
 import 'package:places/domain/sight_search_screen_route_arguments.dart';
 import 'package:places/ui/screen/add_sight_screen/add_sight_screen.dart';
@@ -9,7 +9,6 @@ import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
-import 'package:places/ui/screen/sight_details_screen/sight_details_screen.dart';
 import 'package:places/ui/screen/sight_list_screen/sight_list_screen.dart';
 import 'package:places/ui/screen/sight_search_screen/sight_search_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
@@ -58,11 +57,6 @@ abstract class AppRoutes {
         filtersManager: args.filtersManager,
         searchHistoryManager: args.searchHistoryManager,
       );
-    },
-    SightDetailsScreen.routeName: (argument) {
-      final sight = argument as Sight;
-
-      return SightDetailsScreen(sight: sight);
     },
   };
 
@@ -132,17 +126,6 @@ abstract class AppRoutes {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               SightSearchScreen.routeName,
               arguments: arguments,
-            ) ??
-        Future.value(null);
-  }
-
-  static Future<void> navigateToSightDetailsScreen({
-    required BuildContext context,
-    required Sight sight,
-  }) {
-    return navigators[mainNavigatorKey]?.currentState?.pushNamed(
-              SightDetailsScreen.routeName,
-              arguments: sight,
             ) ??
         Future.value(null);
   }
