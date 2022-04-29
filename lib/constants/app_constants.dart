@@ -49,6 +49,7 @@ abstract class AppConstants {
   static const double initialDraggableBottomSheetHeight = 0.65;
   static const double bottomSheetIndicatorHeight = 7;
   static const double bottomSheetIndicatorWidth = 40;
+  static const double infinity = 1000000;
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;

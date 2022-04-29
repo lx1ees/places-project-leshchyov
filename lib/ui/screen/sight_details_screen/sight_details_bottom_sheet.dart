@@ -186,12 +186,14 @@ class _SightDetailsBottomSheetState extends State<SightDetailsBottomSheet> {
   }
 
   void _setExpanded(bool isExpanded) {
-    setState(() {
-      if (_isExpanded != isExpanded) _isExpanded = isExpanded;
-    });
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor:
-          isExpanded ? Theme.of(context).backgroundColor : Colors.transparent,
-    ));
+    if (_isExpanded != isExpanded) {
+      setState(() {
+        _isExpanded = isExpanded;
+      });
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor:
+            isExpanded ? Theme.of(context).backgroundColor : Colors.transparent,
+      ));
+    }
   }
 }

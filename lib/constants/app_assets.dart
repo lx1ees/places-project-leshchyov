@@ -36,4 +36,6 @@ abstract class AppAssets {
   static const String tutorial2Icon = 'res/images/tutorial_2_icon.svg';
   static const String tutorial3Icon = 'res/images/tutorial_3_icon.svg';
   static const String splashLogo = 'res/images/splash_logo.svg';
+  static const String cameraIcon = 'res/images/camera_icon.svg';
+  static const String fileIcon = 'res/images/file_icon.svg';
 }

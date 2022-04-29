@@ -71,6 +71,9 @@ abstract class AppStrings {
   static const String placeLonTitle = 'ДОЛГОТА';
   static const String placeDetailsTitle = 'ОПИСАНИЕ';
   static const String pointLocationOnMap = 'Указать на карте';
+  static const String camera = 'Камера';
+  static const String photo = 'Фотография';
+  static const String file = 'Файл';
 
   /// Тексты окна поиска мест
   static const String searchTitle = 'Поиск';

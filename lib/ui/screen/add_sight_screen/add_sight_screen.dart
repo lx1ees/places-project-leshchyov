@@ -1,19 +1,23 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/location_point.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/domain/sight_category.dart';
 import 'package:places/mocks.dart';
+import 'package:places/ui/screen/add_sight_screen/add_image_dialog.dart';
 import 'package:places/ui/screen/add_sight_screen/add_image_section.dart';
 import 'package:places/ui/screen/add_sight_screen/add_new_sight_button.dart';
 import 'package:places/ui/screen/add_sight_screen/add_sight_screen_app_bar.dart';
 import 'package:places/ui/screen/add_sight_screen/select_category_section.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widgets/custom_divider.dart';
+import 'package:places/ui/widgets/custom_elevated_button.dart';
 import 'package:places/ui/widgets/custom_text_button.dart';
 import 'package:places/ui/widgets/custom_text_field.dart';
 import 'package:places/ui/widgets/focus_manager_holder.dart';
@@ -21,6 +25,7 @@ import 'package:places/ui/widgets/focus_manager_holder.dart';
 /// Экран добавления нового места
 class AddSightScreen extends StatefulWidget {
   static const String routeName = '/addSight';
+
   const AddSightScreen({Key? key}) : super(key: key);
 
   @override
@@ -58,11 +63,7 @@ class _AddSightScreenState extends State<AddSightScreen> {
                       const SizedBox(height: AppConstants.defaultPaddingX1_5),
                       AddImageSection(
                         images: _imagePaths,
-                        onAddImagePressed: () {
-                          setState(() {
-                            _imagePaths.add(_randomImage());
-                          });
-                        },
+                        onAddImagePressed: _openAddImageDialog,
                         onDeleteImagePressed: (index) {
                           setState(() {
                             _imagePaths.removeAt(index);
@@ -282,5 +283,22 @@ class _AddSightScreenState extends State<AddSightScreen> {
     ];
 
     return images[Random().nextInt(images.length)];
+  }
+
+  Future<void> _openAddImageDialog() async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AddImageDialog(
+          onCameraPressed: () {
+            setState(() {
+              _imagePaths.add(_randomImage());
+            });
+          },
+          onPhotoPressed: () {},
+          onFilePressed: () {},
+        );
+      },
+    );
   }
 }
