@@ -37,36 +37,33 @@ class AddImageDialog extends StatelessWidget {
             borderRadius:
                 BorderRadius.circular(AppConstants.button2BorderRadius),
             clipBehavior: Clip.antiAliasWithSaveLayer,
-            child: Container(
-              color: Theme.of(context).primaryColor,
-              child: Column(
-                children: [
-                  AddImageDialogItem(
-                    title: AppStrings.camera,
-                    iconAsset: AppAssets.cameraIcon,
-                    onPressed: onCameraPressed,
-                  ),
-                  const CustomDivider(hasIndent: true),
-                  AddImageDialogItem(
-                    title: AppStrings.photo,
-                    iconAsset: AppAssets.photoIcon,
-                    onPressed: onPhotoPressed,
-                  ),
-                  const CustomDivider(hasIndent: true),
-                  AddImageDialogItem(
-                    title: AppStrings.file,
-                    iconAsset: AppAssets.fileIcon,
-                    onPressed: onFilePressed,
-                  ),
-                ],
-              ),
+            child: Column(
+              children: [
+                AddImageDialogItem(
+                  title: AppStrings.camera,
+                  iconAsset: AppAssets.cameraIcon,
+                  onPressed: onCameraPressed,
+                ),
+                const CustomDivider(hasIndent: true),
+                AddImageDialogItem(
+                  title: AppStrings.photo,
+                  iconAsset: AppAssets.photoIcon,
+                  onPressed: onPhotoPressed,
+                ),
+                const CustomDivider(hasIndent: true),
+                AddImageDialogItem(
+                  title: AppStrings.file,
+                  iconAsset: AppAssets.fileIcon,
+                  onPressed: onFilePressed,
+                ),
+              ],
             ),
           ),
         ),
         const SizedBox(height: AppConstants.defaultPadding),
         CustomElevatedButton(
           label: AppStrings.cancel,
-          textColor: Theme.of(context).colorScheme.onSurface,
+          textColor: Theme.of(context).colorScheme.secondary,
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () => Navigator.of(context).pop(),
         ),

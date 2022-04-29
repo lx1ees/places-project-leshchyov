@@ -31,6 +31,7 @@ class AddImageDialogItem extends StatelessWidget {
         ),
         onTap: onPressed,
         horizontalTitleGap: 0,
+        tileColor: Theme.of(context).primaryColor,
         leading: SvgPicture.asset(
           iconAsset,
           color: Theme.of(context).colorScheme.onSurface,
