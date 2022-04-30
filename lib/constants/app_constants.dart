@@ -45,12 +45,18 @@ abstract class AppConstants {
   static const String space = ' ';
   static const double splashLogoSize = 160;
   static const int minSplashTimeInSec = 4;
+  static const double minDraggableBottomSheetHeight = 0.4;
+  static const double initialDraggableBottomSheetHeight = 0.65;
+  static const double bottomSheetIndicatorHeight = 7;
+  static const double bottomSheetIndicatorWidth = 40;
+  static const double infinity = 1000000;
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;
   static const double sightDetailsGalleryHeight = 360;
   static const double sightDetailsGalleryBackButtonSize = 32;
   static const double cardAspectRatio = 3 / 2;
+  static const double closeButtonSize = 40;
 
   /// Константы окна с фильтрами
   static const double distanceFilterMinValue = 100;

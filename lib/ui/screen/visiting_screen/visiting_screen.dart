@@ -7,9 +7,9 @@ import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/custom_tab_bar.dart';
 import 'package:places/ui/screen/no_items_placeholder.dart';
-import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/sight_card/sight_to_visit_card.dart';
 import 'package:places/ui/screen/sight_card/sight_visited_card.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_bottom_sheet.dart';
 import 'package:places/ui/screen/sight_list.dart';
 
 /// Экран со списками посещения
@@ -88,7 +88,7 @@ class _VisitingScreenState extends State<VisitingScreen>
                           source: toVisitSights,
                         ),
                         onCardTapped: () =>
-                            _openSightDetailsScreen(context, sight),
+                            _openSightDetailsBottomSheet(context, sight),
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
@@ -116,7 +116,7 @@ class _VisitingScreenState extends State<VisitingScreen>
                           source: visitedSights,
                         ),
                         onCardTapped: () =>
-                            _openSightDetailsScreen(context, sight),
+                            _openSightDetailsBottomSheet(context, sight),
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
@@ -156,14 +156,20 @@ class _VisitingScreenState extends State<VisitingScreen>
   }
 
   /// Метод открытия окна детальной информации о месте
-  Future<void> _openSightDetailsScreen(
+  Future<void> _openSightDetailsBottomSheet(
     BuildContext context,
     Sight sight,
   ) async {
-    await AppRoutes.navigateToSightDetailsScreen(
+    await showModalBottomSheet<void>(
       context: context,
-      sight: sight,
+      backgroundColor: Colors.transparent,
+      barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.24),
+      isScrollControlled: true,
+      isDismissible: true,
+      useRootNavigator: true,
+      builder: (_) {
+        return SightDetailsBottomSheet(sight: sight);
+      },
     );
-    setState(() {});
   }
 }

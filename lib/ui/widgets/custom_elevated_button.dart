@@ -14,12 +14,16 @@ class CustomElevatedButton extends StatelessWidget {
   final Widget? icon;
   final VoidCallback? onPressed;
   final bool shrink;
+  final Color? backgroundColor;
+  final Color? textColor;
 
   const CustomElevatedButton({
     this.onPressed,
     this.label,
     this.icon,
     this.shrink = true,
+    this.backgroundColor,
+    this.textColor,
     Key? key,
   })  : assert(label != null || icon != null),
         super(key: key);
@@ -43,10 +47,10 @@ class CustomElevatedButton extends StatelessWidget {
             Radius.circular(AppConstants.button2BorderRadius),
           ),
         ),
-        primary: Theme.of(context).colorScheme.secondary,
-        onPrimary: Theme.of(context).white,
+        primary: backgroundColor ?? Theme.of(context).colorScheme.secondary,
+        onPrimary: textColor ?? Theme.of(context).white,
         textStyle: AppTypography.buttonTextStyle.copyWith(
-          color: Theme.of(context).white,
+          color: textColor ?? Theme.of(context).white,
         ),
       ),
       child: Row(

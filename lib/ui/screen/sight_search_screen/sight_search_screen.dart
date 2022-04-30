@@ -7,7 +7,7 @@ import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/search_history_manager.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
-import 'package:places/ui/screen/res/routes.dart';
+import 'package:places/ui/screen/sight_details_screen/sight_details_bottom_sheet.dart';
 import 'package:places/ui/screen/sight_search_screen/sight_search_error_placeholder.dart';
 import 'package:places/ui/screen/sight_search_screen/sight_search_history_list.dart';
 import 'package:places/ui/screen/sight_search_screen/sight_search_loading_indicator.dart';
@@ -126,7 +126,7 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
                   searchString: _searchString,
                   results: _foundSights,
                   onSightPressed: (sight) {
-                    _openSightDetailsScreen(
+                    _openSightDetailsBottomSheet(
                       context,
                       sight,
                     );
@@ -169,15 +169,20 @@ class _SightSearchScreenState extends State<SightSearchScreen> {
   }
 
   /// Метод открытия окна детальной информации о месте
-  Future<void> _openSightDetailsScreen(
+  Future<void> _openSightDetailsBottomSheet(
     BuildContext context,
     Sight sight,
   ) async {
-    await AppRoutes.navigateToSightDetailsScreen(
+    await showModalBottomSheet<void>(
       context: context,
-      sight: sight,
+      backgroundColor: Colors.transparent,
+      barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.24),
+      isScrollControlled: true,
+      useRootNavigator: true,
+      builder: (_) {
+        return SightDetailsBottomSheet(sight: sight, isExpanded: true);
+      },
     );
-    setState(() {});
   }
 
   /// Метод изменения условий для показа лоадера
