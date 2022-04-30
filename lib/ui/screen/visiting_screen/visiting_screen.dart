@@ -11,6 +11,7 @@ import 'package:places/ui/screen/sight_card/sight_to_visit_card.dart';
 import 'package:places/ui/screen/sight_card/sight_visited_card.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_bottom_sheet.dart';
 import 'package:places/ui/screen/sight_list.dart';
+import 'package:places/ui/screen/res/themes.dart';
 
 /// Экран со списками посещения
 class VisitingScreen extends StatefulWidget {
@@ -82,7 +83,9 @@ class _VisitingScreenState extends State<VisitingScreen>
                         key: ObjectKey(sight),
                         sight: sight,
                         dateOfVisit: DateTime.now(),
-                        onPlanPressed: () {},
+                        onPlanPressed: () {
+                          _pickPlanDate();
+                        },
                         onDeletePressed: () => _deleteSight(
                           sightToRemove: sight,
                           source: toVisitSights,
@@ -169,6 +172,34 @@ class _VisitingScreenState extends State<VisitingScreen>
       useRootNavigator: true,
       builder: (_) {
         return SightDetailsBottomSheet(sight: sight);
+      },
+    );
+  }
+
+  Future<void> _pickPlanDate() async {
+    final nowDate = DateTime.now();
+    final nowYear = nowDate.year;
+    final date = await showDatePicker(
+      context: context,
+      initialDate: nowDate,
+      firstDate: nowDate,
+      lastDate: DateTime(nowYear + 3),
+      locale: AppConstants.locale,
+      cancelText: AppStrings.cancel,
+      confirmText: AppStrings.apply,
+      helpText: AppStrings.datePickerHelpText,
+      fieldLabelText: AppStrings.datePickerFieldLabelText,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context).colorScheme.secondary,
+              onPrimary: Theme.of(context).white,
+              onSurface: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+          child: child!,
+        );
       },
     );
   }

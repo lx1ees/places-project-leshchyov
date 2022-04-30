@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/theme_mode_holder.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/res/themes.dart';
 
 void main() {
-  initializeDateFormatting();
   runApp(const App());
 }
 
@@ -32,6 +31,11 @@ class _AppState extends State<App> {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeModeHolder.currentThemeMode,
       navigatorKey: AppRoutes.navigators[AppRoutes.mainNavigatorKey],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       onGenerateRoute: (settings) {
         return MaterialPageRoute<Object?>(
           builder: AppRoutes.routeBuilder(

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 abstract class AppConstants {
   /// Константы приложения
   static const double appbarHeight = 152;
@@ -50,6 +52,7 @@ abstract class AppConstants {
   static const double bottomSheetIndicatorHeight = 7;
   static const double bottomSheetIndicatorWidth = 40;
   static const double infinity = 1000000;
+  static const Locale locale = Locale('ru', 'RU');
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;
