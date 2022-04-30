@@ -1,5 +1,3 @@
-import 'package:places/utils/string_utils.dart';
-
 abstract class AppStrings {
   /// Тексты приложения
   static const String appTitle = 'Places';

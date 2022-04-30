@@ -7,11 +7,11 @@ import 'package:places/domain/sight.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/custom_tab_bar.dart';
 import 'package:places/ui/screen/no_items_placeholder.dart';
+import 'package:places/ui/screen/res/themes.dart';
 import 'package:places/ui/screen/sight_card/sight_to_visit_card.dart';
 import 'package:places/ui/screen/sight_card/sight_visited_card.dart';
 import 'package:places/ui/screen/sight_details_screen/sight_details_bottom_sheet.dart';
 import 'package:places/ui/screen/sight_list.dart';
-import 'package:places/ui/screen/res/themes.dart';
 
 /// Экран со списками посещения
 class VisitingScreen extends StatefulWidget {
@@ -83,9 +83,7 @@ class _VisitingScreenState extends State<VisitingScreen>
                         key: ObjectKey(sight),
                         sight: sight,
                         dateOfVisit: DateTime.now(),
-                        onPlanPressed: () {
-                          _pickPlanDate();
-                        },
+                        onPlanPressed: _pickPlanDate,
                         onDeletePressed: () => _deleteSight(
                           sightToRemove: sight,
                           source: toVisitSights,
