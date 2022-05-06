@@ -36,6 +36,9 @@ class _AppState extends State<App> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      supportedLocales: const [
+        Locale('ru', 'RU'),
+      ],
       onGenerateRoute: (settings) {
         return MaterialPageRoute<Object?>(
           builder: AppRoutes.routeBuilder(

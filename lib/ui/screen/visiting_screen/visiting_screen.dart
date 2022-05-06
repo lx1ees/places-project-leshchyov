@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
@@ -177,7 +180,17 @@ class _VisitingScreenState extends State<VisitingScreen>
   Future<void> _pickPlanDate() async {
     final nowDate = DateTime.now();
     final nowYear = nowDate.year;
-    final date = await showDatePicker(
+
+    final date = Platform.isAndroid
+        ? await _cupertinoDatePicker(nowDate, nowYear)
+        : await _materialDatePicker(nowDate, nowYear);
+  }
+
+  Future<DateTime?> _materialDatePicker(
+    DateTime nowDate,
+    int nowYear,
+  ) {
+    return showDatePicker(
       context: context,
       initialDate: nowDate,
       firstDate: nowDate,
@@ -199,6 +212,42 @@ class _VisitingScreenState extends State<VisitingScreen>
           child: child!,
         );
       },
+    );
+  }
+
+  Future<DateTime?> _cupertinoDatePicker(
+    DateTime nowDate,
+    int nowYear,
+  ) {
+    return showCupertinoModalPopup<DateTime?>(
+      builder: (context) {
+        DateTime? dateTime;
+
+        return WillPopScope(
+          onWillPop: () {
+            Navigator.pop(context, dateTime);
+
+            return Future.value(true);
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                height: 300,
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  backgroundColor: Theme.of(context).white,
+                  minimumDate: nowDate,
+                  initialDateTime: nowDate,
+                  maximumDate: DateTime(nowYear + 3),
+                  onDateTimeChanged: (dt) => dateTime = dt,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      context: context,
     );
   }
 }

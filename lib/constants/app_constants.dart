@@ -53,6 +53,8 @@ abstract class AppConstants {
   static const double bottomSheetIndicatorWidth = 40;
   static const double infinity = 1000000;
   static const Locale locale = Locale('ru', 'RU');
+  static const double smallScreenWidth = 480;
+  static const double smallScreenHeight = 800;
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double sightCardImageHeight = 96;
@@ -68,6 +70,7 @@ abstract class AppConstants {
   static const double categoryFilterIconSize = 64;
   static const double categoryFilterIconRadius = categoryFilterIconSize / 2;
   static const double categoryFilterRunSpace = 40;
+  static const double categoryFilterHeight = 92;
 
   /// Константы окна с настройками
   static const double infoIconPadding = 10;

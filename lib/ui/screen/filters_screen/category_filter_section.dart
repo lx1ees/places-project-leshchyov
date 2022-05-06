@@ -13,7 +13,7 @@ typedef OnCategoryFilterTapped = Function(
 );
 
 /// Виджет-секция фильтра по категориям
-class CategoryFilterSection extends StatelessWidget {
+class CategoryFilterSection extends StatefulWidget {
   final FiltersManager filtersManager;
   final OnCategoryFilterTapped onCategoryFilterTapped;
 
@@ -22,6 +22,25 @@ class CategoryFilterSection extends StatelessWidget {
     required this.onCategoryFilterTapped,
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<CategoryFilterSection> createState() => _CategoryFilterSectionState();
+}
+
+class _CategoryFilterSectionState extends State<CategoryFilterSection> {
+  bool _isSmallScreen = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    setState(() {
+      _isSmallScreen = MediaQuery.of(context).size.width * pixelRatio <=
+              AppConstants.smallScreenWidth &&
+          MediaQuery.of(context).size.height * pixelRatio <=
+              AppConstants.smallScreenHeight;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +59,42 @@ class CategoryFilterSection extends StatelessWidget {
             vertical: AppConstants.defaultPaddingX1_5,
           ),
           child: Center(
-            child: Wrap(
-              spacing: AppConstants.defaultButtonHorizontalPadding,
-              runSpacing: AppConstants.categoryFilterRunSpace,
-              children: filtersManager.categoryFilters
-                  .mapIndexed(
-                    (index, categoryFilterEntity) => CategoryFilterItem(
-                      filterEntity: categoryFilterEntity,
-                      onSelected: () => onCategoryFilterTapped(
-                        categoryFilterEntity,
-                        index,
-                      ),
+            child: _isSmallScreen
+                ? SizedBox(
+                    height: AppConstants.categoryFilterHeight,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: widget.filtersManager.categoryFilters.length,
+                      itemBuilder: (context, index) {
+                        final categoryFilterEntity =
+                            widget.filtersManager.categoryFilters[index];
+
+                        return CategoryFilterItem(
+                          filterEntity: categoryFilterEntity,
+                          onSelected: () => widget.onCategoryFilterTapped(
+                            categoryFilterEntity,
+                            index,
+                          ),
+                        );
+                      },
                     ),
                   )
-                  .toList(),
-            ),
+                : Wrap(
+                    spacing: AppConstants.defaultButtonHorizontalPadding,
+                    runSpacing: AppConstants.categoryFilterRunSpace,
+                    children: widget.filtersManager.categoryFilters
+                        .mapIndexed(
+                          (index, categoryFilterEntity) => CategoryFilterItem(
+                            filterEntity: categoryFilterEntity,
+                            onSelected: () => widget.onCategoryFilterTapped(
+                              categoryFilterEntity,
+                              index,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
           ),
         ),
       ],
