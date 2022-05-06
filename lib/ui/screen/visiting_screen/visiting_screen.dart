@@ -181,7 +181,7 @@ class _VisitingScreenState extends State<VisitingScreen>
     final nowDate = DateTime.now();
     final nowYear = nowDate.year;
 
-    final date = Platform.isAndroid
+    final date = Platform.isIOS
         ? await _cupertinoDatePicker(nowDate, nowYear)
         : await _materialDatePicker(nowDate, nowYear);
   }
