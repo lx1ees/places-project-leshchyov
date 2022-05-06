@@ -1,11 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
-import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/location_point.dart';
 import 'package:places/domain/sight.dart';
 import 'package:places/domain/sight_category.dart';
@@ -17,7 +15,6 @@ import 'package:places/ui/screen/add_sight_screen/add_sight_screen_app_bar.dart'
 import 'package:places/ui/screen/add_sight_screen/select_category_section.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widgets/custom_divider.dart';
-import 'package:places/ui/widgets/custom_elevated_button.dart';
 import 'package:places/ui/widgets/custom_text_button.dart';
 import 'package:places/ui/widgets/custom_text_field.dart';
 import 'package:places/ui/widgets/focus_manager_holder.dart';

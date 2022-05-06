@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_typography.dart';
 
 /// Виджет элемента списка в диалоге выбора способа добавления изображения

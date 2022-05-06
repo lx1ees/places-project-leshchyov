@@ -12,6 +12,7 @@ abstract class AppStrings {
   static const String error = 'Ошибка';
   static const String delete = 'Удалить';
   static const String skip = 'Пропустить';
+  static const String apply = 'Применить';
 
   /// Тексты ошибок
   static const String errorNotFilled = 'Поле должно быть заполненным';
@@ -29,6 +30,8 @@ abstract class AppStrings {
       'Отмечайте понравившиеся\nместа и они появятся здесь.';
   static const String placeholderNoVisitedSightsText =
       'Завершите маршрут,\nчтобы место попало сюда.';
+  static const String datePickerHelpText = 'Запланируйте дату визита';
+  static const String datePickerFieldLabelText = 'Введите дату';
 
   /// Тексты окна Избранное
   static const String favoriteScreenAppBarTitle = 'Избранное';
