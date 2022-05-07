@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
+import 'package:places/ui/screen/sight_card/draggable_sight_card.dart';
 import 'package:places/ui/screen/sight_card/sight_card.dart';
 
 typedef OnDragComplete = void Function(int fromIndex, int toIndex);
@@ -35,45 +36,59 @@ class SightList extends StatelessWidget {
       return const SizedBox();
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(
-        AppConstants.defaultPadding,
-        0,
-        AppConstants.defaultPadding,
-        AppConstants.defaultPaddingX4,
-      ),
-      itemCount: sightCards.length,
-      itemBuilder: (context, index) {
-        final currentSightCard = sightCards[index];
-        if (!isDraggable) {
-          return currentSightCard;
-        }
+    return OrientationBuilder(builder: (context, orientation) {
+      return orientation == Orientation.landscape
+          ? Center(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: AppConstants.defaultPadding,
+                  crossAxisSpacing: AppConstants.defaultPaddingX2,
+                  childAspectRatio: 1.4,
+                ),
+                shrinkWrap: true,
+                padding: const EdgeInsets.fromLTRB(
+                  AppConstants.defaultPadding,
+                  0,
+                  AppConstants.defaultPadding,
+                  AppConstants.defaultPaddingX4,
+                ),
+                itemCount: sightCards.length,
+                itemBuilder: (context, index) {
+                  final currentSightCard = sightCards[index];
+                  if (!isDraggable) {
+                    return currentSightCard;
+                  }
 
-        return LongPressDraggable<int>(
-          data: index,
-          feedback: SizedBox(
-            height: AppConstants.cardDragFeedbackHeight,
-            width: AppConstants.cardDragFeedbackWidth,
-            child: currentSightCard,
-          ),
-          maxSimultaneousDrags: 1,
-          childWhenDragging: const SizedBox.shrink(),
-          child: DragTarget<int>(
-            onAccept: (fromIndex) => onDragAccepted(fromIndex, index),
-            onWillAccept: (fromIndex) {
-              return fromIndex != index;
-            },
-            builder: (
-              context,
-              candidateData,
-              rejectedData,
-            ) {
-              return currentSightCard;
-            },
-            // child: sightCard,
-          ),
-        );
-      },
-    );
+                  return DraggableSightCard(
+                    index: index,
+                    onDragAccepted: onDragAccepted,
+                    currentSightCard: currentSightCard,
+                  );
+                },
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(
+                AppConstants.defaultPadding,
+                0,
+                AppConstants.defaultPadding,
+                AppConstants.defaultPaddingX4,
+              ),
+              itemCount: sightCards.length,
+              itemBuilder: (context, index) {
+                final currentSightCard = sightCards[index];
+                if (!isDraggable) {
+                  return currentSightCard;
+                }
+
+                return DraggableSightCard(
+                  index: index,
+                  onDragAccepted: onDragAccepted,
+                  currentSightCard: currentSightCard,
+                );
+              },
+            );
+    });
   }
 }
