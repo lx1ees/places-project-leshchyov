@@ -6,15 +6,15 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/sight.dart';
+import 'package:places/domain/model/place.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/custom_tab_bar.dart';
 import 'package:places/ui/screen/no_items_placeholder.dart';
+import 'package:places/ui/screen/place_card/place_to_visit_card.dart';
+import 'package:places/ui/screen/place_card/place_visited_card.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
+import 'package:places/ui/screen/place_list.dart';
 import 'package:places/ui/screen/res/themes.dart';
-import 'package:places/ui/screen/sight_card/sight_to_visit_card.dart';
-import 'package:places/ui/screen/sight_card/sight_visited_card.dart';
-import 'package:places/ui/screen/sight_details_screen/sight_details_bottom_sheet.dart';
-import 'package:places/ui/screen/sight_list.dart';
 
 /// Экран со списками посещения
 class VisitingScreen extends StatefulWidget {
@@ -73,60 +73,60 @@ class _VisitingScreenState extends State<VisitingScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            SightList(
+            PlaceList(
               onDragComplete: (fromIndex, toIndex) {
-                _moveSight(
+                _movePlace(
                   index: toIndex,
-                  sightToMove: toVisitSights[fromIndex],
-                  source: toVisitSights,
+                  placeToMove: toVisitPlaces[fromIndex],
+                  source: toVisitPlaces,
                 );
               },
-              sightCards: toVisitSights
-                  .map((sight) => SightToVisitCard(
-                        key: ObjectKey(sight),
-                        sight: sight,
+              placeCards: toVisitPlaces
+                  .map((place) => PlaceToVisitCard(
+                        key: ObjectKey(place),
+                        place: place,
                         dateOfVisit: DateTime.now(),
                         onPlanPressed: _pickPlanDate,
-                        onDeletePressed: () => _deleteSight(
-                          sightToRemove: sight,
-                          source: toVisitSights,
+                        onDeletePressed: () => _deletePlace(
+                          placeToRemove: place,
+                          source: toVisitPlaces,
                         ),
                         onCardTapped: () =>
-                            _openSightDetailsBottomSheet(context, sight),
+                            _openPlaceDetailsBottomSheet(context, place),
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
-                iconPath: AppAssets.noToVisitSightsIcon,
+                iconPath: AppAssets.noToVisitPlacesIcon,
                 title: AppStrings.placeholderNoItemsTitleText,
-                subtitle: AppStrings.placeholderNoToVisitSightsText,
+                subtitle: AppStrings.placeholderNoToVisitPlacesText,
               ),
             ),
-            SightList(
+            PlaceList(
               onDragComplete: (fromIndex, toIndex) {
-                _moveSight(
+                _movePlace(
                   index: toIndex,
-                  sightToMove: visitedSights[fromIndex],
-                  source: visitedSights,
+                  placeToMove: visitedPlaces[fromIndex],
+                  source: visitedPlaces,
                 );
               },
-              sightCards: visitedSights
-                  .map((sight) => SightVisitedCard(
-                        key: ObjectKey(sight),
-                        sight: sight,
+              placeCards: visitedPlaces
+                  .map((place) => PlaceVisitedCard(
+                        key: ObjectKey(place),
+                        place: place,
                         dateOfVisit: DateTime.now(),
                         onSharePressed: () {},
-                        onDeletePressed: () => _deleteSight(
-                          sightToRemove: sight,
-                          source: visitedSights,
+                        onDeletePressed: () => _deletePlace(
+                          placeToRemove: place,
+                          source: visitedPlaces,
                         ),
                         onCardTapped: () =>
-                            _openSightDetailsBottomSheet(context, sight),
+                            _openPlaceDetailsBottomSheet(context, place),
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
-                iconPath: AppAssets.noVisitedSightsIcon,
+                iconPath: AppAssets.noVisitedPlacesIcon,
                 title: AppStrings.placeholderNoItemsTitleText,
-                subtitle: AppStrings.placeholderNoVisitedSightsText,
+                subtitle: AppStrings.placeholderNoVisitedPlacesText,
               ),
             ),
           ],
@@ -135,34 +135,34 @@ class _VisitingScreenState extends State<VisitingScreen>
     );
   }
 
-  void _deleteSight({
-    required Sight sightToRemove,
-    required List<Sight> source,
+  void _deletePlace({
+    required Place placeToRemove,
+    required List<Place> source,
   }) {
     setState(() {
-      source.removeWhere((sight) => sight == sightToRemove);
+      source.removeWhere((place) => place == placeToRemove);
     });
   }
 
   /// Метод перемещения картчочки в списке
   /// [index] - позиция, куда переместить
-  /// [sightToMove] - объект перемещения
+  /// [placeToMove] - объект перемещения
   /// [source] - список, где производится перемещение
-  void _moveSight({
+  void _movePlace({
     required int index,
-    required Sight sightToMove,
-    required List<Sight> source,
+    required Place placeToMove,
+    required List<Place> source,
   }) {
     setState(() {
-      _deleteSight(sightToRemove: sightToMove, source: source);
-      source.insert(index, sightToMove);
+      _deletePlace(placeToRemove: placeToMove, source: source);
+      source.insert(index, placeToMove);
     });
   }
 
   /// Метод открытия окна детальной информации о месте
-  Future<void> _openSightDetailsBottomSheet(
+  Future<void> _openPlaceDetailsBottomSheet(
     BuildContext context,
-    Sight sight,
+    Place place,
   ) async {
     await showModalBottomSheet<void>(
       context: context,
@@ -172,7 +172,7 @@ class _VisitingScreenState extends State<VisitingScreen>
       isDismissible: true,
       useRootNavigator: true,
       builder: (_) {
-        return SightDetailsBottomSheet(sight: sight);
+        return PlaceDetailsBottomSheet(place: place);
       },
     );
   }

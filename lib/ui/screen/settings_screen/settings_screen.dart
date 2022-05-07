@@ -7,7 +7,7 @@ import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/theme_mode_holder.dart';
 import 'package:places/ui/screen/res/routes.dart';
-import 'package:places/ui/widgets/custom_divider.dart';
+import 'package:places/ui/widget/custom_divider.dart';
 
 /// Экран с настройками
 class SettingsScreen extends StatefulWidget {

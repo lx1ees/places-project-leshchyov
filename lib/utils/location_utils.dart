@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:places/domain/location_point.dart';
+import 'package:places/domain/model/location_point.dart';
 
 class LocationUtils {
   /// Определение, находится ли координата [checkPoint] от текущего местоположения

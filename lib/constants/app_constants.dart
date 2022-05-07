@@ -57,20 +57,20 @@ abstract class AppConstants {
   static const double smallScreenHeight = 800;
 
   /// Константы карточки и окна детальной информации достопримечательности
-  static const double sightCardImageHeight = 96;
-  static const double sightDetailsGalleryHeight = 360;
-  static const double sightDetailsGalleryBackButtonSize = 32;
+  static const double placeCardImageHeight = 96;
+  static const double placeDetailsGalleryHeight = 360;
+  static const double placeDetailsGalleryBackButtonSize = 32;
   static const double cardAspectRatio = 3 / 2;
   static const double closeButtonSize = 40;
 
   /// Константы окна с фильтрами
   static const double distanceFilterMinValue = 100;
   static const double distanceFilterMaxValue = 10000;
-  static const double categoryFilterWidgetWidth = 96;
-  static const double categoryFilterIconSize = 64;
-  static const double categoryFilterIconRadius = categoryFilterIconSize / 2;
-  static const double categoryFilterRunSpace = 40;
-  static const double categoryFilterHeight = 92;
+  static const double placeTypeFilterWidgetWidth = 96;
+  static const double placeTypeFilterIconSize = 64;
+  static const double placeTypeFilterIconRadius = placeTypeFilterIconSize / 2;
+  static const double placeTypeFilterRunSpace = 40;
+  static const double placeTypeFilterHeight = 92;
 
   /// Константы окна с настройками
   static const double infoIconPadding = 10;
@@ -80,10 +80,16 @@ abstract class AppConstants {
   static const double separatorStartIndent = 88;
 
   /// Константы добавления нового места
-  static const double addNewSightImageSize = 72;
+  static const double addNewPlaceImageSize = 72;
 
   /// Константы онбординга
   static const double onboardingIconBottomMargin = 40;
   static const double onboardingActiveIndicatorWidth = 24;
   static const double indicatorStartIndent = 88;
+
+  /// Константы сетевого взаимодействия
+  static const String baseUrl =  'https://test-backend-flutter.surfstudio.ru/client/client.html';
+  static const int connectTimeout = 5000;
+  static const int receiveTimeout = 5000;
+  static const int sendTimeout = 5000;
 }

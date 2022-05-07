@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
-import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/sight.dart';
+import 'package:places/domain/model/filters_manager.dart';
+import 'package:places/domain/model/place.dart';
 import 'package:places/mocks.dart';
-import 'package:places/ui/screen/filters_screen/category_filter_section.dart';
 import 'package:places/ui/screen/filters_screen/distance_filter_section.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_app_bar.dart';
+import 'package:places/ui/screen/filters_screen/place_type_filter_section.dart';
 import 'package:places/ui/screen/filters_screen/show_filtered_list_button.dart';
 
 /// Экран с фильтрами по категории и дистанции от текущего местоположения
@@ -31,14 +31,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
   /// поменяли какие-то фильтры, не нажали Показать, а вернулись назад, т.е.
   /// не применили сделанные изменения).
   final FiltersManager localFiltersManager = FiltersManager();
-  late List<Sight> _filteredSights;
+  late List<Place> _filteredPlaces;
 
   @override
   void initState() {
     super.initState();
     localFiltersManager.updateWith(widget.filtersManager);
-    _filteredSights = widget.filtersManager.applyFilters(
-      sights: sightsMock,
+    _filteredPlaces = widget.filtersManager.applyFilters(
+      places: placesMock,
     );
   }
 
@@ -48,8 +48,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
       appBar: FilterScreenAppBar(
         onClearFilters: () {
           localFiltersManager.clearFilters();
-          _filteredSights = localFiltersManager.applyFilters(
-            sights: sightsMock,
+          _filteredPlaces = localFiltersManager.applyFilters(
+            places: placesMock,
           );
           setState(() {});
         },
@@ -66,14 +66,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                    CategoryFilterSection(
-                      onCategoryFilterTapped: (categoryFilterEntity, index) {
-                        localFiltersManager.updateCategoryFilter(
+                    PlaceTypeFilterSection(
+                      onPlaceTypeFilterTapped: (placeTypeFilterEntity, index) {
+                        localFiltersManager.updatePlaceTypeFilter(
                           index: index,
-                          categoryFilterEntity: categoryFilterEntity,
+                          placeTypeFilterEntity: placeTypeFilterEntity,
                         );
-                        _filteredSights = localFiltersManager.applyFilters(
-                          sights: sightsMock,
+                        _filteredPlaces = localFiltersManager.applyFilters(
+                          places: placesMock,
                         );
                         setState(() {});
                       },
@@ -89,8 +89,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                         setState(() {});
                       },
                       onDistanceChangeEnded: (values) {
-                        _filteredSights = localFiltersManager.applyFilters(
-                          sights: sightsMock,
+                        _filteredPlaces = localFiltersManager.applyFilters(
+                          places: placesMock,
                         );
                         setState(() {});
                       },
@@ -103,7 +103,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: ShowFilteredListButton(
-                affectedSightsCount: _filteredSights.length,
+                affectedPlacesCount: _filteredPlaces.length,
                 onShow: () {
                   widget.filtersManager.updateWith(localFiltersManager);
                   Navigator.pop(context);

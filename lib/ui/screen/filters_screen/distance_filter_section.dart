@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/model/filters_manager.dart';
 import 'package:places/utils/extensions.dart';
 
 /// Виджет-секция фильтра по дистанции

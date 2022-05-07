@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/sight_category.dart';
-import 'package:places/domain/sight_search_screen_route_arguments.dart';
-import 'package:places/ui/screen/add_sight_screen/add_sight_screen.dart';
-import 'package:places/ui/screen/add_sight_screen/select_category_screen.dart';
+import 'package:places/domain/model/filters_manager.dart';
+import 'package:places/domain/model/place_search_screen_route_arguments.dart';
+import 'package:places/domain/model/place_type.dart';
+import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
+import 'package:places/ui/screen/add_place_screen/select_place_type.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
+import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
-import 'package:places/ui/screen/sight_list_screen/sight_list_screen.dart';
-import 'package:places/ui/screen/sight_search_screen/sight_search_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 
@@ -29,7 +29,7 @@ abstract class AppRoutes {
 
   static final Map<String, Widget Function(BuildContext context)>
       bottomNavigationRoutes = {
-    SightListScreen.routeName: (_) => const SightListScreen(),
+    PlaceListScreen.routeName: (_) => const PlaceListScreen(),
     VisitingScreen.routeName: (_) => const VisitingScreen(),
     SettingsScreen.routeName: (_) => const SettingsScreen(),
   };
@@ -38,22 +38,22 @@ abstract class AppRoutes {
       _mainNavigationRoutes = {
     SplashScreen.routeName: (argument) => const SplashScreen(),
     HomeScreen.routeName: (argument) => const HomeScreen(),
-    AddSightScreen.routeName: (argument) => const AddSightScreen(),
+    AddPlaceScreen.routeName: (argument) => const AddPlaceScreen(),
     OnboardingScreen.routeName: (argument) => const OnboardingScreen(),
-    SelectCategoryScreen.routeName: (argument) {
-      final selectedSightCategory = argument as SightCategory?;
+    SelectPlaceTypeScreen.routeName: (argument) {
+      final selectedPlaceType = argument as PlaceType?;
 
-      return SelectCategoryScreen(selectedSightCategory: selectedSightCategory);
+      return SelectPlaceTypeScreen(selectedPlaceType: selectedPlaceType);
     },
     FiltersScreen.routeName: (argument) {
       final filtersManager = argument as FiltersManager;
 
       return FiltersScreen(filtersManager: filtersManager);
     },
-    SightSearchScreen.routeName: (argument) {
-      final args = argument as SightSearchScreenRouteArguments;
+    PlaceSearchScreen.routeName: (argument) {
+      final args = argument as PlaceSearchScreenRouteArguments;
 
-      return SightSearchScreen(
+      return PlaceSearchScreen(
         filtersManager: args.filtersManager,
         searchHistoryManager: args.searchHistoryManager,
       );
@@ -90,11 +90,11 @@ abstract class AppRoutes {
 
   static Future<Object?> navigateToCategoriesScreen({
     required BuildContext context,
-    required SightCategory? selectedCategory,
+    required PlaceType? selectedPlaceType,
   }) {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed<Object?>(
-              SelectCategoryScreen.routeName,
-              arguments: selectedCategory,
+              SelectPlaceTypeScreen.routeName,
+              arguments: selectedPlaceType,
             ) ??
         Future.value(null);
   }
@@ -103,7 +103,7 @@ abstract class AppRoutes {
     required BuildContext context,
   }) {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
-              AddSightScreen.routeName,
+              AddPlaceScreen.routeName,
             ) ??
         Future.value(null);
   }
@@ -121,10 +121,10 @@ abstract class AppRoutes {
 
   static Future<void> navigateToSearchScreen({
     required BuildContext context,
-    required SightSearchScreenRouteArguments arguments,
+    required PlaceSearchScreenRouteArguments arguments,
   }) {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
-              SightSearchScreen.routeName,
+              PlaceSearchScreen.routeName,
               arguments: arguments,
             ) ??
         Future.value(null);

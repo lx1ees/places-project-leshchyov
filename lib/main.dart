@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/theme_mode_holder.dart';
 import 'package:places/ui/screen/res/routes.dart';
@@ -37,7 +38,7 @@ class _AppState extends State<App> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('ru', 'RU'),
+        AppConstants.locale,
       ],
       onGenerateRoute: (settings) {
         return MaterialPageRoute<Object?>(

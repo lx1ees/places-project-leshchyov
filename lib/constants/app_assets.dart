@@ -7,10 +7,10 @@ abstract class AppAssets {
   static const String goIcon = 'res/images/go_icon.svg';
   static const String calendarIcon = 'res/images/calendar_icon.svg';
   static const String shareIcon = 'res/images/share_icon.svg';
-  static const String noToVisitSightsIcon =
-      'res/images/placeholder_no_to_visit_sights_icon.svg';
-  static const String noVisitedSightsIcon =
-      'res/images/placeholder_no_visited_sights_icon.svg';
+  static const String noToVisitPlacesIcon =
+      'res/images/placeholder_no_to_visit_places_icon.svg';
+  static const String noVisitedPlacesIcon =
+      'res/images/placeholder_no_visited_places_icon.svg';
   static const String cafeIcon = 'res/images/cafe_icon.svg';
   static const String hotelIcon = 'res/images/hotel_icon.svg';
   static const String museumIcon = 'res/images/museum_icon.svg';
