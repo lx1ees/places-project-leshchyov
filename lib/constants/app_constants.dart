@@ -88,7 +88,9 @@ abstract class AppConstants {
   static const double indicatorStartIndent = 88;
 
   /// Константы сетевого взаимодействия
-  static const String baseUrl =  'https://test-backend-flutter.surfstudio.ru/client/client.html';
+  static const String baseUrl =  'https://test-backend-flutter.surfstudio.ru';
+  static const String filteredPlacesPath = '/filtered_places';
+  static const String placesPath = '/place';
   static const int connectTimeout = 5000;
   static const int receiveTimeout = 5000;
   static const int sendTimeout = 5000;

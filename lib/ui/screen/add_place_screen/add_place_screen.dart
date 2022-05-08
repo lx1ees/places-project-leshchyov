@@ -166,7 +166,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                 alignment: Alignment.bottomCenter,
                 child: BottomScreenSubmitButton(
                   label: AppStrings.create,
-                  onAddPressed: () {
+                  onAddPressed: () async {
                     if ((_formKey.currentState?.validate() ?? false) &&
                         _isAllFieldsFilledAndCorrect(
                           placeType: _placeType,
@@ -175,13 +175,15 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                           lon: _lon,
                           description: _description,
                         )) {
-                      _addNewPlace(
+                      await _addNewPlace(
                         placeType: _placeType!,
                         name: _name!,
                         lon: _lon!,
                         lat: _lat!,
                         description: _description!,
                       );
+
+                      if (!mounted) return;
                       Navigator.pop(context);
                     }
                   },
@@ -217,20 +219,20 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
   }
 
   /// Метода добавления нового места
-  void _addNewPlace({
+  Future<void> _addNewPlace({
     required PlaceType placeType,
     required String name,
     required double lat,
     required double lon,
     required String description,
-  }) {
+  }) async{
     final newPlace = Place(
       name: name,
       point: LocationPoint(lat: lat, lon: lon),
       description: description,
       placeType: placeType,
     );
-    placesMock.insert(0, newPlace);
+    await placeInteractor.addNewPlace(newPlace);
   }
 
   /// Функция проверки заполненности и корректности всех обязательных для заполнения

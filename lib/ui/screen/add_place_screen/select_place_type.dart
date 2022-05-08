@@ -78,18 +78,18 @@ class _SelectPlaceTypeScreenState extends State<SelectPlaceTypeScreen> {
                   itemBuilder: (_, index) {
                     return Padding(
                       padding: EdgeInsets.only(
-                        bottom: index == placeTypesMock.length - 1
+                        bottom: index == availablePlaceTypes.length - 1
                             ? AppConstants.defaultPaddingX4
                             : 0,
                       ),
                       child: ListTile(
                         title: Text(
-                          placeTypesMock[index].name,
+                          availablePlaceTypes[index].name,
                           style: AppTypography.textRegularTextStyle.copyWith(
                             color: colorScheme.primary,
                           ),
                         ),
-                        trailing: newPlaceType?.id == placeTypesMock[index].id
+                        trailing: newPlaceType?.id == availablePlaceTypes[index].id
                             ? Icon(
                                 Icons.check_rounded,
                                 color: colorScheme.secondary,
@@ -99,9 +99,9 @@ class _SelectPlaceTypeScreenState extends State<SelectPlaceTypeScreen> {
                         onTap: () {
                           setState(() {
                             newPlaceType =
-                                newPlaceType?.id == placeTypesMock[index].id
+                                newPlaceType?.id == availablePlaceTypes[index].id
                                     ? null
-                                    : placeTypesMock[index];
+                                    : availablePlaceTypes[index];
                           });
                         },
                       ),
@@ -110,7 +110,7 @@ class _SelectPlaceTypeScreenState extends State<SelectPlaceTypeScreen> {
                   separatorBuilder: (_, index) => const CustomDivider(
                     hasIndent: true,
                   ),
-                  itemCount: placeTypesMock.length,
+                  itemCount: availablePlaceTypes.length,
                 ),
               ),
               Align(

@@ -66,7 +66,7 @@ abstract class AppStrings {
   static const String museumTypeId = 'museum';
   static const String cafeTypeId = 'cafe';
   static const String monumentTypeId = 'monument';
-  static const String theathreTypeId = 'theathre';
+  static const String theatreTypeId = 'theatre';
   static const String unknownTypeId = 'other';
 
   /// Тексты окна добавления нового места

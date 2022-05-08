@@ -4,7 +4,7 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/model/search_history_manager.dart';
+import 'package:places/domain/search_history_manager.dart';
 import 'package:places/ui/widget/custom_divider.dart';
 import 'package:places/ui/widget/custom_icon_button.dart';
 import 'package:places/ui/widget/custom_text_button.dart';

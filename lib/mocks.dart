@@ -1,5 +1,10 @@
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/data/api/network_service.dart';
+import 'package:places/data/repository/place_repository.dart';
+import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/interactor/place_interactor.dart';
+import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type.dart';
@@ -16,7 +21,7 @@ List<Place> placesMock = [
     ],
     description:
         'Целостный ансамбль памятников оборонного зодчества, культовой и гражданской архитектуры.',
-    placeType: placeTypesMock.findById(id: AppStrings.templeTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.templeTypeId),
   ),
   Place(
     name: 'Памятник Петру I',
@@ -29,7 +34,7 @@ List<Place> placesMock = [
     ],
     description:
         'Энергично шагающая фигура царя и одновременно смотрящая в сторону Волги. Памятник выполнен из бронзы и установлен на постаменте из розового гранита в виде указателя сторон света, на лучах которого установлены четыре кованных якоря и буквы морского компаса, соответствующие сторонам света. Общая высота памятника с постаментом 9 м, его дополняет кованый свиток с выдержкой из указа об образовании Астраханской губернии, который возложен на подножие постамента.',
-    placeType: placeTypesMock.findById(id: AppStrings.templeTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.templeTypeId),
   ),
   Place(
     name: 'Городская набережная',
@@ -40,7 +45,7 @@ List<Place> placesMock = [
     ],
     description:
         'Городская набережная Астрахани в нынешнем виде появилась в результате реконструкции 2007-2009 годов в предверии празднования 450-летия города на деньги корпорации «Газпром». Сейчас на набережной много туристических объектов для фотографий.',
-    placeType: placeTypesMock.findById(id: AppStrings.templeTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.templeTypeId),
   ),
   Place(
     name: 'Музыкальный фонтан',
@@ -52,7 +57,7 @@ List<Place> placesMock = [
     ],
     description:
         'Одна из главных достопримечательностей набережной реки Волга является светомузыкальный фонтан «Петровский», построенный в 2009 году. Он был назван в честь императора Петра I после проведения среди горожан специального конкурса. Фонтан окружен балюстрадой из небольших фонтанов. Диаметр его составляет 8 м, высота - 3,5 м. У фонтана есть несколько уровней, из которых во время светомузыкального представления в такт с музыкой танцуют цветные струи воды. Очень красивое зрелище!',
-    placeType: placeTypesMock.findById(id: AppStrings.templeTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.templeTypeId),
   ),
   Place(
     name: 'Астраханский государственный театр Оперы и Балета',
@@ -67,7 +72,7 @@ List<Place> placesMock = [
     ],
     description:
         'Астраханский государственный театр оперы и балета построен в 2011 году в "псевдорусском" стиле с элементами стиля модерн. Первый сезон открыл симфонический оркестр Мариинского театра под управлением Валерия Гергиева.Концертный зал вмещает до 1,2 тыс. зрителей, общая площадь театра – 52 тыс. квадратных метров. При проектировании концертного зала проводились со специалистами парижской "Гранд опера" и петербургского Мариинского театра. Специалисты отмечают непревзойденную акустику Астраханского государственного театра оперы и балета. Астраханский государственный театр оперы и балета построен в 2011 году в "псевдорусском" стиле с элементами стиля модерн. Первый сезон открыл симфонический оркестр Мариинского театра под управлением Валерия Гергиева.Концертный зал вмещает до 1,2 тыс. зрителей, общая площадь театра – 52 тыс. квадратных метров. При проектировании концертного зала проводились со специалистами парижской "Гранд опера" и петербургского Мариинского театра. Специалисты отмечают непревзойденную акустику Астраханского государственного театра оперы и балета. Астраханский государственный театр оперы и балета построен в 2011 году в "псевдорусском" стиле с элементами стиля модерн. Первый сезон открыл симфонический оркестр Мариинского театра под управлением Валерия Гергиева.Концертный зал вмещает до 1,2 тыс. зрителей, общая площадь театра – 52 тыс. квадратных метров. При проектировании концертного зала проводились со специалистами парижской "Гранд опера" и петербургского Мариинского театра. Специалисты отмечают непревзойденную акустику Астраханского государственного театра оперы и балета.',
-    placeType: placeTypesMock.findById(id: AppStrings.museumTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.museumTypeId),
   ),
   Place(
     name: 'Усадьба М. А. Шелехова',
@@ -79,7 +84,7 @@ List<Place> placesMock = [
     ],
     description:
         'Дом был построен в 1880-е годы и владела им некая Скорнякова, а собственностью рыбопромышленника М.А. Шелехова он стал в 1904г. После революции и по сей день здание занимает туберкулёзный диспансер. Считается, что сам Шелехов завещал дом мед.учреждению в память о дочери, умершей от этой болезни.',
-    placeType: placeTypesMock.findById(id: AppStrings.museumTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.museumTypeId),
   ),
   Place(
     name: 'Дом купца Тетюшинова Г.В.',
@@ -89,7 +94,7 @@ List<Place> placesMock = [
     ],
     description:
         'Музейно-культурный центр "Дом купца Тетюшинова" расположился в резном деревянном тереме по ул. Коммунистической. Это единственный образец деревянного зодчества XIX века, сохранившийся во всем Нижнем Поволжье.',
-    placeType: placeTypesMock.findById(id: AppStrings.museumTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.museumTypeId),
   ),
   Place(
     name: 'Сквер Гейдара Алиева',
@@ -99,14 +104,14 @@ List<Place> placesMock = [
     ],
     description:
         'Сквер был создан вокруг установленного в 2010 году памятника первому президенту Азербайджана Гейдару Алиеву.',
-    placeType: placeTypesMock.findById(id: AppStrings.parkTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.parkTypeId),
   ),
 ];
 
 final List<Place> toVisitPlaces = [...placesMock.take(3)];
 final List<Place> visitedPlaces = [...placesMock.reversed.take(3)];
 
-const List<PlaceType> placeTypesMock = [
+const List<PlaceType> availablePlaceTypes = [
   PlaceType(
     id: AppStrings.hotelTypeId,
     name: AppStrings.hotelPlaceTypeName,
@@ -131,32 +136,50 @@ const List<PlaceType> placeTypesMock = [
     id: AppStrings.cafeTypeId,
     name: AppStrings.cafePlaceTypeName,
   ),
+  PlaceType(
+    id: AppStrings.monumentTypeId,
+    name: AppStrings.monumentPlaceTypeName,
+  ),
+  PlaceType(
+    id: AppStrings.theatreTypeId,
+    name: AppStrings.theatrePlaceTypeName,
+  ),
 ];
 
 List<PlaceTypeFilterEntity> placeTypeFiltersMock = [
   PlaceTypeFilterEntity(
     iconPath: AppAssets.hotelIcon,
-    placeType: placeTypesMock.findById(id: AppStrings.hotelTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.hotelTypeId),
   ),
   PlaceTypeFilterEntity(
     iconPath: AppAssets.restaurantIcon,
-    placeType: placeTypesMock.findById(id: AppStrings.restaurantTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.restaurantTypeId),
   ),
   PlaceTypeFilterEntity(
     iconPath: AppAssets.particularPlaceIcon,
-    placeType:
-        placeTypesMock.findById(id: AppStrings.templeTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.templeTypeId),
   ),
   PlaceTypeFilterEntity(
     iconPath: AppAssets.parkIcon,
-    placeType: placeTypesMock.findById(id: AppStrings.parkTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.parkTypeId),
   ),
   PlaceTypeFilterEntity(
     iconPath: AppAssets.museumIcon,
-    placeType: placeTypesMock.findById(id: AppStrings.museumTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.museumTypeId),
   ),
   PlaceTypeFilterEntity(
     iconPath: AppAssets.cafeIcon,
-    placeType: placeTypesMock.findById(id: AppStrings.cafeTypeId),
+    placeType: availablePlaceTypes.findById(id: AppStrings.cafeTypeId),
   ),
 ];
+
+/// ----------------------------------------------------------------------------
+FiltersManager filtersManager = FiltersManager();
+PlaceRepository placeRepository = PlaceRepository(NetworkService());
+PlaceInteractor placeInteractor = PlaceInteractor(
+  repository: placeRepository,
+);
+SearchInteractor searchInteractor = SearchInteractor(
+  repository: placeRepository,
+  filtersManager: filtersManager,
+);

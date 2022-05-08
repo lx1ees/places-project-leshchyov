@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/model/filters_manager.dart';
+import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/place_type_filter_entity.dart';
 import 'package:places/ui/screen/filters_screen/place_type_filter_item.dart';
 

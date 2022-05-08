@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/model/filters_manager.dart';
+import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/domain/model/search_history_manager.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_error_placeholder.dart';
@@ -19,16 +19,12 @@ import 'package:places/ui/widget/search_bar.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Экран поиска мест
-/// [filtersManager] - менеджер фильтров
-/// [searchHistoryManager] - менеджер истории поиска
 class PlaceSearchScreen extends StatefulWidget {
   static const String routeName = '/search';
   final FiltersManager filtersManager;
-  final SearchHistoryManager searchHistoryManager;
 
   const PlaceSearchScreen({
     required this.filtersManager,
-    required this.searchHistoryManager,
     Key? key,
   }) : super(key: key);
 
@@ -38,7 +34,6 @@ class PlaceSearchScreen extends StatefulWidget {
 
 class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
   final _searchStream = PublishSubject<String>();
-  final _source = <Place>[];
   final _foundPlaces = <Place>[];
   late final TextEditingController _searchController;
 
@@ -51,13 +46,9 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-
-    /// Сначала фильтруем по категориям и дистанции, среди полученного результата
-    /// и будет производиться поиск
-    _source.addAll(widget.filtersManager.applyFilters(places: placesMock));
     _searchStream
         .debounceTime(const Duration(milliseconds: 500))
-        .listen(_searchFor);
+        .listen(_requestForSearchResults);
   }
 
   @override
@@ -106,7 +97,7 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
               if (_searchString.isEmpty) {
                 /// Показываем историю
                 return PlaceSearchHistoryList(
-                  searchHistoryManager: widget.searchHistoryManager,
+                  searchHistoryManager: searchInteractor.searchHistoryManager,
                   onHistoryPressed: (historySearchString) {
                     _searchController
                       ..text = historySearchString
@@ -144,31 +135,6 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
     );
   }
 
-  /// Функция поиска мест по запросу [searchString]
-  Future<void> _searchFor(String searchString) async {
-    _showLoader();
-    _searchString = searchString;
-
-    /// Имитация сетевой задержки при поиске для демонстрации работы лоадера
-    await Future.delayed(const Duration(milliseconds: 500), () {});
-    _foundPlaces
-      ..clear()
-      ..addAll(
-        _source.where((place) {
-          return searchString.isNotEmpty &&
-              place.name
-                  .toLowerCase()
-                  .contains(searchString.toLowerCase().trim());
-        }),
-      );
-    if (_foundPlaces.isNotEmpty) {
-      /// Если текущий поисковой запрос превел к каким-то результатам, сохраняем
-      /// стоку поиска в историю
-      widget.searchHistoryManager.addInHistory(searchString);
-    }
-    _hideLoader();
-  }
-
   /// Метод открытия окна детальной информации о месте
   Future<void> _openPlaceDetailsBottomSheet(
     BuildContext context,
@@ -198,5 +164,24 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
     setState(() {
       _isShowLoader = false;
     });
+  }
+
+  /// Функция поиска мест по запросу [searchString]
+  Future<void> _requestForSearchResults(String searchString) async {
+    _showLoader();
+    _searchString = searchString;
+
+    final places = await searchInteractor.getSearchResults(
+      filtersManager: filtersManager,
+      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
+      searchString: searchString,
+    );
+    setState(() {
+      _foundPlaces
+        ..clear()
+        ..addAll(places);
+    });
+
+    _hideLoader();
   }
 }

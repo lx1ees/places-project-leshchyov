@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/model/filters_manager.dart';
-import 'package:places/domain/model/place_search_screen_route_arguments.dart';
+import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/place_type.dart';
+import 'package:places/mocks.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/select_place_type.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
@@ -29,7 +29,8 @@ abstract class AppRoutes {
 
   static final Map<String, Widget Function(BuildContext context)>
       bottomNavigationRoutes = {
-    PlaceListScreen.routeName: (_) => const PlaceListScreen(),
+    PlaceListScreen.routeName: (_) =>
+        PlaceListScreen(filtersManager: filtersManager),
     VisitingScreen.routeName: (_) => const VisitingScreen(),
     SettingsScreen.routeName: (_) => const SettingsScreen(),
   };
@@ -46,16 +47,15 @@ abstract class AppRoutes {
       return SelectPlaceTypeScreen(selectedPlaceType: selectedPlaceType);
     },
     FiltersScreen.routeName: (argument) {
-      final filtersManager = argument as FiltersManager;
+      final args = argument as FiltersManager;
 
-      return FiltersScreen(filtersManager: filtersManager);
+      return FiltersScreen(filtersManager: args);
     },
     PlaceSearchScreen.routeName: (argument) {
-      final args = argument as PlaceSearchScreenRouteArguments;
+      final args = argument as FiltersManager;
 
       return PlaceSearchScreen(
-        filtersManager: args.filtersManager,
-        searchHistoryManager: args.searchHistoryManager,
+        filtersManager: args,
       );
     },
   };
@@ -121,11 +121,11 @@ abstract class AppRoutes {
 
   static Future<void> navigateToSearchScreen({
     required BuildContext context,
-    required PlaceSearchScreenRouteArguments arguments,
+    required FiltersManager filtersManager,
   }) {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               PlaceSearchScreen.routeName,
-              arguments: arguments,
+              arguments: filtersManager,
             ) ??
         Future.value(null);
   }

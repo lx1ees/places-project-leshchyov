@@ -14,8 +14,21 @@ class FiltersManager {
 
   List<PlaceTypeFilterEntity> get placeTypeFilters => _placeTypeFilters;
 
+  List<String>? get placeTypeFilterIds {
+    final ids = placeTypeFilters
+        .where((e) => e.isSelected)
+        .map((e) => e.placeType.id)
+        .toList();
+
+    return ids.isNotEmpty ? ids : null;
+  }
+
   bool get isPlaceTypeFiltersApplied =>
       _placeTypeFilters.where((placeType) => placeType.isSelected).isNotEmpty;
+
+  bool get isFiltersApplied =>
+      isPlaceTypeFiltersApplied ||
+      distanceRightThreshold != AppConstants.distanceFilterMaxValue;
 
   List<PlaceTypeFilterEntity> _placeTypeFilters;
 

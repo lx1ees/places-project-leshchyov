@@ -3,10 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
-import 'package:places/domain/model/filters_manager.dart';
+import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/domain/model/place_search_screen_route_arguments.dart';
-import 'package:places/domain/model/search_history_manager.dart';
 import 'package:places/mocks.dart';
 import 'package:places/ui/screen/place_card/place_view_card.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
@@ -19,24 +18,25 @@ import 'package:places/ui/widget/search_bar.dart';
 /// Виджет, описывающий экран списка интересных мест
 class PlaceListScreen extends StatefulWidget {
   static const String routeName = '/placeList';
+  final FiltersManager filtersManager;
 
-  const PlaceListScreen({Key? key}) : super(key: key);
+  const PlaceListScreen({
+    required this.filtersManager,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PlaceListScreen> createState() => _PlaceListScreenState();
 }
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
-  final FiltersManager filtersManager = FiltersManager();
-  final SearchHistoryManager searchHistoryManager = SearchHistoryManager();
   final ScrollController _scrollController = ScrollController();
-  late List<Place> filteredPlaces;
+  final List<Place> _filteredPlaces = [];
 
   @override
   void initState() {
     super.initState();
-    filteredPlaces = [...placesMock];
-    _applyFilters(filtersManager);
+    _requestForRemotePlaces();
   }
 
   @override
@@ -85,10 +85,13 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
             const SizedBox(height: AppConstants.defaultPaddingX1_5),
             Expanded(
               child: PlaceList(
-                placeCards: filteredPlaces
+                placeCards: _filteredPlaces
                     .map((place) => PlaceViewCard(
                           place: place,
-                          onFavoritePressed: () {},
+                          onFavoritePressed: () {
+                            placeInteractor.changeFavorite(place);
+                            _requestForLocalPlaces();
+                          },
                           onCardTapped: () =>
                               _openPlaceDetailsBottomSheet(context, place),
                         ))
@@ -123,8 +126,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     BuildContext context,
   ) async {
     await AppRoutes.navigateToAddNewPlaceScreen(context: context);
-    _applyFilters(filtersManager);
-    setState(() {});
+    await _requestForRemotePlaces();
   }
 
   /// Метода открытия окна с фильтрами
@@ -135,8 +137,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
       context: context,
       filtersManager: filtersManager,
     );
-    _applyFilters(filtersManager);
-    setState(() {});
+    await _requestForRemotePlaces();
   }
 
   /// Метода открытия окна поиска
@@ -145,15 +146,29 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   ) async {
     await AppRoutes.navigateToSearchScreen(
       context: context,
-      arguments: PlaceSearchScreenRouteArguments(
-        filtersManager: filtersManager,
-        searchHistoryManager: searchHistoryManager,
-      ),
+      filtersManager: filtersManager,
     );
     setState(() {});
   }
 
-  void _applyFilters(FiltersManager filtersManager) {
-    filteredPlaces = filtersManager.applyFilters(places: placesMock);
+  Future<void> _requestForRemotePlaces() async {
+    final places = await placeInteractor.getPlaces(
+      filtersManager: filtersManager,
+      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
+    );
+    setState(() {
+      _filteredPlaces
+        ..clear()
+        ..addAll(places);
+    });
+  }
+
+  void _requestForLocalPlaces(){
+    final places =  placeInteractor.getLocalPlaces();
+    setState(() {
+      _filteredPlaces
+        ..clear()
+        ..addAll(places);
+    });
   }
 }

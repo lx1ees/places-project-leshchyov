@@ -7,6 +7,7 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/model/place.dart';
+import 'package:places/mocks.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_description.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_screen_sliver_app_bar.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_title.dart';
@@ -37,17 +38,20 @@ class PlaceDetailsBottomSheet extends StatefulWidget {
 class _PlaceDetailsBottomSheetState extends State<PlaceDetailsBottomSheet> {
   final DraggableScrollableController _scrollController =
       DraggableScrollableController();
+  Place? _place;
   var _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
+    _place = widget.place;
     _isExpanded = widget.isExpanded;
+    _requestForPlaceDetails();
   }
 
   @override
   Widget build(BuildContext context) {
-    final place = widget.place;
+    final place = _place;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
@@ -73,6 +77,8 @@ class _PlaceDetailsBottomSheetState extends State<PlaceDetailsBottomSheet> {
             final cornerRadius = Radius.circular(
               _isExpanded ? 0 : AppConstants.button3BorderRadius,
             );
+
+            if (place == null) return const SizedBox.shrink();
 
             return ClipRRect(
               borderRadius: BorderRadius.only(
@@ -195,5 +201,14 @@ class _PlaceDetailsBottomSheetState extends State<PlaceDetailsBottomSheet> {
             isExpanded ? Theme.of(context).backgroundColor : Colors.transparent,
       ));
     }
+  }
+
+  Future<void> _requestForPlaceDetails() async {
+    final place = await placeInteractor.getPlaceDetails(
+      placeId: widget.place.id.toString(),
+    );
+    setState(() {
+      _place = place;
+    });
   }
 }

@@ -27,7 +27,7 @@ class NetworkService {
             return handler.next(options);
           },
           onResponse: (response, handler) {
-            debugPrint(response.data.toString());
+            // debugPrint(response.data.toString());
 
             return handler.next(response);
           },

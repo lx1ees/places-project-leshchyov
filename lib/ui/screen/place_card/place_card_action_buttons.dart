@@ -82,9 +82,11 @@ class PlaceVisitedCardActionButtons extends PlaceCardActionButtons {
 
 class PlaceViewCardActionButtons extends PlaceCardActionButtons {
   final VoidCallback onFavoritePressed;
+  final bool isPlaceInFavorites;
 
   const PlaceViewCardActionButtons({
     required this.onFavoritePressed,
+    required this.isPlaceInFavorites,
     Key? key,
   }) : super(key: key);
 
@@ -93,7 +95,7 @@ class PlaceViewCardActionButtons extends PlaceCardActionButtons {
     return CustomIconButton(
       onPressed: onFavoritePressed,
       icon: SvgPicture.asset(
-        AppAssets.heartIcon,
+        isPlaceInFavorites ? AppAssets.heartFullIcon : AppAssets.heartIcon,
         height: AppConstants.defaultIconSize,
         width: AppConstants.defaultIconSize,
         color: Theme.of(context).white,
