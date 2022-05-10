@@ -1,3 +1,4 @@
+/// Класс модели запроса мест в сети
 class PlacesFilterRequestDto {
   final double? lat;
   final double? lng;

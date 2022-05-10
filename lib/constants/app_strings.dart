@@ -21,6 +21,7 @@ abstract class AppStrings {
   /// Тексты карточки и окна детальной информации достопримечательности
   static const String placeShortDescriptionMock = 'Закрыто до 9:00';
   static const String placeDetailsPlanActionButtonTitle = 'Запланировать';
+  static const String placeDetailsShareActionButtonTitle = 'Поделиться';
   static const String placeDetailsInFavActionButtonTitle = 'В Избранное';
   static const String placeDetailsRouteButtonTitle = 'Построить маршрут';
   static const String placeCardVisitedText = 'Цель достигнута';

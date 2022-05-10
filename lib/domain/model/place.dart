@@ -2,7 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:places/data/model/place_dto.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/mocks.dart';
+
+enum CardLook { view, toVisit, visited }
 
 /// Класс, описывающий модель данных достопримечательности
 /// [id] - идентификатор
@@ -14,6 +15,7 @@ import 'package:places/mocks.dart';
 /// [planDate] - дата запланированного посещения
 /// [isInFavorites] - флаг, находитеся место в избранном или нет
 /// [isVisited] - флаг, посещенное место или нет
+/// [cardLook] - вид карточки, где показывается место
 class Place extends Equatable {
   final int id;
   final String name;
@@ -24,6 +26,7 @@ class Place extends Equatable {
   final DateTime? planDate;
   final bool isInFavorites;
   final bool isVisited;
+  final CardLook cardLook;
 
   @override
   List<Object?> get props => [id, name, point, urls, description, placeType];
@@ -38,6 +41,7 @@ class Place extends Equatable {
     this.isInFavorites = false,
     this.isVisited = false,
     this.planDate,
+    this.cardLook = CardLook.view,
   });
 
   factory Place.fromDto(PlaceDto dto) {
@@ -62,11 +66,12 @@ class Place extends Equatable {
       urls: urls,
     );
   }
-  
+
   Place copyWith({
     bool? isInFavorites,
     bool? isVisited,
     DateTime? planDate,
+    CardLook? cardLook,
   }) {
     return Place(
       id: id,
@@ -78,6 +83,7 @@ class Place extends Equatable {
       isVisited: isVisited ?? this.isVisited,
       isInFavorites: isInFavorites ?? this.isInFavorites,
       planDate: planDate ?? this.planDate,
+      cardLook: cardLook ?? this.cardLook,
     );
   }
 }

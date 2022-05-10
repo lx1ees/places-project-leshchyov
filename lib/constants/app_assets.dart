@@ -6,6 +6,7 @@ abstract class AppAssets {
   static const String listFullIcon = 'res/images/list_full_icon.svg';
   static const String goIcon = 'res/images/go_icon.svg';
   static const String calendarIcon = 'res/images/calendar_icon.svg';
+  static const String calendarFullIcon = 'res/images/calendar_full_icon.svg';
   static const String shareIcon = 'res/images/share_icon.svg';
   static const String noToVisitPlacesIcon =
       'res/images/placeholder_no_to_visit_places_icon.svg';

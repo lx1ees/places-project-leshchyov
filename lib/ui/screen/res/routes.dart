@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/mocks.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/select_place_type.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';

@@ -5,10 +5,18 @@ import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/search_history_manager.dart';
 
+/// Интерактор фичи Поиск
 class SearchInteractor {
+  /// Список найденных мест
   final List<Place> _places = [];
+
+  /// Репозиторий списка мест
   final PlaceRepository _repository;
+
+  /// Менеджер фильтров
   final FiltersManager _filtersManager;
+
+  /// Менеджер истории поиска
   final SearchHistoryManager _searchHistoryManager = SearchHistoryManager();
 
   FiltersManager get filtersManager => _filtersManager;
@@ -21,6 +29,8 @@ class SearchInteractor {
   })  : _repository = repository,
         _filtersManager = filtersManager;
 
+  /// Метод для поиска мест по поисковому запросу [searchString], учитывая фильтры
+  /// из [_filtersManager] и текущее местоположение [currentLocation]
   Future<List<Place>> getSearchResults({
     required FiltersManager filtersManager,
     required String searchString,

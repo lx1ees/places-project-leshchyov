@@ -7,8 +7,9 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/mocks.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_description.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_dynamic_action_button.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_screen_sliver_app_bar.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_title.dart';
 import 'package:places/ui/widget/bottom_sheet_close_button.dart';
@@ -137,13 +138,9 @@ class _PlaceDetailsBottomSheetState extends State<PlaceDetailsBottomSheet> {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: CustomTextIconButton(
-                                        label: AppStrings
-                                            .placeDetailsPlanActionButtonTitle,
-                                        icon: SvgPicture.asset(
-                                          AppAssets.calendarIcon,
-                                          color: colorScheme.onPrimary,
-                                        ),
+                                      child: PlaceDetailsDynamicActionButton(
+                                        place: place,
+                                        onPressed: _requestForPlaceDetails,
                                       ),
                                     ),
                                     Expanded(
@@ -151,9 +148,15 @@ class _PlaceDetailsBottomSheetState extends State<PlaceDetailsBottomSheet> {
                                         label: AppStrings
                                             .placeDetailsInFavActionButtonTitle,
                                         icon: SvgPicture.asset(
-                                          AppAssets.heartIcon,
+                                          place.isInFavorites
+                                              ? AppAssets.heartFullIcon
+                                              : AppAssets.heartIcon,
                                           color: colorScheme.onPrimary,
                                         ),
+                                        onPressed: () {
+                                          placeInteractor.changeFavorite(place);
+                                          _requestForPlaceDetails();
+                                        },
                                       ),
                                     ),
                                   ],
@@ -203,9 +206,10 @@ class _PlaceDetailsBottomSheetState extends State<PlaceDetailsBottomSheet> {
     }
   }
 
+  /// Обновление места (временная мера пока нет стейтменеджмента)
   Future<void> _requestForPlaceDetails() async {
     final place = await placeInteractor.getPlaceDetails(
-      placeId: widget.place.id.toString(),
+      place: widget.place,
     );
     setState(() {
       _place = place;

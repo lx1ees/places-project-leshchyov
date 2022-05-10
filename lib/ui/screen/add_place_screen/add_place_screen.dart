@@ -7,7 +7,7 @@ import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/mocks.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/add_place_screen/add_image_dialog.dart';
 import 'package:places/ui/screen/add_place_screen/add_image_section.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen_app_bar.dart';
@@ -225,7 +225,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
     required double lat,
     required double lon,
     required String description,
-  }) async{
+  }) async {
     final newPlace = Place(
       name: name,
       point: LocationPoint(lat: lat, lon: lon),

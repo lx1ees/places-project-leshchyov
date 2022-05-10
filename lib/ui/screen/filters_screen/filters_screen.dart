@@ -3,7 +3,7 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/mocks.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/filters_screen/distance_filter_section.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_app_bar.dart';
 import 'package:places/ui/screen/filters_screen/place_type_filter_section.dart';

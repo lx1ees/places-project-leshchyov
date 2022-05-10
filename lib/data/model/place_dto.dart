@@ -1,3 +1,4 @@
+/// Класс модели места dto
 class PlaceDto {
   final int id;
   final double lat;
@@ -34,7 +35,6 @@ class PlaceDto {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      // 'id': id,
       'lat': lat,
       'lng': lng,
       'name': name,

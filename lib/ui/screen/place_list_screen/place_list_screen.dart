@@ -6,7 +6,7 @@ import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/mocks.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/place_card/place_view_card.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_list.dart';
@@ -36,6 +36,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   @override
   void initState() {
     super.initState();
+    _requestForLocalPlaces();
     _requestForRemotePlaces();
   }
 
@@ -119,6 +120,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
         return PlaceDetailsBottomSheet(place: place);
       },
     );
+    await _requestForLocalPlaces();
   }
 
   /// Метод открытия окна добавления нового места
@@ -148,9 +150,10 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
       context: context,
       filtersManager: filtersManager,
     );
-    setState(() {});
+    await _requestForLocalPlaces();
   }
 
+  /// Обновление списка мест из сети (временная мера пока нет стейтменеджмента)
   Future<void> _requestForRemotePlaces() async {
     final places = await placeInteractor.getPlaces(
       filtersManager: filtersManager,
@@ -163,8 +166,9 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
     });
   }
 
-  void _requestForLocalPlaces(){
-    final places =  placeInteractor.getLocalPlaces();
+  /// Обновление списка мест из локального списка (временная мера пока нет стейтменеджмента)
+  Future<void> _requestForLocalPlaces() async {
+    final places = placeInteractor.getLocalPlaces();
     setState(() {
       _filteredPlaces
         ..clear()

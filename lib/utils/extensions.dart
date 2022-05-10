@@ -10,6 +10,12 @@ extension NullableDateTimeExtension on DateTime? {
     return '${AppStrings.placeCardToBeVisitedText} ${this?.toFormattedString()}';
   }
 
+  String toReVisitString() {
+    if (this == null) return '';
+
+    return '${this?.toFormattedString()}';
+  }
+
   String visitedString() {
     if (this == null) return '';
 

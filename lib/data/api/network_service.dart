@@ -28,7 +28,6 @@ class NetworkService {
           },
           onResponse: (response, handler) {
             // debugPrint(response.data.toString());
-
             return handler.next(response);
           },
           onError: (error, handler) {

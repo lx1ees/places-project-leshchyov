@@ -7,7 +7,7 @@ import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/mocks.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_error_placeholder.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_history_list.dart';

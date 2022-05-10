@@ -8,10 +8,10 @@ import 'package:places/ui/screen/place_card/place_card_action_buttons.dart';
 class PlaceToVisitCard extends PlaceCard {
   PlaceToVisitCard({
     required Place place,
-    required DateTime dateOfVisit,
     required VoidCallback onDeletePressed,
     required VoidCallback onPlanPressed,
     required Key key,
+    DateTime? dateOfVisit,
     VoidCallback? onCardTapped,
   }) : super(
           place: place,

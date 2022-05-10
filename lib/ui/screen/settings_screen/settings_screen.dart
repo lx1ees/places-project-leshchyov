@@ -5,7 +5,7 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/theme_mode_holder.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widget/custom_divider.dart';
 
@@ -44,9 +44,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             title: const Text(AppStrings.darkThemeOption),
             trailing: CupertinoSwitch(
-              value: themeModeHolder.currentThemeMode == ThemeMode.dark,
+              value: settingsInteractor.themeModeHolder.currentThemeMode ==
+                  ThemeMode.dark,
               onChanged: (value) {
-                themeModeHolder.setThemeMode(isDark: value);
+                settingsInteractor.themeModeHolder.setThemeMode(isDark: value);
               },
             ),
           ),

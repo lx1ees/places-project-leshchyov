@@ -3,7 +3,6 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/mocks.dart';
 import 'package:places/ui/widget/bottom_screen_submit_button.dart';
 import 'package:places/ui/widget/custom_divider.dart';
 import 'package:places/ui/widget/custom_icon_button.dart';
@@ -78,18 +77,20 @@ class _SelectPlaceTypeScreenState extends State<SelectPlaceTypeScreen> {
                   itemBuilder: (_, index) {
                     return Padding(
                       padding: EdgeInsets.only(
-                        bottom: index == availablePlaceTypes.length - 1
-                            ? AppConstants.defaultPaddingX4
-                            : 0,
+                        bottom:
+                            index == PlaceType.availablePlaceTypes.length - 1
+                                ? AppConstants.defaultPaddingX4
+                                : 0,
                       ),
                       child: ListTile(
                         title: Text(
-                          availablePlaceTypes[index].name,
+                          PlaceType.availablePlaceTypes[index].name,
                           style: AppTypography.textRegularTextStyle.copyWith(
                             color: colorScheme.primary,
                           ),
                         ),
-                        trailing: newPlaceType?.id == availablePlaceTypes[index].id
+                        trailing: newPlaceType?.id ==
+                                PlaceType.availablePlaceTypes[index].id
                             ? Icon(
                                 Icons.check_rounded,
                                 color: colorScheme.secondary,
@@ -98,10 +99,10 @@ class _SelectPlaceTypeScreenState extends State<SelectPlaceTypeScreen> {
                             : null,
                         onTap: () {
                           setState(() {
-                            newPlaceType =
-                                newPlaceType?.id == availablePlaceTypes[index].id
-                                    ? null
-                                    : availablePlaceTypes[index];
+                            newPlaceType = newPlaceType?.id ==
+                                    PlaceType.availablePlaceTypes[index].id
+                                ? null
+                                : PlaceType.availablePlaceTypes[index];
                           });
                         },
                       ),
@@ -110,7 +111,7 @@ class _SelectPlaceTypeScreenState extends State<SelectPlaceTypeScreen> {
                   separatorBuilder: (_, index) => const CustomDivider(
                     hasIndent: true,
                   ),
-                  itemCount: availablePlaceTypes.length,
+                  itemCount: PlaceType.availablePlaceTypes.length,
                 ),
               ),
               Align(
