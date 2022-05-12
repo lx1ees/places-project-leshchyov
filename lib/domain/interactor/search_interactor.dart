@@ -1,4 +1,5 @@
 import 'package:places/data/model/place_dto.dart';
+import 'package:places/data/repository/place_mapper.dart';
 import 'package:places/data/repository/place_repository.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
@@ -49,7 +50,7 @@ class SearchInteractor {
           )
       ..sort((a, b) => a.distance?.compareTo(b.distance ?? 0) ?? -1);
 
-    final places = placeDtos.map(Place.fromDto).toList();
+    final places = placeDtos.map(PlaceMapper.fromDto).toList();
     _places
       ..clear()
       ..addAll(places);

@@ -44,28 +44,28 @@ class Place extends Equatable {
     this.cardLook = CardLook.view,
   });
 
-  factory Place.fromDto(PlaceDto dto) {
-    return Place(
-      id: dto.id,
-      name: dto.name,
-      point: LocationPoint(lat: dto.lat, lon: dto.lng),
-      description: dto.description,
-      urls: dto.urls,
-      placeType: PlaceType.getPlaceTypeById(id: dto.placeType),
-    );
-  }
-
-  PlaceDto toDto() {
-    return PlaceDto(
-      id: id,
-      lat: point.lat,
-      lng: point.lon,
-      name: name,
-      placeType: placeType.id,
-      description: description,
-      urls: urls,
-    );
-  }
+  // factory Place.fromDto(PlaceDto dto) {
+  //   return Place(
+  //     id: dto.id,
+  //     name: dto.name,
+  //     point: LocationPoint(lat: dto.lat, lon: dto.lng),
+  //     description: dto.description,
+  //     urls: dto.urls,
+  //     placeType: PlaceType.getPlaceTypeById(id: dto.placeType),
+  //   );
+  // }
+  //
+  // PlaceDto toDto() {
+  //   return PlaceDto(
+  //     id: id,
+  //     lat: point.lat,
+  //     lng: point.lon,
+  //     name: name,
+  //     placeType: placeType.id,
+  //     description: description,
+  //     urls: urls,
+  //   );
+  // }
 
   Place copyWith({
     bool? isInFavorites,

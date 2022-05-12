@@ -1,4 +1,5 @@
 import 'package:places/data/model/place_dto.dart';
+import 'package:places/data/repository/place_mapper.dart';
 import 'package:places/data/repository/place_repository.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
@@ -43,7 +44,7 @@ class PlaceInteractor {
     }
     placeDtos.sort((a, b) => a.distance?.compareTo(b.distance ?? 0) ?? -1);
 
-    final remotePlaces = placeDtos.map(Place.fromDto).toList();
+    final remotePlaces = placeDtos.map(PlaceMapper.fromDto).toList();
 
     /// Получили свежие места от сервера -> обновили их флаги (Избранное, Посетил)
     /// на основе существующего списка мест
@@ -76,15 +77,15 @@ class PlaceInteractor {
 
   /// Метод добавления нового места
   Future<Place> addNewPlace(Place newPlace) async {
-    final addedPlaceDto = await _repository.addPlace(newPlace.toDto());
+    final addedPlaceDto = await _repository.addPlace(PlaceMapper.toDto(newPlace));
 
-    return Place.fromDto(addedPlaceDto);
+    return PlaceMapper.fromDto(addedPlaceDto);
   }
 
   /// Метод получения места по id
   Future<Place> getPlaceDetails({required Place place}) async {
     final placeDto = await _repository.getPlace(place.id.toString());
-    final updatedPlace = Place.fromDto(placeDto);
+    final updatedPlace = PlaceMapper.fromDto(placeDto);
 
     final modifiedRemotePlaces = _compareAndModifyPlaces(
       favoritePlaces: _favoritePlaces,
