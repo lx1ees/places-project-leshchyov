@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/ui/widgets/custom_icon_button.dart';
+import 'package:places/ui/widget/custom_icon_button.dart';
 
 /// Кастомный аппбар экрана с фильтрами с обработчиком кнопки очестки фильтров
 /// [onClearFilters]

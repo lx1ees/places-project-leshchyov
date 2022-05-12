@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/sight.dart';
-import 'package:places/mocks.dart';
-import 'package:places/ui/screen/filters_screen/category_filter_section.dart';
+import 'package:places/domain/model/location_point.dart';
+import 'package:places/domain/model/place.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/filters_screen/distance_filter_section.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_app_bar.dart';
+import 'package:places/ui/screen/filters_screen/place_type_filter_section.dart';
 import 'package:places/ui/screen/filters_screen/show_filtered_list_button.dart';
 
 /// Экран с фильтрами по категории и дистанции от текущего местоположения
-/// [filtersManager] - менеджер фильтров, хранит информацию о примененных фильтрах
 class FiltersScreen extends StatefulWidget {
   static const String routeName = '/filters';
   final FiltersManager filtersManager;
@@ -31,27 +31,22 @@ class _FiltersScreenState extends State<FiltersScreen> {
   /// поменяли какие-то фильтры, не нажали Показать, а вернулись назад, т.е.
   /// не применили сделанные изменения).
   final FiltersManager localFiltersManager = FiltersManager();
-  late List<Sight> _filteredSights;
+  final List<Place> _filteredPlaces = [];
 
   @override
   void initState() {
     super.initState();
-    localFiltersManager.updateWith(widget.filtersManager);
-    _filteredSights = widget.filtersManager.applyFilters(
-      sights: sightsMock,
-    );
+    localFiltersManager.updateWith(filtersManager);
+    _requestForPlaces(filtersManager: localFiltersManager);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: FilterScreenAppBar(
-        onClearFilters: () {
+        onClearFilters: () async {
           localFiltersManager.clearFilters();
-          _filteredSights = localFiltersManager.applyFilters(
-            sights: sightsMock,
-          );
-          setState(() {});
+          await _requestForPlaces(filtersManager: localFiltersManager);
         },
       ),
       body: SafeArea(
@@ -66,16 +61,16 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: AppConstants.defaultPaddingX1_5),
-                    CategoryFilterSection(
-                      onCategoryFilterTapped: (categoryFilterEntity, index) {
-                        localFiltersManager.updateCategoryFilter(
+                    PlaceTypeFilterSection(
+                      onPlaceTypeFilterTapped:
+                          (placeTypeFilterEntity, index) async {
+                        localFiltersManager.updatePlaceTypeFilter(
                           index: index,
-                          categoryFilterEntity: categoryFilterEntity,
+                          placeTypeFilterEntity: placeTypeFilterEntity,
                         );
-                        _filteredSights = localFiltersManager.applyFilters(
-                          sights: sightsMock,
+                        await _requestForPlaces(
+                          filtersManager: localFiltersManager,
                         );
-                        setState(() {});
                       },
                       filtersManager: localFiltersManager,
                     ),
@@ -88,11 +83,10 @@ class _FiltersScreenState extends State<FiltersScreen> {
                           ..distanceRightThreshold = values.end;
                         setState(() {});
                       },
-                      onDistanceChangeEnded: (values) {
-                        _filteredSights = localFiltersManager.applyFilters(
-                          sights: sightsMock,
+                      onDistanceChangeEnded: (values) async {
+                        await _requestForPlaces(
+                          filtersManager: localFiltersManager,
                         );
-                        setState(() {});
                       },
                     ),
                     const SizedBox(height: AppConstants.defaultPaddingX4),
@@ -103,9 +97,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: ShowFilteredListButton(
-                affectedSightsCount: _filteredSights.length,
+                affectedPlacesCount: _filteredPlaces.length,
                 onShow: () {
-                  widget.filtersManager.updateWith(localFiltersManager);
+                  filtersManager.updateWith(localFiltersManager);
                   Navigator.pop(context);
                 },
               ),
@@ -114,5 +108,19 @@ class _FiltersScreenState extends State<FiltersScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _requestForPlaces({
+    required FiltersManager filtersManager,
+  }) async {
+    final places = await placeInteractor.getPlaces(
+      filtersManager: filtersManager,
+      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
+    );
+    setState(() {
+      _filteredPlaces
+        ..clear()
+        ..addAll(places);
+    });
   }
 }

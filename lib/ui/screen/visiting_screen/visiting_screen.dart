@@ -6,15 +6,15 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/sight.dart';
-import 'package:places/mocks.dart';
+import 'package:places/domain/model/place.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/custom_tab_bar.dart';
 import 'package:places/ui/screen/no_items_placeholder.dart';
+import 'package:places/ui/screen/place_card/place_to_visit_card.dart';
+import 'package:places/ui/screen/place_card/place_visited_card.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
+import 'package:places/ui/screen/place_list.dart';
 import 'package:places/ui/screen/res/themes.dart';
-import 'package:places/ui/screen/sight_card/sight_to_visit_card.dart';
-import 'package:places/ui/screen/sight_card/sight_visited_card.dart';
-import 'package:places/ui/screen/sight_details_screen/sight_details_bottom_sheet.dart';
-import 'package:places/ui/screen/sight_list.dart';
 
 /// Экран со списками посещения
 class VisitingScreen extends StatefulWidget {
@@ -29,12 +29,15 @@ class VisitingScreen extends StatefulWidget {
 class _VisitingScreenState extends State<VisitingScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
+  final _favoritePlaces = <Place>[];
+  final _visitedPlaces = <Place>[];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() => setState(() {}));
+    _requestForLocalPlaces();
   }
 
   @override
@@ -73,60 +76,60 @@ class _VisitingScreenState extends State<VisitingScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            SightList(
+            PlaceList(
               onDragComplete: (fromIndex, toIndex) {
-                _moveSight(
+                placeInteractor.movePlaceInFavorites(
                   index: toIndex,
-                  sightToMove: toVisitSights[fromIndex],
-                  source: toVisitSights,
+                  placeToMove: _favoritePlaces[fromIndex],
                 );
+                _requestForLocalPlaces();
               },
-              sightCards: toVisitSights
-                  .map((sight) => SightToVisitCard(
-                        key: ObjectKey(sight),
-                        sight: sight,
-                        dateOfVisit: DateTime.now(),
-                        onPlanPressed: _pickPlanDate,
-                        onDeletePressed: () => _deleteSight(
-                          sightToRemove: sight,
-                          source: toVisitSights,
-                        ),
+              placeCards: _favoritePlaces
+                  .map((place) => PlaceToVisitCard(
+                        key: ObjectKey(place),
+                        place: place,
+                        dateOfVisit: place.planDate,
+                        onPlanPressed: () => _pickPlanDate(place),
+                        onDeletePressed: () {
+                          placeInteractor.changeFavorite(place);
+                          _requestForLocalPlaces();
+                        },
                         onCardTapped: () =>
-                            _openSightDetailsBottomSheet(context, sight),
+                            _openPlaceDetailsBottomSheet(context, place),
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
-                iconPath: AppAssets.noToVisitSightsIcon,
+                iconPath: AppAssets.noToVisitPlacesIcon,
                 title: AppStrings.placeholderNoItemsTitleText,
-                subtitle: AppStrings.placeholderNoToVisitSightsText,
+                subtitle: AppStrings.placeholderNoToVisitPlacesText,
               ),
             ),
-            SightList(
+            PlaceList(
               onDragComplete: (fromIndex, toIndex) {
-                _moveSight(
+                placeInteractor.movePlaceInVisited(
                   index: toIndex,
-                  sightToMove: visitedSights[fromIndex],
-                  source: visitedSights,
+                  placeToMove: _visitedPlaces[fromIndex],
                 );
+                _requestForLocalPlaces();
               },
-              sightCards: visitedSights
-                  .map((sight) => SightVisitedCard(
-                        key: ObjectKey(sight),
-                        sight: sight,
-                        dateOfVisit: DateTime.now(),
+              placeCards: _visitedPlaces
+                  .map((place) => PlaceVisitedCard(
+                        key: ObjectKey(place),
+                        place: place,
+                        dateOfVisit: place.planDate,
                         onSharePressed: () {},
-                        onDeletePressed: () => _deleteSight(
-                          sightToRemove: sight,
-                          source: visitedSights,
-                        ),
+                        onDeletePressed: () {
+                          placeInteractor.removePlaceFromVisited(place);
+                          _requestForLocalPlaces();
+                        },
                         onCardTapped: () =>
-                            _openSightDetailsBottomSheet(context, sight),
+                            _openPlaceDetailsBottomSheet(context, place),
                       ))
                   .toList(),
               emptyListPlaceholder: const NoItemsPlaceholder(
-                iconPath: AppAssets.noVisitedSightsIcon,
+                iconPath: AppAssets.noVisitedPlacesIcon,
                 title: AppStrings.placeholderNoItemsTitleText,
-                subtitle: AppStrings.placeholderNoVisitedSightsText,
+                subtitle: AppStrings.placeholderNoVisitedPlacesText,
               ),
             ),
           ],
@@ -135,34 +138,24 @@ class _VisitingScreenState extends State<VisitingScreen>
     );
   }
 
-  void _deleteSight({
-    required Sight sightToRemove,
-    required List<Sight> source,
-  }) {
+  /// Обновление списка мест из локального списка (временная мера пока нет стейтменеджмента)
+  Future<void> _requestForLocalPlaces() async {
+    final favoritePlaces = placeInteractor.getFavoritePlaces();
+    final visitedPlaces = placeInteractor.getVisitedPlaces();
     setState(() {
-      source.removeWhere((sight) => sight == sightToRemove);
-    });
-  }
-
-  /// Метод перемещения картчочки в списке
-  /// [index] - позиция, куда переместить
-  /// [sightToMove] - объект перемещения
-  /// [source] - список, где производится перемещение
-  void _moveSight({
-    required int index,
-    required Sight sightToMove,
-    required List<Sight> source,
-  }) {
-    setState(() {
-      _deleteSight(sightToRemove: sightToMove, source: source);
-      source.insert(index, sightToMove);
+      _favoritePlaces
+        ..clear()
+        ..addAll(favoritePlaces);
+      _visitedPlaces
+        ..clear()
+        ..addAll(visitedPlaces);
     });
   }
 
   /// Метод открытия окна детальной информации о месте
-  Future<void> _openSightDetailsBottomSheet(
+  Future<void> _openPlaceDetailsBottomSheet(
     BuildContext context,
-    Sight sight,
+    Place place,
   ) async {
     await showModalBottomSheet<void>(
       context: context,
@@ -172,18 +165,21 @@ class _VisitingScreenState extends State<VisitingScreen>
       isDismissible: true,
       useRootNavigator: true,
       builder: (_) {
-        return SightDetailsBottomSheet(sight: sight);
+        return PlaceDetailsBottomSheet(place: place);
       },
     );
+    await _requestForLocalPlaces();
   }
 
-  Future<void> _pickPlanDate() async {
+  Future<void> _pickPlanDate(Place place) async {
     final nowDate = DateTime.now();
     final nowYear = nowDate.year;
 
-    final date = Platform.isIOS
+    final planDate = Platform.isIOS
         ? await _cupertinoDatePicker(nowDate, nowYear)
         : await _materialDatePicker(nowDate, nowYear);
+    placeInteractor.setPlanDate(place: place, planDate: planDate);
+    await _requestForLocalPlaces();
   }
 
   Future<DateTime?> _materialDatePicker(
@@ -223,28 +219,32 @@ class _VisitingScreenState extends State<VisitingScreen>
       builder: (context) {
         DateTime? dateTime;
 
-        return WillPopScope(
-          onWillPop: () {
-            Navigator.pop(context, dateTime);
-
-            return Future.value(true);
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                height: 300,
-                child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
-                  backgroundColor: Theme.of(context).white,
-                  minimumDate: nowDate,
-                  initialDateTime: nowDate,
-                  maximumDate: DateTime(nowYear + 3),
-                  onDateTimeChanged: (dt) => dateTime = dt,
-                ),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              height: 300,
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                minimumDate: nowDate,
+                initialDateTime: nowDate,
+                maximumDate: DateTime(nowYear + 3),
+                onDateTimeChanged: (dt) => dateTime = dt,
               ),
-            ],
-          ),
+            ),
+            Container(
+              color: Theme.of(context).colorScheme.surface,
+              padding: const EdgeInsets.symmetric(
+                vertical: AppConstants.defaultPaddingX2,
+              ),
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () => Navigator.pop(context, dateTime ?? nowDate),
+                child: const Text(AppStrings.apply),
+              ),
+            ),
+          ],
         );
       },
       context: context,

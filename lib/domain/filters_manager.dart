@@ -1,110 +1,68 @@
 import 'package:places/constants/app_constants.dart';
-import 'package:places/domain/category_filter_entity.dart';
-import 'package:places/domain/location_point.dart';
-import 'package:places/domain/sight.dart';
-import 'package:places/domain/sight_category.dart';
-import 'package:places/mocks.dart';
-import 'package:places/utils/location_utils.dart';
+import 'package:places/domain/model/place_type.dart';
+import 'package:places/domain/model/place_type_filter_entity.dart';
 
-/// Класс, который содержит информацию о фильтрах по категории [categoryFilters],
+/// Класс, который содержит информацию о фильтрах по категории [placeTypeFilters],
 /// минимальной [distanceLeftThreshold] и максимальной [distanceRightThreshold] дистанции.
 class FiltersManager {
   double distanceLeftThreshold;
   double distanceRightThreshold;
 
-  List<CategoryFilterEntity> get categoryFilters => _categoryFilters;
+  List<PlaceTypeFilterEntity> get placeTypeFilters => _placeTypeFilters;
 
-  bool get isCategoryFiltersApplied =>
-      _categoryFilters.where((category) => category.isSelected).isNotEmpty;
+  List<String>? get placeTypeFilterIds {
+    final ids = placeTypeFilters
+        .where((e) => e.isSelected)
+        .map((e) => e.placeType.id)
+        .toList();
 
-  List<CategoryFilterEntity> _categoryFilters;
+    return ids.isNotEmpty ? ids : null;
+  }
+
+  bool get isPlaceTypeFiltersApplied =>
+      _placeTypeFilters.where((placeType) => placeType.isSelected).isNotEmpty;
+
+  bool get isFiltersApplied =>
+      isPlaceTypeFiltersApplied ||
+      distanceRightThreshold != AppConstants.distanceFilterMaxValue;
+
+  List<PlaceTypeFilterEntity> _placeTypeFilters;
 
   FiltersManager()
-      : _categoryFilters = [...categoryFiltersMock],
+      : _placeTypeFilters = [
+          ...PlaceTypeFilterEntity.availablePlaceTypeFilters,
+        ],
         distanceLeftThreshold = AppConstants.distanceFilterMinValue,
         distanceRightThreshold = AppConstants.distanceFilterMaxValue;
 
   void updateWith(final FiltersManager filtersManager) {
     distanceRightThreshold = filtersManager.distanceRightThreshold;
     distanceLeftThreshold = filtersManager.distanceLeftThreshold;
-    _categoryFilters = [...filtersManager.categoryFilters];
+    _placeTypeFilters = [...filtersManager.placeTypeFilters];
   }
 
   /// Очистка фильтров
   void clearFilters() {
-    _categoryFilters = [...categoryFiltersMock];
+    _placeTypeFilters = [...PlaceTypeFilterEntity.availablePlaceTypeFilters];
     distanceLeftThreshold = AppConstants.distanceFilterMinValue;
     distanceRightThreshold = AppConstants.distanceFilterMaxValue;
   }
 
-  /// Обновление фильтра по категории [categoryFilterEntity] в списке фильтров по категории
-  void updateCategoryFilter({
+  /// Обновление фильтра по категории [placeTypeFilterEntity] в списке фильтров по категории
+  void updatePlaceTypeFilter({
     required int index,
-    required CategoryFilterEntity categoryFilterEntity,
+    required PlaceTypeFilterEntity placeTypeFilterEntity,
   }) {
     if (index != -1) {
-      _categoryFilters[index] = categoryFilterEntity.copyWith(
-        isSelected: !categoryFilterEntity.isSelected,
+      _placeTypeFilters[index] = placeTypeFilterEntity.copyWith(
+        isSelected: !placeTypeFilterEntity.isSelected,
       );
     }
   }
 
-  /// Определение, осуществляется ли фильтрация по категории [category]
-  bool isCategorySelected(SightCategory category) => categoryFilters
-      .where((category) => category.isSelected)
-      .map((categoryFilter) => categoryFilter.sightCategory)
-      .contains(category);
-
-  /// Пока что делегировал фильтрацию списка мест этому классу, в будущем перенесу
-  /// в интерактор, когда выстроится архитектура и стейтменеджмент
-
-  /// Применение фильтров к списку достопримечательностей
-  List<Sight> applyFilters({
-    required List<Sight> sights,
-  }) {
-    var result = <Sight>[...sights];
-
-    /// Фильтрация по категориям
-    result = _applyCategoryFilters(
-      sights: result,
-    );
-
-    /// Фильтрация по дистанции
-    result = _applyDistanceFilters(
-      sights: result,
-      currentLocationPoint: const LocationPoint(
-        // mock
-        lat: 46.35039319381485,
-        lon: 48.04015295725935,
-      ),
-    );
-
-    return result;
-  }
-
-  /// Фильтрация по категориям
-  List<Sight> _applyCategoryFilters({
-    required List<Sight> sights,
-  }) {
-    if (!isCategoryFiltersApplied) return sights;
-
-    return sights.where((sight) => isCategorySelected(sight.category)).toList();
-  }
-
-  /// Фильтрация по дистанции
-  List<Sight> _applyDistanceFilters({
-    required List<Sight> sights,
-    required LocationPoint currentLocationPoint,
-  }) {
-    return sights
-        .where(
-          (sight) => LocationUtils.arePointsNear(
-            checkPoint: sight.point,
-            centerPoint: currentLocationPoint,
-            startRadiusRange: distanceLeftThreshold,
-            endRadiusRange: distanceRightThreshold,
-          ),
-        )
-        .toList();
-  }
+  /// Определение, осуществляется ли фильтрация по категории [placeType]
+  bool isPlaceTypeSelected(PlaceType placeType) => placeTypeFilters
+      .where((currentPlaceType) => currentPlaceType.isSelected)
+      .map((placeTypeFilter) => placeTypeFilter.placeType)
+      .contains(placeType);
 }

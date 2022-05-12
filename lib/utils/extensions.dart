@@ -7,13 +7,19 @@ extension NullableDateTimeExtension on DateTime? {
   String toBeVisitedString() {
     if (this == null) return '';
 
-    return '${AppStrings.sightCardToBeVisitedText} ${this?.toFormattedString()}';
+    return '${AppStrings.placeCardToBeVisitedText} ${this?.toFormattedString()}';
+  }
+
+  String toReVisitString() {
+    if (this == null) return '';
+
+    return '${this?.toFormattedString()}';
   }
 
   String visitedString() {
     if (this == null) return '';
 
-    return '${AppStrings.sightCardVisitedText} ${this?.toFormattedString()}';
+    return '${AppStrings.placeCardVisitedText} ${this?.toFormattedString()}';
   }
 }
 
