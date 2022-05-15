@@ -31,7 +31,6 @@ class PlaceListScreen extends StatefulWidget {
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
   final ScrollController _scrollController = ScrollController();
-  final List<Place> _filteredPlaces = [];
 
   @override
   void initState() {
@@ -43,6 +42,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    placeInteractor.disposePlacesStream();
     super.dispose();
   }
 
@@ -85,18 +85,35 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
             ),
             const SizedBox(height: AppConstants.defaultPaddingX1_5),
             Expanded(
-              child: PlaceList(
-                placeCards: _filteredPlaces
-                    .map((place) => PlaceViewCard(
-                          place: place,
-                          onFavoritePressed: () {
-                            placeInteractor.changeFavorite(place);
-                            _requestForLocalPlaces();
-                          },
-                          onCardTapped: () =>
-                              _openPlaceDetailsBottomSheet(context, place),
-                        ))
-                    .toList(),
+              child: StreamBuilder<List<Place>>(
+                stream: placeInteractor.placesStream,
+                builder: (context, snapshot) {
+                  final places = snapshot.data;
+
+                  if (snapshot.hasData && places != null && places.isNotEmpty) {
+                    return PlaceList(
+                      placeCards: places
+                          .map((place) => PlaceViewCard(
+                                place: place,
+                                onFavoritePressed: () {
+                                  placeInteractor.changeFavorite(place);
+                                },
+                                onCardTapped: () =>
+                                    _openPlaceDetailsBottomSheet(
+                                  context,
+                                  place,
+                                ),
+                              ))
+                          .toList(),
+                    );
+                  }
+
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: colorScheme.secondary,
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -155,24 +172,14 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
   /// Обновление списка мест из сети (временная мера пока нет стейтменеджмента)
   Future<void> _requestForRemotePlaces() async {
-    final places = await placeInteractor.getPlaces(
+    await placeInteractor.requestPlaces(
       filtersManager: filtersManager,
       currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
     );
-    setState(() {
-      _filteredPlaces
-        ..clear()
-        ..addAll(places);
-    });
   }
 
   /// Обновление списка мест из локального списка (временная мера пока нет стейтменеджмента)
   Future<void> _requestForLocalPlaces() async {
-    final places = placeInteractor.getLocalPlaces();
-    setState(() {
-      _filteredPlaces
-        ..clear()
-        ..addAll(places);
-    });
+    placeInteractor.requestLocalPlaces();
   }
 }

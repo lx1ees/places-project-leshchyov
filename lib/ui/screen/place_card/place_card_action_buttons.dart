@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
+import 'package:places/domain/model/place.dart';
+import 'package:places/main.dart';
 import 'package:places/ui/screen/res/themes.dart';
 import 'package:places/ui/widget/custom_icon_button.dart';
 
 /// Виджет кнопок действий на карточке достопримечательности, для каждого типа карточки свой
-abstract class PlaceCardActionButtons extends StatelessWidget {
+abstract class PlaceCardActionButtons extends StatefulWidget {
   const PlaceCardActionButtons({Key? key}) : super(key: key);
 }
 
@@ -21,11 +25,18 @@ class PlaceToVisitCardActionButtons extends PlaceCardActionButtons {
   }) : super(key: key);
 
   @override
+  State<PlaceToVisitCardActionButtons> createState() =>
+      _PlaceToVisitCardActionButtonsState();
+}
+
+class _PlaceToVisitCardActionButtonsState
+    extends State<PlaceToVisitCardActionButtons> {
+  @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         CustomIconButton(
-          onPressed: onPlanPressed,
+          onPressed: widget.onPlanPressed,
           icon: SvgPicture.asset(
             AppAssets.calendarIcon,
             height: AppConstants.defaultIconSize,
@@ -34,7 +45,7 @@ class PlaceToVisitCardActionButtons extends PlaceCardActionButtons {
           ),
         ),
         CustomIconButton(
-          onPressed: onDeletePressed,
+          onPressed: widget.onDeletePressed,
           icon: Icon(
             Icons.close_rounded,
             color: Theme.of(context).white,
@@ -56,11 +67,18 @@ class PlaceVisitedCardActionButtons extends PlaceCardActionButtons {
   }) : super(key: key);
 
   @override
+  State<PlaceVisitedCardActionButtons> createState() =>
+      _PlaceVisitedCardActionButtonsState();
+}
+
+class _PlaceVisitedCardActionButtonsState
+    extends State<PlaceVisitedCardActionButtons> {
+  @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         CustomIconButton(
-          onPressed: onSharePressed,
+          onPressed: widget.onSharePressed,
           icon: SvgPicture.asset(
             AppAssets.shareIcon,
             height: AppConstants.defaultIconSize,
@@ -69,7 +87,7 @@ class PlaceVisitedCardActionButtons extends PlaceCardActionButtons {
           ),
         ),
         CustomIconButton(
-          onPressed: onDeletePressed,
+          onPressed: widget.onDeletePressed,
           icon: Icon(
             Icons.close_rounded,
             color: Theme.of(context).white,
@@ -82,24 +100,63 @@ class PlaceVisitedCardActionButtons extends PlaceCardActionButtons {
 
 class PlaceViewCardActionButtons extends PlaceCardActionButtons {
   final VoidCallback onFavoritePressed;
-  final bool isPlaceInFavorites;
+  final Place place;
 
   const PlaceViewCardActionButtons({
     required this.onFavoritePressed,
-    required this.isPlaceInFavorites,
+    required this.place,
     Key? key,
   }) : super(key: key);
 
   @override
+  State<PlaceViewCardActionButtons> createState() =>
+      _PlaceViewCardActionButtonsState();
+}
+
+class _PlaceViewCardActionButtonsState
+    extends State<PlaceViewCardActionButtons> {
+  final StreamController<bool> _favoritesStreamController = StreamController();
+  bool currentFavValue = false;
+
+  @override
+  void initState() {
+    currentFavValue = widget.place.isInFavorites;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _favoritesStreamController.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return CustomIconButton(
-      onPressed: onFavoritePressed,
-      icon: SvgPicture.asset(
-        isPlaceInFavorites ? AppAssets.heartFullIcon : AppAssets.heartIcon,
-        height: AppConstants.defaultIconSize,
-        width: AppConstants.defaultIconSize,
-        color: Theme.of(context).white,
-      ),
+    return StreamBuilder<bool>(
+      stream: _favoritesStreamController.stream,
+      initialData: widget.place.isInFavorites,
+      builder: (context, snapshot) {
+        final isInFavorites = snapshot.data;
+        if (snapshot.hasData && isInFavorites != null) {
+          return CustomIconButton(
+            onPressed: () {
+              currentFavValue = !currentFavValue;
+              _favoritesStreamController.sink.add(currentFavValue);
+              widget.onFavoritePressed();
+            },
+            icon: SvgPicture.asset(
+              isInFavorites
+                  ? AppAssets.heartFullIcon
+                  : AppAssets.heartIcon,
+              height: AppConstants.defaultIconSize,
+              width: AppConstants.defaultIconSize,
+              color: Theme.of(context).white,
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
     );
   }
 }

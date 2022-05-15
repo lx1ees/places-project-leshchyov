@@ -15,7 +15,7 @@ class PlaceViewCard extends PlaceCard {
           place: place,
           actionButtons: PlaceViewCardActionButtons(
             onFavoritePressed: onFavoritePressed,
-            isPlaceInFavorites: place.isInFavorites,
+            place: place,
           ),
           onCardTapped: onCardTapped,
           key: key,
