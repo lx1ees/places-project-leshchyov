@@ -16,6 +16,11 @@ class NetworkService {
       connectTimeout: AppConstants.connectTimeout,
       receiveTimeout: AppConstants.receiveTimeout,
       sendTimeout: AppConstants.sendTimeout,
+      validateStatus: (status) {
+        /// Считаем запросы успешными только с этими кодами, остальные
+        /// попадают в onError
+        return status == 200 || status == 201;
+      },
     );
 
     return Dio(options)
@@ -27,12 +32,9 @@ class NetworkService {
             return handler.next(options);
           },
           onResponse: (response, handler) {
-            // debugPrint(response.data.toString());
             return handler.next(response);
           },
           onError: (error, handler) {
-            debugPrint(error.message);
-
             return handler.next(error);
           },
         ),

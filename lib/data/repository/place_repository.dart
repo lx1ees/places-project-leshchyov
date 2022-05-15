@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:places/constants/app_constants.dart';
+import 'package:places/data/api/exceptions/network_exception.dart';
 import 'package:places/data/api/network_service.dart';
 import 'package:places/data/model/place_dto.dart';
 import 'package:places/data/model/places_filter_request_dto.dart';
@@ -49,91 +51,114 @@ class PlaceRepository {
 
   /// Метод для запроса из сети списка всех мест без фильтрации
   Future<List<PlaceDto>> getPlaces() async {
-    final response = await networkService.client.get<Object>(
-      AppConstants.placesPath,
-    );
+    try {
+      final response = await networkService.client.get<Object>(
+        AppConstants.placesPath,
+      );
 
-    if (response.statusCode == 200) {
       return (response.data as List<Object?>).map<PlaceDto>((raw) {
         return PlaceDto.fromJson(raw as Map<String, dynamic>);
       }).toList();
+    } on DioError catch (e) {
+      throw NetworkException(
+        requestName: '${AppConstants.baseUrl}${AppConstants.placesPath}',
+        code: e.response?.statusCode,
+        errorMessage: e.message,
+      );
     }
-
-    /// Пока кидаю ексепшн тут (в других методах аналогично) без обработки на UI,
-    /// позже после прохождения урока по ексепшенам перенесу в интерсептор,
-    /// а тут наверное надо будет пробросить на UI
-    throw Exception(response.statusMessage);
   }
 
   /// Метода для добавления нового места [place] на сервер
   Future<PlaceDto> addPlace(PlaceDto place) async {
-    final response = await networkService.client.post<Object>(
-      AppConstants.placesPath,
-      data: place.toJson(),
-    );
+    try {
+      final response = await networkService.client.post<Object>(
+        AppConstants.placesPath,
+        data: place.toJson(),
+      );
 
-    if (response.statusCode == 200) {
       return PlaceDto.fromJson(response.data as Map<String, dynamic>);
+    } on DioError catch (e) {
+      throw NetworkException(
+        requestName: '${AppConstants.baseUrl}${AppConstants.placesPath}',
+        code: e.response?.statusCode,
+        errorMessage: e.message,
+      );
     }
-
-    throw Exception(response.statusMessage);
   }
 
   /// Метод для получения места из сервера по id [id]
   Future<PlaceDto> getPlace(String id) async {
-    final response = await networkService.client.get<Object>(
-      '${AppConstants.placesPath}/$id',
-    );
+    try {
+      final response = await networkService.client.get<Object>(
+        '${AppConstants.placesPath}/$id',
+      );
 
-    if (response.statusCode == 200) {
       return PlaceDto.fromJson(response.data as Map<String, dynamic>);
+    } on DioError catch (e) {
+      throw NetworkException(
+        requestName: '${AppConstants.baseUrl}${AppConstants.placesPath}/$id',
+        code: e.response?.statusCode,
+        errorMessage: e.message,
+      );
     }
-
-    throw Exception(response.statusMessage);
   }
 
   /// Метод для удаления места на сервере по id [id]
   Future<bool> deletePlace(String id) async {
-    final response = await networkService.client.delete<Object>(
-      '${AppConstants.placesPath}/$id',
-    );
+    try {
+      await networkService.client.delete<Object>(
+        '${AppConstants.placesPath}/$id',
+      );
 
-    if (response.statusCode == 200) {
       return true;
+    } on DioError catch (e) {
+      throw NetworkException(
+        requestName: '${AppConstants.baseUrl}${AppConstants.placesPath}/$id',
+        code: e.response?.statusCode,
+        errorMessage: e.message,
+      );
     }
-
-    return false;
   }
 
   /// Метод для обновления места [place] на сервере
   Future<PlaceDto> updatePlace(PlaceDto place) async {
-    final response = await networkService.client.put<Object>(
-      '${AppConstants.placesPath}/${place.id}',
-      data: place.toJson(),
-    );
+    try {
+      final response = await networkService.client.put<Object>(
+        '${AppConstants.placesPath}/${place.id}',
+        data: place.toJson(),
+      );
 
-    if (response.statusCode == 200) {
       return PlaceDto.fromJson(response.data as Map<String, dynamic>);
+    } on DioError catch (e) {
+      throw NetworkException(
+        requestName:
+            '${AppConstants.baseUrl}${AppConstants.placesPath}/${place.id}',
+        code: e.response?.statusCode,
+        errorMessage: e.message,
+      );
     }
-
-    throw Exception(response.statusMessage);
   }
 
   /// Метод для запрсоа списка мест и сорфмированным ранее боди [requestBody]
   Future<List<PlaceDto>> _getFilteredPlaces({
     required PlacesFilterRequestDto requestBody,
   }) async {
-    final response = await networkService.client.post<Object>(
-      AppConstants.filteredPlacesPath,
-      data: requestBody.toJson(),
-    );
+    try {
+      final response = await networkService.client.post<Object>(
+        AppConstants.filteredPlacesPath,
+        data: requestBody.toJson(),
+      );
 
-    if (response.statusCode == 200) {
       return (response.data as List<Object?>).map<PlaceDto>((raw) {
         return PlaceDto.fromJson(raw as Map<String, dynamic>);
       }).toList();
+    } on DioError catch (e) {
+      throw NetworkException(
+        requestName:
+            '${AppConstants.baseUrl}${AppConstants.filteredPlacesPath}',
+        code: e.response?.statusCode,
+        errorMessage: e.message,
+      );
     }
-
-    throw Exception(response.statusMessage);
   }
 }
