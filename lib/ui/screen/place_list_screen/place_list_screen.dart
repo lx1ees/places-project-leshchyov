@@ -10,6 +10,7 @@ import 'package:places/main.dart';
 import 'package:places/ui/screen/place_card/place_view_card.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_list.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_error_placeholder.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_sliver_app_bar.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widget/gradient_extended_fab.dart';
@@ -90,6 +91,12 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                 builder: (context, snapshot) {
                   final places = snapshot.data;
 
+                  if (snapshot.hasError){
+                    debugPrint(snapshot.error.toString());
+
+                    return const PlaceListErrorPlaceholder();
+                  }
+
                   if (snapshot.hasData && places != null && places.isNotEmpty) {
                     return PlaceList(
                       placeCards: places
@@ -138,6 +145,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
       },
     );
     await _requestForLocalPlaces();
+    await _requestForRemotePlaces();
   }
 
   /// Метод открытия окна добавления нового места
@@ -168,6 +176,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
       filtersManager: filtersManager,
     );
     await _requestForLocalPlaces();
+    await _requestForRemotePlaces();
   }
 
   /// Обновление списка мест из сети (временная мера пока нет стейтменеджмента)

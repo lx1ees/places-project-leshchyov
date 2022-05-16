@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:places/data/api/exceptions/network_exception.dart';
 import 'package:places/data/model/place_dto.dart';
 import 'package:places/data/repository/place_mapper.dart';
 import 'package:places/data/repository/place_repository.dart';
@@ -40,39 +41,43 @@ class PlaceInteractor {
     required FiltersManager filtersManager,
     LocationPoint? currentLocation,
   }) async {
-    _initPlacesStreamController();
-    _placesController.sink.add([]);
-    late final List<PlaceDto> placeDtos;
-    if (currentLocation != null) {
-      placeDtos = await _repository.getFilteredPlaces(
-        locationPoint: currentLocation,
-        filtersManager: filtersManager,
+    try {
+      _initPlacesStreamController();
+      _placesController.sink.add([]);
+      late final List<PlaceDto> placeDtos;
+      if (currentLocation != null) {
+        placeDtos = await _repository.getFilteredPlaces(
+          locationPoint: currentLocation,
+          filtersManager: filtersManager,
+        );
+      } else if (filtersManager.isFiltersApplied) {
+        placeDtos = await _repository.getFilteredPlacesWithoutLocation(
+          filtersManager: filtersManager,
+        );
+      } else {
+        placeDtos = await _repository.getPlaces();
+      }
+      placeDtos.sort((a, b) => a.distance?.compareTo(b.distance ?? 0) ?? -1);
+
+      final remotePlaces = placeDtos.map(PlaceMapper.fromDto).toList();
+
+      /// Получили свежие места от сервера -> обновили их флаги (Избранное, Посетил)
+      /// на основе существующего списка мест
+      final modifiedRemotePlaces = _compareAndModifyPlaces(
+        favoritePlaces: _favoritePlaces,
+        visitedPlaces: _visitedPlaces,
+        remotePlaces: remotePlaces,
+        cardLook: CardLook.view,
       );
-    } else if (filtersManager.isFiltersApplied) {
-      placeDtos = await _repository.getFilteredPlacesWithoutLocation(
-        filtersManager: filtersManager,
-      );
-    } else {
-      placeDtos = await _repository.getPlaces();
+
+      _places
+        ..clear()
+        ..addAll(modifiedRemotePlaces);
+
+      _placesController.sink.add(_places);
+    } on NetworkException catch (e) {
+      _placesController.sink.addError(e);
     }
-    placeDtos.sort((a, b) => a.distance?.compareTo(b.distance ?? 0) ?? -1);
-
-    final remotePlaces = placeDtos.map(PlaceMapper.fromDto).toList();
-
-    /// Получили свежие места от сервера -> обновили их флаги (Избранное, Посетил)
-    /// на основе существующего списка мест
-    final modifiedRemotePlaces = _compareAndModifyPlaces(
-      favoritePlaces: _favoritePlaces,
-      visitedPlaces: _visitedPlaces,
-      remotePlaces: remotePlaces,
-      cardLook: CardLook.view,
-    );
-
-    _places
-      ..clear()
-      ..addAll(modifiedRemotePlaces);
-
-    _placesController.sink.add(_places);
   }
 
   /// Оставил пока старый метод для совместимости на других экранах
@@ -82,37 +87,41 @@ class PlaceInteractor {
     required FiltersManager filtersManager,
     LocationPoint? currentLocation,
   }) async {
-    late final List<PlaceDto> placeDtos;
-    if (currentLocation != null) {
-      placeDtos = await _repository.getFilteredPlaces(
-        locationPoint: currentLocation,
-        filtersManager: filtersManager,
+    try {
+      late final List<PlaceDto> placeDtos;
+      if (currentLocation != null) {
+        placeDtos = await _repository.getFilteredPlaces(
+          locationPoint: currentLocation,
+          filtersManager: filtersManager,
+        );
+      } else if (filtersManager.isFiltersApplied) {
+        placeDtos = await _repository.getFilteredPlacesWithoutLocation(
+          filtersManager: filtersManager,
+        );
+      } else {
+        placeDtos = await _repository.getPlaces();
+      }
+      placeDtos.sort((a, b) => a.distance?.compareTo(b.distance ?? 0) ?? -1);
+
+      final remotePlaces = placeDtos.map(PlaceMapper.fromDto).toList();
+
+      /// Получили свежие места от сервера -> обновили их флаги (Избранное, Посетил)
+      /// на основе существующего списка мест
+      final modifiedRemotePlaces = _compareAndModifyPlaces(
+        favoritePlaces: _favoritePlaces,
+        visitedPlaces: _visitedPlaces,
+        remotePlaces: remotePlaces,
+        cardLook: CardLook.view,
       );
-    } else if (filtersManager.isFiltersApplied) {
-      placeDtos = await _repository.getFilteredPlacesWithoutLocation(
-        filtersManager: filtersManager,
-      );
-    } else {
-      placeDtos = await _repository.getPlaces();
+
+      _places
+        ..clear()
+        ..addAll(modifiedRemotePlaces);
+
+      return _places;
+    } on NetworkException catch (e) {
+      return [];
     }
-    placeDtos.sort((a, b) => a.distance?.compareTo(b.distance ?? 0) ?? -1);
-
-    final remotePlaces = placeDtos.map(PlaceMapper.fromDto).toList();
-
-    /// Получили свежие места от сервера -> обновили их флаги (Избранное, Посетил)
-    /// на основе существующего списка мест
-    final modifiedRemotePlaces = _compareAndModifyPlaces(
-      favoritePlaces: _favoritePlaces,
-      visitedPlaces: _visitedPlaces,
-      remotePlaces: remotePlaces,
-      cardLook: CardLook.view,
-    );
-
-    _places
-      ..clear()
-      ..addAll(modifiedRemotePlaces);
-
-    return _places;
   }
 
   /// Оставил пока старый метод для совместимости на других экранах
@@ -137,25 +146,33 @@ class PlaceInteractor {
 
   /// Метод добавления нового места
   Future<Place> addNewPlace(Place newPlace) async {
-    final addedPlaceDto =
-        await _repository.addPlace(PlaceMapper.toDto(newPlace));
+    try {
+      final addedPlaceDto =
+          await _repository.addPlace(PlaceMapper.toDto(newPlace));
 
-    return PlaceMapper.fromDto(addedPlaceDto);
+      return PlaceMapper.fromDto(addedPlaceDto);
+    } on NetworkException catch (e) {
+      return newPlace;
+    }
   }
 
   /// Метод получения места по id
   Future<Place> getPlaceDetails({required Place place}) async {
-    final placeDto = await _repository.getPlace(place.id.toString());
-    final updatedPlace = PlaceMapper.fromDto(placeDto);
+    try {
+      final placeDto = await _repository.getPlace(place.id.toString());
+      final updatedPlace = PlaceMapper.fromDto(placeDto);
 
-    final modifiedRemotePlaces = _compareAndModifyPlaces(
-      favoritePlaces: _favoritePlaces,
-      visitedPlaces: _visitedPlaces,
-      remotePlaces: [updatedPlace],
-      cardLook: place.cardLook,
-    );
+      final modifiedRemotePlaces = _compareAndModifyPlaces(
+        favoritePlaces: _favoritePlaces,
+        visitedPlaces: _visitedPlaces,
+        remotePlaces: [updatedPlace],
+        cardLook: place.cardLook,
+      );
 
-    return modifiedRemotePlaces[0];
+      return modifiedRemotePlaces[0];
+    } on NetworkException catch (e) {
+      return place;
+    }
   }
 
   /// Метод добавления места в список посещенных

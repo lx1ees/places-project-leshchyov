@@ -17,6 +17,7 @@ abstract class AppStrings {
   /// Тексты ошибок
   static const String errorNotFilled = 'Поле должно быть заполненным';
   static const String errorIncorrect = 'Некорректное значение';
+  static const String errorSomethingWentWrong = 'Что-то пошло не так.\nПопробуйте позже.';
 
   /// Тексты карточки и окна детальной информации достопримечательности
   static const String placeShortDescriptionMock = 'Закрыто до 9:00';
