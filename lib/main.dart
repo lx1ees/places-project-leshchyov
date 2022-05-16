@@ -1,32 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:places/app_scoped.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
-import 'package:places/data/api/network_service.dart';
-import 'package:places/data/repository/place_repository.dart';
-import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
-import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/interactor/settings_interactor.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/res/themes.dart';
-
-/// Пока нет нормального DI здесь хранятся все инстансы репозиториев и
-/// интеракторов
-FiltersManager filtersManager = FiltersManager();
-PlaceRepository placeRepository = PlaceRepository(NetworkService());
-PlaceInteractor placeInteractor = PlaceInteractor(
-  repository: placeRepository,
-);
-SearchInteractor searchInteractor = SearchInteractor(
-  repository: placeRepository,
-  filtersManager: filtersManager,
-);
-SettingsInteractor settingsInteractor = SettingsInteractor();
-/// ----------------------------------------------------------------------------
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const App());
+  runApp(const AppScoped(child: App()));
 }
 
 class App extends StatefulWidget {
@@ -40,7 +23,10 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    settingsInteractor.themeModeHolder.addListener(_themeModeHolderListener);
+    context
+        .read<SettingsInteractor>()
+        .themeModeHolder
+        .addListener(_themeModeHolderListener);
   }
 
   @override
@@ -49,7 +35,8 @@ class _AppState extends State<App> {
       title: AppStrings.appTitle,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: settingsInteractor.themeModeHolder.currentThemeMode,
+      themeMode:
+          context.read<SettingsInteractor>().themeModeHolder.currentThemeMode,
       navigatorKey: AppRoutes.navigators[AppRoutes.mainNavigatorKey],
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -73,7 +60,10 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
-    settingsInteractor.themeModeHolder.removeListener(_themeModeHolderListener);
+    context
+        .read<SettingsInteractor>()
+        .themeModeHolder
+        .removeListener(_themeModeHolderListener);
     super.dispose();
   }
 

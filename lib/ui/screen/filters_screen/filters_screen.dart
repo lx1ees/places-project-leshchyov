@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/main.dart';
 import 'package:places/ui/screen/filters_screen/distance_filter_section.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_app_bar.dart';
 import 'package:places/ui/screen/filters_screen/place_type_filter_section.dart';
 import 'package:places/ui/screen/filters_screen/show_filtered_list_button.dart';
+import 'package:provider/provider.dart';
 
 /// Экран с фильтрами по категории и дистанции от текущего местоположения
 class FiltersScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
   @override
   void initState() {
     super.initState();
-    localFiltersManager.updateWith(filtersManager);
+    localFiltersManager.updateWith(context.read<FiltersManager>());
     _requestForPlaces(filtersManager: localFiltersManager);
   }
 
@@ -99,7 +100,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
               child: ShowFilteredListButton(
                 affectedPlacesCount: _filteredPlaces.length,
                 onShow: () {
-                  filtersManager.updateWith(localFiltersManager);
+                  context
+                      .read<FiltersManager>()
+                      .updateWith(localFiltersManager);
                   Navigator.pop(context);
                 },
               ),
@@ -113,10 +116,10 @@ class _FiltersScreenState extends State<FiltersScreen> {
   Future<void> _requestForPlaces({
     required FiltersManager filtersManager,
   }) async {
-    final places = await placeInteractor.getPlaces(
-      filtersManager: filtersManager,
-      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
-    );
+    final places = await context.read<PlaceInteractor>().getPlaces(
+          filtersManager: filtersManager,
+          currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
+        );
     setState(() {
       _filteredPlaces
         ..clear()

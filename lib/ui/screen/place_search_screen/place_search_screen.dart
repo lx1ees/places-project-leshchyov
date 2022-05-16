@@ -5,9 +5,9 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/main.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_error_placeholder.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_history_list.dart';
@@ -16,6 +16,7 @@ import 'package:places/ui/screen/place_search_screen/place_search_no_results_pla
 import 'package:places/ui/screen/place_search_screen/place_search_results_list.dart';
 import 'package:places/ui/widget/custom_icon_button.dart';
 import 'package:places/ui/widget/search_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Экран поиска мест
@@ -97,7 +98,8 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
               if (_searchString.isEmpty) {
                 /// Показываем историю
                 return PlaceSearchHistoryList(
-                  searchHistoryManager: searchInteractor.searchHistoryManager,
+                  searchHistoryManager:
+                      context.read<SearchInteractor>().searchHistoryManager,
                   onHistoryPressed: (historySearchString) {
                     _searchController
                       ..text = historySearchString
@@ -171,11 +173,11 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
     _showLoader();
     _searchString = searchString;
 
-    final places = await searchInteractor.getSearchResults(
-      filtersManager: filtersManager,
-      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
-      searchString: searchString,
-    );
+    final places = await context.read<SearchInteractor>().getSearchResults(
+          filtersManager: context.read<FiltersManager>(),
+          currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
+          searchString: searchString,
+        );
     setState(() {
       _foundPlaces
         ..clear()

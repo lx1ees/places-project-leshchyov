@@ -6,6 +6,7 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
+import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/main.dart';
 import 'package:places/ui/screen/custom_tab_bar.dart';
@@ -15,6 +16,7 @@ import 'package:places/ui/screen/place_card/place_visited_card.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_list.dart';
 import 'package:places/ui/screen/res/themes.dart';
+import 'package:provider/provider.dart';
 
 /// Экран со списками посещения
 class VisitingScreen extends StatefulWidget {
@@ -48,6 +50,8 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final placeInteractor = context.read<PlaceInteractor>();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -140,6 +144,7 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   /// Обновление списка мест из локального списка (временная мера пока нет стейтменеджмента)
   Future<void> _requestForLocalPlaces() async {
+    final placeInteractor = context.read<PlaceInteractor>();
     final favoritePlaces = placeInteractor.getFavoritePlaces();
     final visitedPlaces = placeInteractor.getVisitedPlaces();
     setState(() {
@@ -178,7 +183,11 @@ class _VisitingScreenState extends State<VisitingScreen>
     final planDate = Platform.isIOS
         ? await _cupertinoDatePicker(nowDate, nowYear)
         : await _materialDatePicker(nowDate, nowYear);
-    placeInteractor.setPlanDate(place: place, planDate: planDate);
+
+    if (!mounted) return;
+    context
+        .read<PlaceInteractor>()
+        .setPlanDate(place: place, planDate: planDate);
     await _requestForLocalPlaces();
   }
 

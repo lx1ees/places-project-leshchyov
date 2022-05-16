@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/main.dart';
 import 'package:places/ui/screen/place_details_screen/to_plan_button.dart';
@@ -11,6 +12,7 @@ import 'package:places/ui/screen/place_details_screen/to_plan_inactive_button.da
 import 'package:places/ui/screen/place_details_screen/to_replan_button.dart';
 import 'package:places/ui/screen/place_details_screen/to_share_button.dart';
 import 'package:places/ui/screen/res/themes.dart';
+import 'package:provider/provider.dart';
 
 /// Экшн кнопка на экране детальной информации места, которая меняется в зависимости
 /// от типа карточки
@@ -69,7 +71,11 @@ class _PlaceDetailsDynamicActionButtonState
     final planDate = Platform.isIOS
         ? await _cupertinoDatePicker(nowDate, nowYear)
         : await _materialDatePicker(nowDate, nowYear);
-    placeInteractor.setPlanDate(place: place, planDate: planDate);
+
+    if (!mounted) return;
+    context
+        .read<PlaceInteractor>()
+        .setPlanDate(place: place, planDate: planDate);
   }
 
   Future<DateTime?> _materialDatePicker(
