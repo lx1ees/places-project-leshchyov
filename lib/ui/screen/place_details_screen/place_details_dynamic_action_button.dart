@@ -6,7 +6,6 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/main.dart';
 import 'package:places/ui/screen/place_details_screen/to_plan_button.dart';
 import 'package:places/ui/screen/place_details_screen/to_plan_inactive_button.dart';
 import 'package:places/ui/screen/place_details_screen/to_replan_button.dart';
