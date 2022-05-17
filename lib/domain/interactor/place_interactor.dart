@@ -22,65 +22,10 @@ class PlaceInteractor {
   /// Репозиторий списка мест
   final PlaceRepository _repository;
 
-  Stream<List<Place>> get placesStream => _placesController.stream;
-
-  StreamController<List<Place>> _placesController =
-      StreamController<List<Place>>();
-
   PlaceInteractor({
     required PlaceRepository repository,
   }) : _repository = repository;
 
-  void disposePlacesStream() {
-    _placesController.close();
-  }
-
-  /// Метод для получения списка мест от сервера на основе фильтров [filtersManager]
-  /// и текущего местоположения [currentLocation]
-  Future<void> requestPlaces({
-    required FiltersManager filtersManager,
-    LocationPoint? currentLocation,
-  }) async {
-    try {
-      _initPlacesStreamController();
-      _placesController.sink.add([]);
-      late final List<PlaceDto> placeDtos;
-      if (currentLocation != null) {
-        placeDtos = await _repository.getFilteredPlaces(
-          locationPoint: currentLocation,
-          filtersManager: filtersManager,
-        );
-      } else if (filtersManager.isFiltersApplied) {
-        placeDtos = await _repository.getFilteredPlacesWithoutLocation(
-          filtersManager: filtersManager,
-        );
-      } else {
-        placeDtos = await _repository.getPlaces();
-      }
-      placeDtos.sort((a, b) => a.distance?.compareTo(b.distance ?? 0) ?? -1);
-
-      final remotePlaces = placeDtos.map(PlaceMapper.fromDto).toList();
-
-      /// Получили свежие места от сервера -> обновили их флаги (Избранное, Посетил)
-      /// на основе существующего списка мест
-      final modifiedRemotePlaces = _compareAndModifyPlaces(
-        favoritePlaces: _favoritePlaces,
-        visitedPlaces: _visitedPlaces,
-        remotePlaces: remotePlaces,
-        cardLook: CardLook.view,
-      );
-
-      _places
-        ..clear()
-        ..addAll(modifiedRemotePlaces);
-
-      _placesController.sink.add(_places);
-    } on NetworkException catch (e) {
-      _placesController.sink.addError(e);
-    }
-  }
-
-  /// Оставил пока старый метод для совместимости на других экранах
   /// Метод для получения списка мест от сервера на основе фильтров [filtersManager]
   /// и текущего местоположения [currentLocation]
   Future<List<Place>> getPlaces({
@@ -120,19 +65,13 @@ class PlaceInteractor {
 
       return _places;
     } on NetworkException catch (_) {
-      return [];
+      rethrow;
     }
   }
 
   /// Оставил пока старый метод для совместимости на других экранах
   /// Метод получения списка мест для отображения на жкране Список мест
   List<Place> getLocalPlaces() => _places;
-
-  /// Метод получения списка мест для отображения на жкране Список мест
-  void requestLocalPlaces() {
-    _initPlacesStreamController();
-    _placesController.sink.add(_places);
-  }
 
   /// Метод получения списка мест, которые находятся в избранном
   List<Place> getFavoritePlaces() {
@@ -286,11 +225,5 @@ class PlaceInteractor {
 
       return updatedPlace;
     }).toList();
-  }
-
-  void _initPlacesStreamController() {
-    if (_placesController.isClosed) {
-      _placesController = StreamController<List<Place>>();
-    }
   }
 }
