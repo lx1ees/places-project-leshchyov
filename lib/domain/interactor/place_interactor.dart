@@ -119,7 +119,7 @@ class PlaceInteractor {
         ..addAll(modifiedRemotePlaces);
 
       return _places;
-    } on NetworkException catch (e) {
+    } on NetworkException catch (_) {
       return [];
     }
   }
@@ -151,7 +151,7 @@ class PlaceInteractor {
           await _repository.addPlace(PlaceMapper.toDto(newPlace));
 
       return PlaceMapper.fromDto(addedPlaceDto);
-    } on NetworkException catch (e) {
+    } on NetworkException catch (_) {
       return newPlace;
     }
   }
@@ -170,7 +170,7 @@ class PlaceInteractor {
       );
 
       return modifiedRemotePlaces[0];
-    } on NetworkException catch (e) {
+    } on NetworkException catch (_) {
       return place;
     }
   }

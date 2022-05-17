@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/main.dart';
 import 'package:places/ui/screen/add_place_screen/add_image_dialog.dart';
 import 'package:places/ui/screen/add_place_screen/add_image_section.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen_app_bar.dart';
@@ -18,6 +18,7 @@ import 'package:places/ui/widget/custom_divider.dart';
 import 'package:places/ui/widget/custom_text_button.dart';
 import 'package:places/ui/widget/custom_text_field.dart';
 import 'package:places/ui/widget/focus_manager_holder.dart';
+import 'package:provider/provider.dart';
 
 /// Экран добавления нового места
 class AddPlaceScreen extends StatefulWidget {
@@ -232,7 +233,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
       description: description,
       placeType: placeType,
     );
-    await placeInteractor.addNewPlace(newPlace);
+    await context.read<PlaceInteractor>().addNewPlace(newPlace);
   }
 
   /// Функция проверки заполненности и корректности всех обязательных для заполнения

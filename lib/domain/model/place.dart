@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:places/data/model/place_dto.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place_type.dart';
 

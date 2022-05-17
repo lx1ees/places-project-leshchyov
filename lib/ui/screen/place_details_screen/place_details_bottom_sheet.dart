@@ -6,8 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/main.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_description.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_dynamic_action_button.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_screen_sliver_app_bar.dart';
@@ -16,6 +16,7 @@ import 'package:places/ui/widget/bottom_sheet_close_button.dart';
 import 'package:places/ui/widget/bottom_sheet_indicator.dart';
 import 'package:places/ui/widget/custom_elevated_button.dart';
 import 'package:places/ui/widget/custom_text_icon_button.dart';
+import 'package:provider/provider.dart';
 
 /// Виджет-окно для отображения полной информации о [place] достопримечательности
 /// и выполнения действий с ней.
@@ -154,7 +155,9 @@ class _PlaceDetailsBottomSheetState extends State<PlaceDetailsBottomSheet> {
                                           color: colorScheme.onPrimary,
                                         ),
                                         onPressed: () {
-                                          placeInteractor.changeFavorite(place);
+                                          context
+                                              .read<PlaceInteractor>()
+                                              .changeFavorite(place);
                                           _requestForPlaceDetails();
                                         },
                                       ),
@@ -208,9 +211,9 @@ class _PlaceDetailsBottomSheetState extends State<PlaceDetailsBottomSheet> {
 
   /// Обновление места (временная мера пока нет стейтменеджмента)
   Future<void> _requestForPlaceDetails() async {
-    final place = await placeInteractor.getPlaceDetails(
-      place: widget.place,
-    );
+    final place = await context.read<PlaceInteractor>().getPlaceDetails(
+          place: widget.place,
+        );
     setState(() {
       _place = place;
     });

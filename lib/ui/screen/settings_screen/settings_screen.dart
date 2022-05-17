@@ -5,9 +5,10 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/main.dart';
+import 'package:places/domain/interactor/settings_interactor.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widget/custom_divider.dart';
+import 'package:provider/provider.dart';
 
 /// Экран с настройками
 class SettingsScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final settingsInteractor = context.read<SettingsInteractor>();
 
     return Scaffold(
       appBar: AppBar(

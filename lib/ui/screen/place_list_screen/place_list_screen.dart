@@ -4,9 +4,9 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/main.dart';
 import 'package:places/ui/screen/place_card/place_view_card.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_list.dart';
@@ -15,6 +15,7 @@ import 'package:places/ui/screen/place_list_screen/place_list_screen_sliver_app_
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widget/gradient_extended_fab.dart';
 import 'package:places/ui/widget/search_bar.dart';
+import 'package:provider/provider.dart';
 
 /// Виджет, описывающий экран списка интересных мест
 class PlaceListScreen extends StatefulWidget {
@@ -32,10 +33,12 @@ class PlaceListScreen extends StatefulWidget {
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
   final ScrollController _scrollController = ScrollController();
+  late final PlaceInteractor _placeInteractor;
 
   @override
   void initState() {
     super.initState();
+    _placeInteractor = context.read<PlaceInteractor>();
     _requestForLocalPlaces();
     _requestForRemotePlaces();
   }
@@ -43,13 +46,14 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
-    placeInteractor.disposePlacesStream();
+    _placeInteractor.disposePlacesStream();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final placeInteractor = context.read<PlaceInteractor>();
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -91,7 +95,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                 builder: (context, snapshot) {
                   final places = snapshot.data;
 
-                  if (snapshot.hasError){
+                  if (snapshot.hasError) {
                     debugPrint(snapshot.error.toString());
 
                     return const PlaceListErrorPlaceholder();
@@ -162,7 +166,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   ) async {
     await AppRoutes.navigateToFiltersScreen(
       context: context,
-      filtersManager: filtersManager,
+      filtersManager: context.read<FiltersManager>(),
     );
     await _requestForRemotePlaces();
   }
@@ -173,7 +177,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   ) async {
     await AppRoutes.navigateToSearchScreen(
       context: context,
-      filtersManager: filtersManager,
+      filtersManager: context.read<FiltersManager>(),
     );
     await _requestForLocalPlaces();
     await _requestForRemotePlaces();
@@ -181,14 +185,14 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
   /// Обновление списка мест из сети (временная мера пока нет стейтменеджмента)
   Future<void> _requestForRemotePlaces() async {
-    await placeInteractor.requestPlaces(
-      filtersManager: filtersManager,
-      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
-    );
+    await context.read<PlaceInteractor>().requestPlaces(
+          filtersManager: context.read<FiltersManager>(),
+          currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
+        );
   }
 
   /// Обновление списка мест из локального списка (временная мера пока нет стейтменеджмента)
   Future<void> _requestForLocalPlaces() async {
-    placeInteractor.requestLocalPlaces();
+    context.read<PlaceInteractor>().requestLocalPlaces();
   }
 }

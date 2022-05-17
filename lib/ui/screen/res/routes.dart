@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/main.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/select_place_type.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
@@ -13,6 +12,7 @@ import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
+import 'package:provider/provider.dart';
 
 /// Класс роутинга
 abstract class AppRoutes {
@@ -29,8 +29,8 @@ abstract class AppRoutes {
 
   static final Map<String, Widget Function(BuildContext context)>
       bottomNavigationRoutes = {
-    PlaceListScreen.routeName: (_) =>
-        PlaceListScreen(filtersManager: filtersManager),
+    PlaceListScreen.routeName: (context) =>
+        PlaceListScreen(filtersManager: context.read<FiltersManager>()),
     VisitingScreen.routeName: (_) => const VisitingScreen(),
     SettingsScreen.routeName: (_) => const SettingsScreen(),
   };
