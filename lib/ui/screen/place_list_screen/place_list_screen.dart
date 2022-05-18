@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobx/mobx.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
@@ -7,6 +9,7 @@ import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
+import 'package:places/domain/store/place_store.dart';
 import 'package:places/ui/screen/place_card/place_view_card.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_list.dart';
@@ -33,12 +36,12 @@ class PlaceListScreen extends StatefulWidget {
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
   final ScrollController _scrollController = ScrollController();
-  late final PlaceInteractor _placeInteractor;
+  late final PlaceStore _placeStore;
 
   @override
   void initState() {
     super.initState();
-    _placeInteractor = context.read<PlaceInteractor>();
+    _placeStore = PlaceStore(placeInteractor: context.read<PlaceInteractor>());
     _requestForLocalPlaces();
     _requestForRemotePlaces();
   }
@@ -46,7 +49,6 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _placeInteractor.disposePlacesStream();
     super.dispose();
   }
 
@@ -90,41 +92,41 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
             ),
             const SizedBox(height: AppConstants.defaultPaddingX1_5),
             Expanded(
-              child: StreamBuilder<List<Place>>(
-                stream: placeInteractor.placesStream,
-                builder: (context, snapshot) {
-                  final places = snapshot.data;
+              child: Provider<PlaceStore>(
+                create: (_) => _placeStore,
+                child: Observer(
+                  builder: (_) {
+                    final status = _placeStore.getPlacesFuture?.status;
+                    final places = _placeStore.getPlacesFuture?.value;
 
-                  if (snapshot.hasError) {
-                    debugPrint(snapshot.error.toString());
+                    if (status == FutureStatus.rejected) {
+                      return const PlaceListErrorPlaceholder();
+                    } else if (status == FutureStatus.fulfilled &&
+                        places != null) {
+                      return PlaceList(
+                        placeCards: places
+                            .map((place) => PlaceViewCard(
+                                  place: place,
+                                  onFavoritePressed: () {
+                                    placeInteractor.changeFavorite(place);
+                                  },
+                                  onCardTapped: () =>
+                                      _openPlaceDetailsBottomSheet(
+                                    context,
+                                    place,
+                                  ),
+                                ))
+                            .toList(),
+                      );
+                    }
 
-                    return const PlaceListErrorPlaceholder();
-                  }
-
-                  if (snapshot.hasData && places != null && places.isNotEmpty) {
-                    return PlaceList(
-                      placeCards: places
-                          .map((place) => PlaceViewCard(
-                                place: place,
-                                onFavoritePressed: () {
-                                  placeInteractor.changeFavorite(place);
-                                },
-                                onCardTapped: () =>
-                                    _openPlaceDetailsBottomSheet(
-                                  context,
-                                  place,
-                                ),
-                              ))
-                          .toList(),
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: colorScheme.secondary,
+                      ),
                     );
-                  }
-
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: colorScheme.secondary,
-                    ),
-                  );
-                },
+                  },
+                ),
               ),
             ),
           ],
@@ -185,14 +187,14 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
   /// Обновление списка мест из сети (временная мера пока нет стейтменеджмента)
   Future<void> _requestForRemotePlaces() async {
-    await context.read<PlaceInteractor>().requestPlaces(
-          filtersManager: context.read<FiltersManager>(),
-          currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
-        );
+    _placeStore.getPlaces(
+      filtersManager: context.read<FiltersManager>(),
+      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
+    );
   }
 
   /// Обновление списка мест из локального списка (временная мера пока нет стейтменеджмента)
   Future<void> _requestForLocalPlaces() async {
-    context.read<PlaceInteractor>().requestLocalPlaces();
+    _placeStore.getLocalPlaces();
   }
 }
