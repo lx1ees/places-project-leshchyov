@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
@@ -8,6 +9,9 @@ import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
+import 'package:places/ui/redux/action/search_action.dart';
+import 'package:places/ui/redux/state/app_state.dart';
+import 'package:places/ui/redux/state/search_state.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_error_placeholder.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_history_list.dart';
@@ -35,12 +39,7 @@ class PlaceSearchScreen extends StatefulWidget {
 
 class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
   final _searchStream = PublishSubject<String>();
-  final _foundPlaces = <Place>[];
   late final TextEditingController _searchController;
-
-  /// Временные флаги, пока нет стейтменеджмента
-  final _isErrorOccurred = false;
-  bool _isShowLoader = false;
   String _searchString = '';
 
   @override
@@ -94,43 +93,49 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
             ),
           ),
           Expanded(
-            child: Builder(builder: (context) {
-              if (_searchString.isEmpty) {
-                /// Показываем историю
-                return PlaceSearchHistoryList(
-                  searchHistoryManager:
-                      context.read<SearchInteractor>().searchHistoryManager,
-                  onHistoryPressed: (historySearchString) {
-                    _searchController
-                      ..text = historySearchString
-                      ..selection = TextSelection.collapsed(
-                        offset: historySearchString.length,
-                      );
-                  },
-                );
-              } else if (_isErrorOccurred) {
-                /// Показываем сообщение об ошибке
-                return const PlaceSearchErrorPlaceholder();
-              } else if (_isShowLoader) {
-                /// Показываем лоадер
-                return const PlaceSearchLoadingIndicator();
-              } else if (_foundPlaces.isNotEmpty) {
-                /// Если есть результаты поиска, показываем их
-                return PlaceSearchResultsList(
-                  searchString: _searchString,
-                  results: _foundPlaces,
-                  onPlacePressed: (place) {
-                    _openPlaceDetailsBottomSheet(
-                      context,
-                      place,
-                    );
-                  },
-                );
-              }
+            child: StoreConnector<AppState, SearchState>(
+              converter: (store) {
+                return store.state.searchState;
+              },
+              builder: (context, vm) {
+                if (_searchString.isEmpty) {
+                  return PlaceSearchHistoryList(
+                    searchHistoryManager:
+                        context.read<SearchInteractor>().searchHistoryManager,
+                    onHistoryPressed: (historySearchString) {
+                      _searchController
+                        ..text = historySearchString
+                        ..selection = TextSelection.collapsed(
+                          offset: historySearchString.length,
+                        );
+                    },
+                  );
+                }
 
-              /// Если нет результатов поиска, показываем плейсхолдер
-              return const PlaceSearchNoResultsPlaceholder();
-            }),
+                if (vm is SearchLoadingState) {
+                  return const PlaceSearchLoadingIndicator();
+                } else if (vm is SearchSuccessState) {
+                  final foundPlaces = vm.foundPlaces;
+
+                  if (foundPlaces.isEmpty) {
+                    return const PlaceSearchNoResultsPlaceholder();
+                  }
+
+                  return PlaceSearchResultsList(
+                    searchString: _searchString,
+                    results: vm.foundPlaces,
+                    onPlacePressed: (place) {
+                      _openPlaceDetailsBottomSheet(
+                        context,
+                        place,
+                      );
+                    },
+                  );
+                }
+
+                return const PlaceSearchErrorPlaceholder();
+              },
+            ),
           ),
         ],
       ),
@@ -154,36 +159,13 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
     );
   }
 
-  /// Метод изменения условий для показа лоадера
-  void _showLoader() {
-    setState(() {
-      _isShowLoader = true;
-    });
-  }
-
-  /// Метод изменения условий для сокрытия лоадера
-  void _hideLoader() {
-    setState(() {
-      _isShowLoader = false;
-    });
-  }
-
   /// Функция поиска мест по запросу [searchString]
   Future<void> _requestForSearchResults(String searchString) async {
-    _showLoader();
     _searchString = searchString;
-
-    final places = await context.read<SearchInteractor>().getSearchResults(
-          filtersManager: context.read<FiltersManager>(),
-          currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
-          searchString: searchString,
-        );
-    setState(() {
-      _foundPlaces
-        ..clear()
-        ..addAll(places);
-    });
-
-    _hideLoader();
+    StoreProvider.of<AppState>(context).dispatch(GetSearchResultsAction(
+      filtersManager: context.read<FiltersManager>(),
+      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
+      searchString: searchString,
+    ));
   }
 }
