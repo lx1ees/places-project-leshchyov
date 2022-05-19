@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place.dart';
+import 'package:places/ui/bloc/visiting/visiting_bloc.dart';
 import 'package:places/ui/screen/custom_tab_bar.dart';
 import 'package:places/ui/screen/no_items_placeholder.dart';
 import 'package:places/ui/screen/place_card/place_to_visit_card.dart';
@@ -15,7 +16,6 @@ import 'package:places/ui/screen/place_card/place_visited_card.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_list.dart';
 import 'package:places/ui/screen/res/themes.dart';
-import 'package:provider/provider.dart';
 
 /// Экран со списками посещения
 class VisitingScreen extends StatefulWidget {
@@ -30,15 +30,12 @@ class VisitingScreen extends StatefulWidget {
 class _VisitingScreenState extends State<VisitingScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  final _favoritePlaces = <Place>[];
-  final _visitedPlaces = <Place>[];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() => setState(() {}));
-    _requestForLocalPlaces();
   }
 
   @override
@@ -49,8 +46,6 @@ class _VisitingScreenState extends State<VisitingScreen>
 
   @override
   Widget build(BuildContext context) {
-    final placeInteractor = context.read<PlaceInteractor>();
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -76,84 +71,83 @@ class _VisitingScreenState extends State<VisitingScreen>
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: AppConstants.defaultPaddingX1_5),
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            PlaceList(
-              onDragComplete: (fromIndex, toIndex) {
-                placeInteractor.movePlaceInFavorites(
-                  index: toIndex,
-                  placeToMove: _favoritePlaces[fromIndex],
-                );
-                _requestForLocalPlaces();
-              },
-              placeCards: _favoritePlaces
-                  .map((place) => PlaceToVisitCard(
-                        key: ObjectKey(place),
-                        place: place,
-                        dateOfVisit: place.planDate,
-                        onPlanPressed: () => _pickPlanDate(place),
-                        onDeletePressed: () {
-                          placeInteractor.changeFavorite(place);
-                          _requestForLocalPlaces();
-                        },
-                        onCardTapped: () =>
-                            _openPlaceDetailsBottomSheet(context, place),
-                      ))
-                  .toList(),
-              emptyListPlaceholder: const NoItemsPlaceholder(
-                iconPath: AppAssets.noToVisitPlacesIcon,
-                title: AppStrings.placeholderNoItemsTitleText,
-                subtitle: AppStrings.placeholderNoToVisitPlacesText,
-              ),
-            ),
-            PlaceList(
-              onDragComplete: (fromIndex, toIndex) {
-                placeInteractor.movePlaceInVisited(
-                  index: toIndex,
-                  placeToMove: _visitedPlaces[fromIndex],
-                );
-                _requestForLocalPlaces();
-              },
-              placeCards: _visitedPlaces
-                  .map((place) => PlaceVisitedCard(
-                        key: ObjectKey(place),
-                        place: place,
-                        dateOfVisit: place.planDate,
-                        onSharePressed: () {},
-                        onDeletePressed: () {
-                          placeInteractor.removePlaceFromVisited(place);
-                          _requestForLocalPlaces();
-                        },
-                        onCardTapped: () =>
-                            _openPlaceDetailsBottomSheet(context, place),
-                      ))
-                  .toList(),
-              emptyListPlaceholder: const NoItemsPlaceholder(
-                iconPath: AppAssets.noVisitedPlacesIcon,
-                title: AppStrings.placeholderNoItemsTitleText,
-                subtitle: AppStrings.placeholderNoVisitedPlacesText,
-              ),
-            ),
-          ],
+        child: BlocBuilder<VisitingBloc, VisitingState>(
+          builder: (context, state) {
+            if (state is VisitingLoadedSuccessfully) {
+              return TabBarView(
+                controller: _tabController,
+                children: [
+                  PlaceList(
+                    onDragComplete: (fromIndex, toIndex) {
+                      context.read<VisitingBloc>().add(
+                            PlaceChangedOrderInFavorites(
+                              fromIndex: fromIndex,
+                              toIndex: toIndex,
+                            ),
+                          );
+                    },
+                    placeCards: state.favoritePlaces
+                        .map((place) => PlaceToVisitCard(
+                              key: ObjectKey(place),
+                              place: place,
+                              dateOfVisit: place.planDate,
+                              onPlanPressed: () => _pickPlanDate(place),
+                              onDeletePressed: () {
+                                context
+                                    .read<VisitingBloc>()
+                                    .add(PlaceInFavoritesToggled(place: place));
+                              },
+                              onCardTapped: () =>
+                                  _openPlaceDetailsBottomSheet(context, place),
+                            ))
+                        .toList(),
+                    emptyListPlaceholder: const NoItemsPlaceholder(
+                      iconPath: AppAssets.noToVisitPlacesIcon,
+                      title: AppStrings.placeholderNoItemsTitleText,
+                      subtitle: AppStrings.placeholderNoToVisitPlacesText,
+                    ),
+                  ),
+                  PlaceList(
+                    onDragComplete: (fromIndex, toIndex) {
+                      context.read<VisitingBloc>().add(
+                            PlaceChangedOrderInVisited(
+                              fromIndex: fromIndex,
+                              toIndex: toIndex,
+                            ),
+                          );
+                    },
+                    placeCards: state.visitedPlaces
+                        .map((place) => PlaceVisitedCard(
+                              key: ObjectKey(place),
+                              place: place,
+                              dateOfVisit: place.planDate,
+                              onSharePressed: () {},
+                              onDeletePressed: () {
+                                context
+                                    .read<VisitingBloc>()
+                                    .add(PlaceInVisitedRemoved(place: place));
+                              },
+                              onCardTapped: () =>
+                                  _openPlaceDetailsBottomSheet(context, place),
+                            ))
+                        .toList(),
+                    emptyListPlaceholder: const NoItemsPlaceholder(
+                      iconPath: AppAssets.noVisitedPlacesIcon,
+                      title: AppStrings.placeholderNoItemsTitleText,
+                      subtitle: AppStrings.placeholderNoVisitedPlacesText,
+                    ),
+                  ),
+                ],
+              );
+            } else if (state is VisitingLoadedWithFailure) {}
+
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ),
       ),
     );
-  }
-
-  /// Обновление списка мест из локального списка (временная мера пока нет стейтменеджмента)
-  Future<void> _requestForLocalPlaces() async {
-    final placeInteractor = context.read<PlaceInteractor>();
-    final favoritePlaces = placeInteractor.getFavoritePlaces();
-    final visitedPlaces = placeInteractor.getVisitedPlaces();
-    setState(() {
-      _favoritePlaces
-        ..clear()
-        ..addAll(favoritePlaces);
-      _visitedPlaces
-        ..clear()
-        ..addAll(visitedPlaces);
-    });
   }
 
   /// Метод открытия окна детальной информации о месте
@@ -172,7 +166,9 @@ class _VisitingScreenState extends State<VisitingScreen>
         return PlaceDetailsBottomSheet(place: place);
       },
     );
-    await _requestForLocalPlaces();
+
+    if (!mounted) return;
+    context.read<VisitingBloc>().add(const PlacesRequested());
   }
 
   Future<void> _pickPlanDate(Place place) async {
@@ -184,10 +180,12 @@ class _VisitingScreenState extends State<VisitingScreen>
         : await _materialDatePicker(nowDate, nowYear);
 
     if (!mounted) return;
-    context
-        .read<PlaceInteractor>()
-        .setPlanDate(place: place, planDate: planDate);
-    await _requestForLocalPlaces();
+    context.read<VisitingBloc>().add(
+          PlacePlanDateIsSet(
+            place: place,
+            dateTime: planDate,
+          ),
+        );
   }
 
   Future<DateTime?> _materialDatePicker(

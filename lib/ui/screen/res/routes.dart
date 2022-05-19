@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place_type.dart';
+import 'package:places/ui/bloc/visiting/visiting_bloc.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/select_place_type.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
@@ -12,7 +15,6 @@ import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
-import 'package:provider/provider.dart';
 
 /// Класс роутинга
 abstract class AppRoutes {
@@ -31,7 +33,12 @@ abstract class AppRoutes {
       bottomNavigationRoutes = {
     PlaceListScreen.routeName: (context) =>
         PlaceListScreen(filtersManager: context.read<FiltersManager>()),
-    VisitingScreen.routeName: (_) => const VisitingScreen(),
+    VisitingScreen.routeName: (_) => BlocProvider(
+          create: (context) => VisitingBloc(
+            placeInteractor: context.read<PlaceInteractor>(),
+          )..add(const PlacesRequested()),
+          child: const VisitingScreen(),
+        ),
     SettingsScreen.routeName: (_) => const SettingsScreen(),
   };
 
