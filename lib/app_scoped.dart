@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:places/data/api/network_service.dart';
 import 'package:places/data/repository/place_repository.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/interactor/settings_interactor.dart';
+import 'package:places/ui/redux/middleware/search_middleware.dart';
+import 'package:places/ui/redux/reducer/search_reducer.dart';
+import 'package:places/ui/redux/state/app_state.dart';
 import 'package:provider/provider.dart';
+import 'package:redux/redux.dart';
 
 /// Класс обертка над App с DI
 class AppScoped extends StatefulWidget {
@@ -34,6 +39,14 @@ class _AppScopedState extends State<AppScoped> {
     );
     final settingsInteractor = SettingsInteractor();
 
+    final store = Store<AppState>(
+      searchReducer,
+      initialState: AppState(),
+      middleware: [
+        SearchMiddleware(searchInteractor: searchInteractor),
+      ],
+    );
+
     return MultiProvider(
       providers: [
         Provider.value(value: filtersManager),
@@ -42,7 +55,10 @@ class _AppScopedState extends State<AppScoped> {
         Provider.value(value: searchInteractor),
         Provider.value(value: settingsInteractor),
       ],
-      child: widget.child,
+      child: StoreProvider<AppState>(
+        store: store,
+        child: widget.child,
+      ),
     );
   }
 }
