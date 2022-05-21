@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mwwm/mwwm.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/bloc/visiting/visiting_bloc.dart';
+import 'package:places/ui/mwwm/add_place/add_place_widget_model.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/select_place_type.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
@@ -46,7 +48,13 @@ abstract class AppRoutes {
       _mainNavigationRoutes = {
     SplashScreen.routeName: (argument) => const SplashScreen(),
     HomeScreen.routeName: (argument) => const HomeScreen(),
-    AddPlaceScreen.routeName: (argument) => const AddPlaceScreen(),
+    AddPlaceScreen.routeName: (argument) => AddPlaceScreen(
+          widgetModelBuilder: (context) => AddPlaceWidgetModel(
+            const WidgetModelDependencies(),
+            placeInteractor: context.read<PlaceInteractor>(),
+            navigator: Navigator.of(context),
+          ),
+        ),
     OnboardingScreen.routeName: (argument) => const OnboardingScreen(),
     SelectPlaceTypeScreen.routeName: (argument) {
       final selectedPlaceType = argument as PlaceType?;
