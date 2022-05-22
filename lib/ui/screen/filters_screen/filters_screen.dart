@@ -4,10 +4,10 @@ import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/ui/screen/filters_screen/distance_filter_section.dart';
-import 'package:places/ui/screen/filters_screen/filters_screen_app_bar.dart';
-import 'package:places/ui/screen/filters_screen/place_type_filter_section.dart';
-import 'package:places/ui/screen/filters_screen/show_filtered_list_button.dart';
+import 'package:places/ui/widget/filters/distance_filter_section.dart';
+import 'package:places/ui/widget/filters/filters_screen_app_bar.dart';
+import 'package:places/ui/widget/filters/place_type_filter_section.dart';
+import 'package:places/ui/widget/filters/show_filtered_list_button.dart';
 import 'package:provider/provider.dart';
 
 /// Экран с фильтрами по категории и дистанции от текущего местоположения

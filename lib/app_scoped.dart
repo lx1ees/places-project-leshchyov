@@ -1,3 +1,4 @@
+import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:places/data/api/network_service.dart';
@@ -9,6 +10,7 @@ import 'package:places/domain/interactor/settings_interactor.dart';
 import 'package:places/ui/redux/middleware/search_middleware.dart';
 import 'package:places/ui/redux/reducer/search_reducer.dart';
 import 'package:places/ui/redux/state/app_state.dart';
+import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
@@ -28,6 +30,8 @@ class AppScoped extends StatefulWidget {
 class _AppScopedState extends State<AppScoped> {
   @override
   Widget build(BuildContext context) {
+    final errorHandler = DefaultErrorHandler();
+    final themeWrapper = ThemeWrapper();
     final filtersManager = FiltersManager();
     final placeRepository = PlaceRepository(NetworkService());
     final placeInteractor = PlaceInteractor(
@@ -54,6 +58,8 @@ class _AppScopedState extends State<AppScoped> {
         Provider.value(value: placeInteractor),
         Provider.value(value: searchInteractor),
         Provider.value(value: settingsInteractor),
+        Provider.value(value: errorHandler),
+        Provider<ThemeWrapper>(create: (_) => themeWrapper),
       ],
       child: StoreProvider<AppState>(
         store: store,

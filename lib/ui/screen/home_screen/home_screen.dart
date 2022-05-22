@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/ui/screen/res/routes.dart';
-import 'package:places/ui/widget/custom_divider.dart';
+import 'package:places/ui/widget/common/custom_divider.dart';
 
 /// Стартовый экран с навигацией
 class HomeScreen extends StatefulWidget {

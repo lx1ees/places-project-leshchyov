@@ -7,16 +7,16 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/mwwm/add_place/add_place_widget_model.dart';
-import 'package:places/ui/screen/add_place_screen/add_image_dialog.dart';
-import 'package:places/ui/screen/add_place_screen/add_image_section.dart';
-import 'package:places/ui/screen/add_place_screen/add_place_screen_app_bar.dart';
-import 'package:places/ui/screen/add_place_screen/select_place_type_section.dart';
 import 'package:places/ui/screen/res/routes.dart';
-import 'package:places/ui/widget/bottom_screen_submit_button.dart';
-import 'package:places/ui/widget/custom_divider.dart';
-import 'package:places/ui/widget/custom_text_button.dart';
-import 'package:places/ui/widget/custom_text_field.dart';
-import 'package:places/ui/widget/focus_manager_holder.dart';
+import 'package:places/ui/widget/add_place/add_image_dialog.dart';
+import 'package:places/ui/widget/add_place/add_image_section.dart';
+import 'package:places/ui/widget/add_place/add_place_screen_app_bar.dart';
+import 'package:places/ui/widget/add_place/select_place_type_section.dart';
+import 'package:places/ui/widget/common/bottom_screen_submit_button.dart';
+import 'package:places/ui/widget/common/custom_divider.dart';
+import 'package:places/ui/widget/common/custom_text_button.dart';
+import 'package:places/ui/widget/common/custom_text_field.dart';
+import 'package:places/ui/widget/common/focus_manager_holder.dart';
 import 'package:relation/relation.dart';
 
 /// Экран добавления нового места
@@ -166,6 +166,7 @@ class _AddPlaceScreenState
                 ),
               ),
             ),
+
             /// Кнопку добавления оставляю всегда активной. При нажатии, если есть незаполненные поля,
             /// пользователю показывается где и что незаполнено. Если все заполнено корректно,
             /// то место добавляется.

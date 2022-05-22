@@ -7,7 +7,7 @@ import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/interactor/settings_interactor.dart';
 import 'package:places/ui/screen/res/routes.dart';
-import 'package:places/ui/widget/custom_divider.dart';
+import 'package:places/ui/widget/common/custom_divider.dart';
 import 'package:provider/provider.dart';
 
 /// Экран с настройками

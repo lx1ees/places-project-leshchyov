@@ -1,22 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mwwm/mwwm.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/ui/bloc/visiting/visiting_bloc.dart';
 import 'package:places/ui/mwwm/add_place/add_place_widget_model.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
-import 'package:places/ui/screen/add_place_screen/select_place_type.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_model.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
+import 'package:places/ui/screen/visiting_screen/visiting_screen_widget_model.dart';
+import 'package:places/ui/widget/add_place/select_place_type.dart';
+import 'package:provider/provider.dart';
 
 /// Класс роутинга
 abstract class AppRoutes {
@@ -33,13 +34,11 @@ abstract class AppRoutes {
 
   static final Map<String, Widget Function(BuildContext context)>
       bottomNavigationRoutes = {
-    PlaceListScreen.routeName: (context) =>
-        PlaceListScreen(filtersManager: context.read<FiltersManager>()),
-    VisitingScreen.routeName: (_) => BlocProvider(
-          create: (context) => VisitingBloc(
-            placeInteractor: context.read<PlaceInteractor>(),
-          )..add(const PlacesRequested()),
-          child: const VisitingScreen(),
+    PlaceListScreen.routeName: (context) => const PlaceListScreen(
+          widgetModelFactory: placeListScreenWidgetModelFactory,
+        ),
+    VisitingScreen.routeName: (_) => const VisitingScreen(
+          widgetModelFactory: visitingScreenWidgetModelFactory,
         ),
     SettingsScreen.routeName: (_) => const SettingsScreen(),
   };
