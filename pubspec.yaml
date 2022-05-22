@@ -16,9 +16,7 @@ dependencies:
     sdk: flutter
   flutter_svg: ^1.0.3
   intl: ^0.17.0
-  mwwm: ^2.0.0
   provider: ^6.0.2
-  relation: ^3.1.0
   rxdart: ^0.27.3
 
 dev_dependencies:
@@ -35,16 +33,16 @@ flutter:
     - res/
     - res/images/
   fonts:
-     - family: Roboto
-       fonts:
-         - asset: res/fonts/Roboto-Black.ttf
-         - asset: res/fonts/Roboto-BlackItalic.ttf
-         - asset: res/fonts/Roboto-Bold.ttf
-         - asset: res/fonts/Roboto-BoldItalic.ttf
-         - asset: res/fonts/Roboto-Light.ttf
-         - asset: res/fonts/Roboto-LightItalic.ttf
-         - asset: res/fonts/Roboto-Medium.ttf
-         - asset: res/fonts/Roboto-MediumItalic.ttf
-         - asset: res/fonts/Roboto-Regular.ttf
-         - asset: res/fonts/Roboto-Thin.ttf
-         - asset: res/fonts/Roboto-ThinItalic.ttf
+    - family: Roboto
+      fonts:
+        - asset: res/fonts/Roboto-Black.ttf
+        - asset: res/fonts/Roboto-BlackItalic.ttf
+        - asset: res/fonts/Roboto-Bold.ttf
+        - asset: res/fonts/Roboto-BoldItalic.ttf
+        - asset: res/fonts/Roboto-Light.ttf
+        - asset: res/fonts/Roboto-LightItalic.ttf
+        - asset: res/fonts/Roboto-Medium.ttf
+        - asset: res/fonts/Roboto-MediumItalic.ttf
+        - asset: res/fonts/Roboto-Regular.ttf
+        - asset: res/fonts/Roboto-Thin.ttf
+        - asset: res/fonts/Roboto-ThinItalic.ttf

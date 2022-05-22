@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mwwm/mwwm.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/ui/mwwm/add_place/add_place_widget_model.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
+import 'package:places/ui/screen/add_place_screen/add_place_screen_widget_model.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
@@ -18,7 +16,6 @@ import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen_widget_model.dart';
 import 'package:places/ui/widget/add_place/select_place_type.dart';
-import 'package:provider/provider.dart';
 
 /// Класс роутинга
 abstract class AppRoutes {
@@ -48,12 +45,8 @@ abstract class AppRoutes {
       _mainNavigationRoutes = {
     SplashScreen.routeName: (_) => const SplashScreen(),
     HomeScreen.routeName: (_) => const HomeScreen(),
-    AddPlaceScreen.routeName: (_) => AddPlaceScreen(
-          widgetModelBuilder: (context) => AddPlaceWidgetModel(
-            const WidgetModelDependencies(),
-            placeInteractor: context.read<PlaceInteractor>(),
-            navigator: Navigator.of(context),
-          ),
+    AddPlaceScreen.routeName: (_) => const AddPlaceScreen(
+          widgetModelFactory: addPlaceScreenWidgetModelFactory,
         ),
     OnboardingScreen.routeName: (_) => const OnboardingScreen(),
     SelectPlaceTypeScreen.routeName: (argument) {

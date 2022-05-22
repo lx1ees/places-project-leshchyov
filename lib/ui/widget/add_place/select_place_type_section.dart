@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
+import 'package:places/domain/model/place_type.dart';
 
-/// Виджет секции выбора категори [selectedPlaceTypeName] на экране создания нового места
+/// Виджет секции выбора категори [selectedPlaceType] на экране создания нового места
 class SelectPlaceTypeSection extends StatelessWidget {
-  final String? selectedPlaceTypeName;
-  final VoidCallback onSelectPlaceTypePressed;
+  final PlaceType? selectedPlaceType;
+  final ValueChanged<PlaceType?> onSelectPlaceTypePressed;
 
   const SelectPlaceTypeSection({
     required this.onSelectPlaceTypePressed,
-    this.selectedPlaceTypeName,
+    this.selectedPlaceType,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isPlaceTypeSelected = selectedPlaceTypeName != null;
+    final isPlaceTypeSelected = selectedPlaceType != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +37,7 @@ class SelectPlaceTypeSection extends StatelessWidget {
         ListTile(
           title: Text(
             isPlaceTypeSelected
-                ? selectedPlaceTypeName ?? ''
+                ? selectedPlaceType?.name ?? ''
                 : AppStrings.placeTypeNotSelected,
             style: AppTypography.textRegularTextStyle.copyWith(
               color: isPlaceTypeSelected
@@ -55,7 +56,7 @@ class SelectPlaceTypeSection extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(
             horizontal: AppConstants.defaultPadding,
           ),
-          onTap: onSelectPlaceTypePressed,
+          onTap: () => onSelectPlaceTypePressed(selectedPlaceType),
         ),
       ],
     );
