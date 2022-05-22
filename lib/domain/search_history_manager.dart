@@ -15,11 +15,15 @@ class SearchHistoryManager {
     _successSearches.insert(0, searchString);
   }
 
-  void remove(String searchString) {
+  List<String> remove(String searchString) {
     _successSearches.remove(searchString);
+
+    return _successSearches;
   }
 
-  void clearHistory() {
+  List<String> clearHistory() {
     _successSearches.clear();
+
+    return _successSearches;
   }
 }

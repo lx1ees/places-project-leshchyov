@@ -29,7 +29,7 @@ VisitingScreenWidgetModel visitingScreenWidgetModelFactory(
   );
 }
 
-/// Виджет-модель для [VisitingScreenWidgetModel]
+/// Виджет-модель для [VisitingScreenModel]
 class VisitingScreenWidgetModel
     extends WidgetModel<VisitingScreen, VisitingScreenModel>
     with TickerProviderWidgetModelMixin

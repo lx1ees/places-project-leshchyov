@@ -37,7 +37,10 @@ class PlaceList extends StatelessWidget {
     }
 
     return OrientationBuilder(builder: (context, orientation) {
-      return orientation == Orientation.landscape
+      final isKeyboardOpened =
+          (WidgetsBinding.instance?.window.viewInsets.bottom ?? 0.0) > 0.0;
+
+      return orientation == Orientation.landscape && !isKeyboardOpened
           ? Center(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

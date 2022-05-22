@@ -43,11 +43,17 @@ class PlaceListScreenWidgetModel
   /// Цветовая схема текущей темы приложения
   late final ColorScheme _colorScheme;
 
+  /// Текущая тема приложения
+  late final ThemeData _theme;
+
   /// Состояние списка мест
   final _listPlacesEntityState = EntityStateNotifier<List<Place>>();
 
   @override
   ColorScheme get colorScheme => _colorScheme;
+
+  @override
+  ThemeData get theme => _theme;
 
   @override
   ScrollController get listScrollController => _scrollController;
@@ -67,7 +73,9 @@ class PlaceListScreenWidgetModel
   @override
   void initWidgetModel() {
     super.initWidgetModel();
-    _colorScheme = _themeWrapper.getTheme(context).colorScheme;
+    _theme = _themeWrapper.getTheme(context);
+    _colorScheme = _theme.colorScheme;
+
     _requestForPlaces();
   }
 
@@ -139,10 +147,7 @@ class PlaceListScreenWidgetModel
 
   /// Метод открытия окна поиска
   Future<void> _openSearchScreen() async {
-    await AppRoutes.navigateToSearchScreen(
-      context: context,
-      filtersManager: _filtersManager,
-    );
+    await AppRoutes.navigateToSearchScreen(context: context);
     await _requestForPlaces();
   }
 }
@@ -150,6 +155,9 @@ class PlaceListScreenWidgetModel
 abstract class IPlaceListScreenWidgetModel extends IWidgetModel {
   /// Цветовая схема текущей темы приложения
   ColorScheme get colorScheme;
+
+  /// Текущая тема приложения
+  ThemeData get theme;
 
   /// Контроллер прокрутки списка мест
   ScrollController get listScrollController;

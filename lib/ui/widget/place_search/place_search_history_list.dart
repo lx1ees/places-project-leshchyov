@@ -4,50 +4,35 @@ import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/search_history_manager.dart';
 import 'package:places/ui/widget/common/custom_divider.dart';
 import 'package:places/ui/widget/common/custom_icon_button.dart';
 import 'package:places/ui/widget/common/custom_text_button.dart';
 
-/// Виджет, отображающий список историю поиска с обработчиком нажатия [onHistoryPressed]
-/// [searchHistoryManager] - менеджер истории поиска
-class PlaceSearchHistoryList extends StatefulWidget {
-  final SearchHistoryManager searchHistoryManager;
-  final ValueChanged<String> onHistoryPressed;
+/// Виджет, отображающий список историю поиска [history] с обработчикоми нажатия [onHistoryItemPressed],
+/// удаления [onHistoryItemRemoved] и очистки всей истории [onHistoryCleared]
+class PlaceSearchHistoryList extends StatelessWidget {
+  final ScrollController scrollController;
+  final ValueChanged<String> onHistoryItemPressed;
+  final ValueChanged<String> onHistoryItemRemoved;
+  final VoidCallback onHistoryCleared;
+  final Iterable<String>? history;
+  final ColorScheme colorScheme;
 
   const PlaceSearchHistoryList({
-    required this.searchHistoryManager,
-    required this.onHistoryPressed,
+    required this.scrollController,
+    required this.onHistoryItemPressed,
+    required this.onHistoryItemRemoved,
+    required this.onHistoryCleared,
+    required this.history,
+    required this.colorScheme,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PlaceSearchHistoryList> createState() => _PlaceSearchHistoryListState();
-}
-
-class _PlaceSearchHistoryListState extends State<PlaceSearchHistoryList> {
-  late final ScrollController _scrollController;
-  late final SearchHistoryManager _searchHistoryManager;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-    _searchHistoryManager = widget.searchHistoryManager;
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final history = _searchHistoryManager.load();
+    final historyList = history;
 
-    if (history.isNotEmpty) {
+    if (historyList != null && historyList.isNotEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: AppConstants.defaultPaddingX2),
         child: Column(
@@ -66,15 +51,15 @@ class _PlaceSearchHistoryListState extends State<PlaceSearchHistoryList> {
             Flexible(
               child: Scrollbar(
                 isAlwaysShown: true,
-                controller: _scrollController,
+                controller: scrollController,
                 child: ListView.separated(
-                  itemCount: history.length,
+                  itemCount: historyList.length,
                   shrinkWrap: true,
-                  controller: _scrollController,
+                  controller: scrollController,
                   itemBuilder: (_, index) {
                     return ListTile(
                       title: Text(
-                        history[index],
+                        historyList.elementAt(index),
                         style: AppTypography.textRegularTextStyle.copyWith(
                           color: colorScheme.secondaryContainer,
                         ),
@@ -87,12 +72,12 @@ class _PlaceSearchHistoryListState extends State<PlaceSearchHistoryList> {
                           height: AppConstants.defaultIcon4Size,
                         ),
                         padding: EdgeInsets.zero,
-                        onPressed: () {
-                          _searchHistoryManager.remove(history[index]);
-                          setState(() {});
-                        },
+                        onPressed: () => onHistoryItemRemoved(
+                          historyList.elementAt(index),
+                        ),
                       ),
-                      onTap: () => widget.onHistoryPressed(history[index]),
+                      onTap: () =>
+                          onHistoryItemPressed(historyList.elementAt(index)),
                     );
                   },
                   separatorBuilder: (_, __) => const CustomDivider(
@@ -108,10 +93,7 @@ class _PlaceSearchHistoryListState extends State<PlaceSearchHistoryList> {
               child: CustomTextButton(
                 label: AppStrings.clearHistory,
                 foregroundColor: colorScheme.secondary,
-                onPressed: () {
-                  _searchHistoryManager.clearHistory();
-                  setState(() {});
-                },
+                onPressed: onHistoryCleared,
               ),
             ),
           ],

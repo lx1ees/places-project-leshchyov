@@ -7,11 +7,11 @@ import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_model.dart';
 import 'package:places/ui/widget/common/gradient_extended_fab.dart';
-import 'package:places/ui/widget/common/search_bar.dart';
 import 'package:places/ui/widget/place_card/place_view_card.dart';
 import 'package:places/ui/widget/place_list/place_list.dart';
 import 'package:places/ui/widget/place_list/place_list_error_placeholder.dart';
 import 'package:places/ui/widget/place_list/place_list_screen_sliver_app_bar.dart';
+import 'package:places/ui/widget/place_search/search_bar.dart';
 
 /// Виджет, описывающий экран списка интересных мест
 class PlaceListScreen extends ElementaryWidget<IPlaceListScreenWidgetModel> {
@@ -55,6 +55,7 @@ class PlaceListScreen extends ElementaryWidget<IPlaceListScreenWidgetModel> {
                 isBlocked: true,
                 onOpenFiltersPressed: wm.onFiltersPressed,
                 onTap: wm.onSearchPressed,
+                theme: wm.theme,
               ),
             ),
             const SizedBox(height: AppConstants.defaultPaddingX1_5),
