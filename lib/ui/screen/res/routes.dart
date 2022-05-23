@@ -12,6 +12,7 @@ import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_mode
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen_widget_model.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
+import 'package:places/ui/screen/settings_screen/settings_screen_widget_model.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen_widget_model.dart';
@@ -38,7 +39,9 @@ abstract class AppRoutes {
     VisitingScreen.routeName: (_) => const VisitingScreen(
           widgetModelFactory: visitingScreenWidgetModelFactory,
         ),
-    SettingsScreen.routeName: (_) => const SettingsScreen(),
+    SettingsScreen.routeName: (context) => const SettingsScreen(
+          widgetModelFactory: settingsScreenWidgetModelFactory,
+        ),
   };
 
   static final Map<String, Widget Function(Object? argument)>

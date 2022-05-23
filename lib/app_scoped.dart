@@ -5,13 +5,13 @@ import 'package:places/data/repository/place_repository.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/interactor/search_interactor.dart';
-import 'package:places/domain/interactor/settings_interactor.dart';
 import 'package:places/domain/search_history_manager.dart';
+import 'package:places/domain/settings_manager.dart';
 import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 
 /// Класс обертка над App с DI
-class AppScoped extends StatefulWidget {
+class AppScoped extends StatelessWidget {
   final Widget child;
 
   const AppScoped({
@@ -19,11 +19,6 @@ class AppScoped extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<AppScoped> createState() => _AppScopedState();
-}
-
-class _AppScopedState extends State<AppScoped> {
   @override
   Widget build(BuildContext context) {
     final errorHandler = DefaultErrorHandler();
@@ -39,19 +34,19 @@ class _AppScopedState extends State<AppScoped> {
       filtersManager: filtersManager,
       searchHistoryManager: searchHistoryManager,
     );
-    final settingsInteractor = SettingsInteractor();
+    final settingsManager = SettingsManager();
 
     return MultiProvider(
       providers: [
         Provider.value(value: filtersManager),
-        Provider.value(value: filtersManager),
+        Provider.value(value: searchHistoryManager),
         Provider.value(value: placeInteractor),
         Provider.value(value: searchInteractor),
-        Provider.value(value: settingsInteractor),
         Provider.value(value: errorHandler),
+        Provider.value(value: settingsManager),
         Provider<ThemeWrapper>(create: (_) => themeWrapper),
       ],
-      child: widget.child,
+      child: child,
     );
   }
 }
