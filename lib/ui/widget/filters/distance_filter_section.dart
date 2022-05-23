@@ -3,18 +3,19 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/utils/extensions.dart';
 
 /// Виджет-секция фильтра по дистанции
 class DistanceFilterSection extends StatelessWidget {
   final ValueChanged<RangeValues> onDistanceChanged;
   final ValueChanged<RangeValues> onDistanceChangeEnded;
-  final FiltersManager filtersManager;
+  final DistanceFilter distanceFilter;
+  final String distanceTitleRepresentation;
 
   const DistanceFilterSection({
-    required this.filtersManager,
+    required this.distanceFilter,
     required this.onDistanceChanged,
     required this.onDistanceChangeEnded,
+    required this.distanceTitleRepresentation,
     Key? key,
   }) : super(key: key);
 
@@ -35,10 +36,7 @@ class DistanceFilterSection extends StatelessWidget {
                 style: AppTypography.textRegularTextStyle,
               ),
               Text(
-                _distanceTitleRepresentation(
-                  filtersManager.distanceLeftThreshold,
-                  filtersManager.distanceRightThreshold,
-                ),
+                distanceTitleRepresentation,
                 style: AppTypography.textRegularTextStyle.copyWith(
                   color: Theme.of(context).colorScheme.secondaryContainer,
                 ),
@@ -55,50 +53,13 @@ class DistanceFilterSection extends StatelessWidget {
               onChanged: onDistanceChanged,
               onChangeEnd: onDistanceChangeEnded,
               values: RangeValues(
-                filtersManager.distanceLeftThreshold,
-                filtersManager.distanceRightThreshold,
+                distanceFilter.distanceLeftThreshold,
+                distanceFilter.distanceRightThreshold,
               ),
             ),
           ),
         ],
       ),
     );
-  }
-
-  /// Формирование строки с информацией о выбранной дистанции
-  String _distanceTitleRepresentation(
-    double leftThreshold,
-    double rightThreshold,
-  ) {
-    const oneKmInMeters = 1000;
-    String _rightMeasure(double value, {bool addPostfix = false}) {
-      if (value < oneKmInMeters) {
-        return '${value.round()}${addPostfix ? ' ${AppStrings.meter}' : ''}';
-      }
-      final km = (value / oneKmInMeters).toPrecision(1);
-
-      return '${km.isWhole ? km.round() : km}${addPostfix ? ' ${AppStrings.km}' : ''}';
-    }
-
-    if (leftThreshold < oneKmInMeters && rightThreshold < oneKmInMeters) {
-      return '${AppStrings.prepositionFrom} ${_rightMeasure(leftThreshold)} ${AppStrings.prepositionTo} ${_rightMeasure(
-        rightThreshold,
-        addPostfix: true,
-      )}';
-    }
-    if (leftThreshold > oneKmInMeters && rightThreshold > oneKmInMeters) {
-      return '${AppStrings.prepositionFrom} ${_rightMeasure(leftThreshold)} ${AppStrings.prepositionTo} ${_rightMeasure(
-        rightThreshold,
-        addPostfix: true,
-      )}';
-    }
-
-    return '${AppStrings.prepositionFrom} ${_rightMeasure(
-      leftThreshold,
-      addPostfix: true,
-    )} ${AppStrings.prepositionTo} ${_rightMeasure(
-      rightThreshold,
-      addPostfix: true,
-    )}';
   }
 }

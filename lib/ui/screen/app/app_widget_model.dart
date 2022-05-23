@@ -24,11 +24,6 @@ class AppWidgetModel extends WidgetModel<App, AppScreenModel>
       model.currentThemeModeState;
 
   AppWidgetModel(AppScreenModel model) : super(model);
-
-  @override
-  void initWidgetModel() {
-    super.initWidgetModel();
-  }
 }
 
 abstract class IAppWidgetModel extends IWidgetModel {

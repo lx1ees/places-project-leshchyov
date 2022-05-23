@@ -5,6 +5,7 @@ import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen_widget_model.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
+import 'package:places/ui/screen/filters_screen/filters_screen_widget_model.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
@@ -60,7 +61,10 @@ abstract class AppRoutes {
     FiltersScreen.routeName: (argument) {
       final args = argument as FiltersManager;
 
-      return FiltersScreen(filtersManager: args);
+      return FiltersScreen(
+        filtersManager: args,
+        widgetModelFactory: filtersScreenWidgetModelFactory,
+      );
     },
     PlaceSearchScreen.routeName: (argument) {
       return const PlaceSearchScreen(

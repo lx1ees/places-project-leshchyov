@@ -2,11 +2,23 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/domain/model/place_type_filter_entity.dart';
 
+class DistanceFilter {
+  final double distanceLeftThreshold;
+  final double distanceRightThreshold;
+
+  const DistanceFilter({
+    double? distanceLeftThreshold,
+    double? distanceRightThreshold,
+  })  : distanceLeftThreshold =
+            distanceLeftThreshold ?? AppConstants.distanceFilterMinValue,
+        distanceRightThreshold =
+            distanceRightThreshold ?? AppConstants.distanceFilterMaxValue;
+}
+
 /// Класс, который содержит информацию о фильтрах по категории [placeTypeFilters],
-/// минимальной [distanceLeftThreshold] и максимальной [distanceRightThreshold] дистанции.
+/// минимальной и максимальной дистанции [distanceFilter].
 class FiltersManager {
-  double distanceLeftThreshold;
-  double distanceRightThreshold;
+  DistanceFilter distanceFilter;
 
   List<PlaceTypeFilterEntity> get placeTypeFilters => _placeTypeFilters;
 
@@ -24,7 +36,8 @@ class FiltersManager {
 
   bool get isFiltersApplied =>
       isPlaceTypeFiltersApplied ||
-      distanceRightThreshold != AppConstants.distanceFilterMaxValue;
+      distanceFilter.distanceRightThreshold !=
+          AppConstants.distanceFilterMaxValue;
 
   List<PlaceTypeFilterEntity> _placeTypeFilters;
 
@@ -32,20 +45,19 @@ class FiltersManager {
       : _placeTypeFilters = [
           ...PlaceTypeFilterEntity.availablePlaceTypeFilters,
         ],
-        distanceLeftThreshold = AppConstants.distanceFilterMinValue,
-        distanceRightThreshold = AppConstants.distanceFilterMaxValue;
+        distanceFilter = const DistanceFilter();
 
   void updateWith(final FiltersManager filtersManager) {
-    distanceRightThreshold = filtersManager.distanceRightThreshold;
-    distanceLeftThreshold = filtersManager.distanceLeftThreshold;
+    distanceFilter = filtersManager.distanceFilter;
     _placeTypeFilters = [...filtersManager.placeTypeFilters];
   }
 
   /// Очистка фильтров
   void clearFilters() {
-    _placeTypeFilters = [...PlaceTypeFilterEntity.availablePlaceTypeFilters];
-    distanceLeftThreshold = AppConstants.distanceFilterMinValue;
-    distanceRightThreshold = AppConstants.distanceFilterMaxValue;
+    _placeTypeFilters = [
+      ...PlaceTypeFilterEntity.availablePlaceTypeFilters,
+    ];
+    distanceFilter = const DistanceFilter();
   }
 
   /// Обновление фильтра по категории [placeTypeFilterEntity] в списке фильтров по категории

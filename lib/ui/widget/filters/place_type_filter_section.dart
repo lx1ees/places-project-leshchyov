@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/place_type_filter_entity.dart';
 import 'package:places/ui/widget/filters/place_type_filter_item.dart';
 
@@ -13,34 +12,17 @@ typedef OnPlaceTypeFilterTapped = Function(
 );
 
 /// Виджет-секция фильтра по категориям
-class PlaceTypeFilterSection extends StatefulWidget {
-  final FiltersManager filtersManager;
+class PlaceTypeFilterSection extends StatelessWidget {
+  final List<PlaceTypeFilterEntity> placeTypeFilters;
   final OnPlaceTypeFilterTapped onPlaceTypeFilterTapped;
+  final bool isSmallScreen;
 
   const PlaceTypeFilterSection({
-    required this.filtersManager,
+    required this.placeTypeFilters,
     required this.onPlaceTypeFilterTapped,
+    this.isSmallScreen = false,
     Key? key,
   }) : super(key: key);
-
-  @override
-  State<PlaceTypeFilterSection> createState() => _PlaceTypeFilterSectionState();
-}
-
-class _PlaceTypeFilterSectionState extends State<PlaceTypeFilterSection> {
-  bool _isSmallScreen = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    setState(() {
-      _isSmallScreen = MediaQuery.of(context).size.width * pixelRatio <=
-              AppConstants.smallScreenWidth &&
-          MediaQuery.of(context).size.height * pixelRatio <=
-              AppConstants.smallScreenHeight;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,20 +41,19 @@ class _PlaceTypeFilterSectionState extends State<PlaceTypeFilterSection> {
             vertical: AppConstants.defaultPaddingX1_5,
           ),
           child: Center(
-            child: _isSmallScreen
+            child: isSmallScreen
                 ? SizedBox(
                     height: AppConstants.placeTypeFilterHeight,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
-                      itemCount: widget.filtersManager.placeTypeFilters.length,
+                      itemCount: placeTypeFilters.length,
                       itemBuilder: (context, index) {
-                        final placeTypeFilterEntity =
-                            widget.filtersManager.placeTypeFilters[index];
+                        final placeTypeFilterEntity = placeTypeFilters[index];
 
                         return PlaceTypeFilterItem(
                           filterEntity: placeTypeFilterEntity,
-                          onSelected: () => widget.onPlaceTypeFilterTapped(
+                          onSelected: () => onPlaceTypeFilterTapped(
                             placeTypeFilterEntity,
                             index,
                           ),
@@ -83,11 +64,11 @@ class _PlaceTypeFilterSectionState extends State<PlaceTypeFilterSection> {
                 : Wrap(
                     spacing: AppConstants.defaultButtonHorizontalPadding,
                     runSpacing: AppConstants.placeTypeFilterRunSpace,
-                    children: widget.filtersManager.placeTypeFilters
+                    children: placeTypeFilters
                         .mapIndexed(
                           (index, placeTypeFilterEntity) => PlaceTypeFilterItem(
                             filterEntity: placeTypeFilterEntity,
-                            onSelected: () => widget.onPlaceTypeFilterTapped(
+                            onSelected: () => onPlaceTypeFilterTapped(
                               placeTypeFilterEntity,
                               index,
                             ),
