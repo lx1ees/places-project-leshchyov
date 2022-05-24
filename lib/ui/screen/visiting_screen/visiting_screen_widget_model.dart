@@ -1,16 +1,12 @@
-import 'dart:io';
-
 import 'package:elementary/elementary.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:places/constants/app_constants.dart';
-import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
-import 'package:places/ui/screen/res/themes.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen_model.dart';
+import 'package:places/utils/datetime_utils.dart';
 import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -131,7 +127,7 @@ class VisitingScreenWidgetModel
 
   @override
   void onPlanPlacePressed(Place place) {
-    _pickPlanDate().then((planDate) {
+    DateTimeUtils.pickPlanDate(context).then((planDate) {
       if (planDate != null) {
         model.setPlacePlanDate(place: place, planDate: planDate);
         _requestForFavoritesPlaces();
@@ -174,91 +170,16 @@ class VisitingScreenWidgetModel
     return showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.24),
+      barrierColor: _colorScheme.primary.withOpacity(0.24),
       isScrollControlled: true,
       isDismissible: true,
       useRootNavigator: true,
       builder: (_) {
-        return PlaceDetailsBottomSheet(place: place);
-      },
-    );
-  }
-
-  Future<DateTime?> _pickPlanDate() async {
-    final nowDate = DateTime.now();
-    final nowYear = nowDate.year;
-
-    return Platform.isIOS
-        ? await _cupertinoDatePicker(nowDate, nowYear)
-        : await _materialDatePicker(nowDate, nowYear);
-  }
-
-  Future<DateTime?> _materialDatePicker(
-    DateTime nowDate,
-    int nowYear,
-  ) {
-    return showDatePicker(
-      context: context,
-      initialDate: nowDate,
-      firstDate: nowDate,
-      lastDate: DateTime(nowYear + 3),
-      locale: AppConstants.locale,
-      cancelText: AppStrings.cancel,
-      confirmText: AppStrings.apply,
-      helpText: AppStrings.datePickerHelpText,
-      fieldLabelText: AppStrings.datePickerFieldLabelText,
-      builder: (context, child) {
-        return Theme(
-          data: _theme.copyWith(
-            colorScheme: ColorScheme.light(
-              primary: _colorScheme.secondary,
-              onPrimary: _theme.white,
-              onSurface: _colorScheme.secondary,
-            ),
-          ),
-          child: child!,
+        return PlaceDetailsBottomSheet(
+          place: place,
+          widgetModelFactory: placeDetailsBottomSheetWidgetModelFactory,
         );
       },
-    );
-  }
-
-  Future<DateTime?> _cupertinoDatePicker(
-    DateTime nowDate,
-    int nowYear,
-  ) {
-    return showCupertinoModalPopup<DateTime?>(
-      builder: (context) {
-        DateTime? dateTime;
-
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            SizedBox(
-              height: 300,
-              child: CupertinoDatePicker(
-                mode: CupertinoDatePickerMode.date,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                minimumDate: nowDate,
-                initialDateTime: nowDate,
-                maximumDate: DateTime(nowYear + 3),
-                onDateTimeChanged: (dt) => dateTime = dt,
-              ),
-            ),
-            Container(
-              color: Theme.of(context).colorScheme.surface,
-              padding: const EdgeInsets.symmetric(
-                vertical: AppConstants.defaultPaddingX2,
-              ),
-              width: double.infinity,
-              child: TextButton(
-                onPressed: () => Navigator.pop(context, dateTime ?? nowDate),
-                child: const Text(AppStrings.apply),
-              ),
-            ),
-          ],
-        );
-      },
-      context: context,
     );
   }
 }

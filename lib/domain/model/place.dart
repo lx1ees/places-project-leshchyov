@@ -28,7 +28,17 @@ class Place extends Equatable {
   final CardLook cardLook;
 
   @override
-  List<Object?> get props => [id, name, point, urls, description, placeType];
+  List<Object?> get props => [
+        id,
+        name,
+        point,
+        urls,
+        description,
+        placeType,
+        isInFavorites,
+        isVisited,
+        planDate,
+      ];
 
   const Place({
     this.id = 0,

@@ -5,6 +5,7 @@ import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_model.dart';
 import 'package:places/ui/screen/res/routes.dart';
@@ -120,11 +121,14 @@ class PlaceListScreenWidgetModel
     await showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.24),
+      barrierColor: _colorScheme.primary.withOpacity(0.24),
       isScrollControlled: true,
       useRootNavigator: true,
       builder: (_) {
-        return PlaceDetailsBottomSheet(place: place);
+        return PlaceDetailsBottomSheet(
+          place: place,
+          widgetModelFactory: placeDetailsBottomSheetWidgetModelFactory,
+        );
       },
     );
     await _requestForPlaces();

@@ -6,6 +6,7 @@ import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/search_history_manager.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen_model.dart';
 import 'package:places/utils/default_error_handler.dart';
@@ -190,7 +191,11 @@ class PlaceSearchScreenWidgetModel
       isScrollControlled: true,
       useRootNavigator: true,
       builder: (_) {
-        return PlaceDetailsBottomSheet(place: place, isExpanded: true);
+        return PlaceDetailsBottomSheet(
+          place: place,
+          isExpanded: true,
+          widgetModelFactory: placeDetailsBottomSheetWidgetModelFactory,
+        );
       },
     );
   }
