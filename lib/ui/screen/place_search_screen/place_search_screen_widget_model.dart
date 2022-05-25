@@ -1,15 +1,14 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/search_history_manager.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen_model.dart';
-import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -17,16 +16,17 @@ import 'package:rxdart/rxdart.dart';
 PlaceSearchScreenWidgetModel placeSearchScreenWidgetModelFactory(
   BuildContext context,
 ) {
+  final dependencies = context.read<IAppScope>();
   final model = PlaceSearchScreenModel(
-    errorHandler: context.read<DefaultErrorHandler>(),
-    searchInteractor: context.read<SearchInteractor>(),
+    errorHandler: dependencies.errorHandler,
+    searchInteractor: dependencies.searchInteractor,
   );
 
   return PlaceSearchScreenWidgetModel(
     model: model,
-    themeWrapper: context.read<ThemeWrapper>(),
+    themeWrapper: dependencies.themeWrapper,
     navigator: Navigator.of(context),
-    filtersManager: context.read<FiltersManager>(),
+    filtersManager: dependencies.filtersManager,
   );
 }
 

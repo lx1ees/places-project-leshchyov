@@ -3,26 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type_filter_entity.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_model.dart';
-import 'package:places/utils/default_error_handler.dart';
 import 'package:places/utils/extensions.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [FiltersScreenWidgetModel]
 FiltersScreenWidgetModel filtersScreenWidgetModelFactory(BuildContext context) {
+  final dependencies = context.read<IAppScope>();
   final model = FiltersScreenModel(
-    errorHandler: context.read<DefaultErrorHandler>(),
-    placeInteractor: context.read<PlaceInteractor>(),
+    errorHandler: dependencies.errorHandler,
+    placeInteractor: dependencies.placeInteractor,
   );
 
   return FiltersScreenWidgetModel(
     model: model,
-    filtersManager: context.read<FiltersManager>(),
+    filtersManager: dependencies.filtersManager,
     navigator: Navigator.of(context),
   );
 }

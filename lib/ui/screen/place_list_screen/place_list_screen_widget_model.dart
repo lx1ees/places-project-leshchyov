@@ -1,29 +1,29 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_model.dart';
 import 'package:places/ui/screen/res/routes.dart';
-import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [PlaceListScreenWidgetModel]
 PlaceListScreenWidgetModel placeListScreenWidgetModelFactory(
   BuildContext context,
 ) {
+  final dependencies = context.read<IAppScope>();
   final model = PlaceListScreenModel(
-    errorHandler: context.read<DefaultErrorHandler>(),
-    placeInteractor: context.read<PlaceInteractor>(),
+    errorHandler: dependencies.errorHandler,
+    placeInteractor: dependencies.placeInteractor,
   );
 
   return PlaceListScreenWidgetModel(
-    themeWrapper: context.read<ThemeWrapper>(),
-    filtersManager: context.read<FiltersManager>(),
+    themeWrapper: dependencies.themeWrapper,
+    filtersManager: dependencies.filtersManager,
     model: model,
   );
 }

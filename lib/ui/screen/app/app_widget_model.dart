@@ -1,16 +1,16 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/settings_manager.dart';
 import 'package:places/ui/screen/app/app.dart';
 import 'package:places/ui/screen/app/app_screen_model.dart';
-import 'package:places/utils/default_error_handler.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [AppWidgetModel]
 AppWidgetModel appWidgetModelFactory(BuildContext context) {
+  final dependencies = context.read<IAppScope>();
   final model = AppScreenModel(
-    errorHandler: context.read<DefaultErrorHandler>(),
-    settingsManager: context.read<SettingsManager>(),
+    errorHandler: dependencies.errorHandler,
+    settingsManager: dependencies.settingsManager,
   );
 
   return AppWidgetModel(model);

@@ -4,27 +4,27 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_strings.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen_model.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widget/add_place/add_image_dialog.dart';
-import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [AddPlaceScreenWidgetModel]
 AddPlaceScreenWidgetModel addPlaceScreenWidgetModelFactory(
   BuildContext context,
 ) {
+  final dependencies = context.read<IAppScope>();
   final model = AddPlaceScreenModel(
-    errorHandler: context.read<DefaultErrorHandler>(),
-    placeInteractor: context.read<PlaceInteractor>(),
+    errorHandler: dependencies.errorHandler,
+    placeInteractor: dependencies.placeInteractor,
   );
 
   return AddPlaceScreenWidgetModel(
     model: model,
-    themeWrapper: context.read<ThemeWrapper>(),
+    themeWrapper: dependencies.themeWrapper,
     navigator: Navigator.of(context),
   );
 }

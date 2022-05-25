@@ -1,27 +1,27 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen_model.dart';
 import 'package:places/utils/datetime_utils.dart';
-import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [VisitingScreenWidgetModel]
 VisitingScreenWidgetModel visitingScreenWidgetModelFactory(
   BuildContext context,
 ) {
+  final dependencies = context.read<IAppScope>();
   final model = VisitingScreenModel(
-    errorHandler: context.read<DefaultErrorHandler>(),
-    placeInteractor: context.read<PlaceInteractor>(),
+    errorHandler: dependencies.errorHandler,
+    placeInteractor: dependencies.placeInteractor,
   );
 
   return VisitingScreenWidgetModel(
     model: model,
-    themeWrapper: context.read<ThemeWrapper>(),
+    themeWrapper: dependencies.themeWrapper,
   );
 }
 

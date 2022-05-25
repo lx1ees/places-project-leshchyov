@@ -1,26 +1,26 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_model.dart';
 import 'package:places/utils/datetime_utils.dart';
-import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [PlaceDetailsBottomSheetWidgetModel]
 PlaceDetailsBottomSheetWidgetModel placeDetailsBottomSheetWidgetModelFactory(
   BuildContext context,
 ) {
+  final dependencies = context.read<IAppScope>();
   final model = PlaceDetailsBottomSheetModel(
-    placeInteractor: context.read<PlaceInteractor>(),
-    errorHandler: context.read<DefaultErrorHandler>(),
+    placeInteractor: dependencies.placeInteractor,
+    errorHandler: dependencies.errorHandler,
   );
 
   return PlaceDetailsBottomSheetWidgetModel(
     model: model,
-    themeWrapper: context.read<ThemeWrapper>(),
+    themeWrapper: dependencies.themeWrapper,
   );
 }
 

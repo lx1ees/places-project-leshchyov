@@ -1,23 +1,23 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/settings_manager.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen_model.dart';
-import 'package:places/utils/default_error_handler.dart';
 import 'package:provider/provider.dart';
 
 SettingsScreenWidgetModel settingsScreenWidgetModelFactory(
   BuildContext context,
 ) {
+  final dependencies = context.read<IAppScope>();
   final model = SettingsScreenModel(
-    errorHandler: context.read<DefaultErrorHandler>(),
-    settingsManager: context.read<SettingsManager>(),
+    errorHandler: dependencies.errorHandler,
+    settingsManager: dependencies.settingsManager,
   );
 
   return SettingsScreenWidgetModel(
     model: model,
-    themeWrapper: context.read<ThemeWrapper>(),
+    themeWrapper: dependencies.themeWrapper,
   );
 }
 
