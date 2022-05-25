@@ -18,7 +18,7 @@ class SearchInteractor {
   final FiltersManager _filtersManager;
 
   /// Менеджер истории поиска
-  final SearchHistoryManager _searchHistoryManager = SearchHistoryManager();
+  final SearchHistoryManager _searchHistoryManager;
 
   FiltersManager get filtersManager => _filtersManager;
 
@@ -27,8 +27,10 @@ class SearchInteractor {
   SearchInteractor({
     required PlaceRepository repository,
     required FiltersManager filtersManager,
+    required SearchHistoryManager searchHistoryManager,
   })  : _repository = repository,
-        _filtersManager = filtersManager;
+        _filtersManager = filtersManager,
+        _searchHistoryManager = searchHistoryManager;
 
   /// Метод для поиска мест по поисковому запросу [searchString], учитывая фильтры
   /// из [_filtersManager] и текущее местоположение [currentLocation]

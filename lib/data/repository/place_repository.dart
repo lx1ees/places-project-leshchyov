@@ -41,7 +41,7 @@ class PlaceRepository {
     final requestBody = PlacesFilterRequestDto(
       lat: locationPoint.lat,
       lng: locationPoint.lon,
-      radius: filtersManager.distanceRightThreshold,
+      radius: filtersManager.distanceFilter.distanceRightThreshold,
       typeFilter: filtersManager.placeTypeFilterIds,
       nameFilter: searchString,
     );

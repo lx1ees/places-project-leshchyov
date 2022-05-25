@@ -1,70 +1,34 @@
-import 'dart:async';
-
+import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/interactor/search_interactor.dart';
-import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/ui/redux/action/search_action.dart';
-import 'package:places/ui/redux/state/app_state.dart';
-import 'package:places/ui/redux/state/search_state.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
-import 'package:places/ui/screen/place_search_screen/place_search_error_placeholder.dart';
-import 'package:places/ui/screen/place_search_screen/place_search_history_list.dart';
-import 'package:places/ui/screen/place_search_screen/place_search_loading_indicator.dart';
-import 'package:places/ui/screen/place_search_screen/place_search_no_results_placeholder.dart';
-import 'package:places/ui/screen/place_search_screen/place_search_results_list.dart';
-import 'package:places/ui/widget/custom_icon_button.dart';
-import 'package:places/ui/widget/search_bar.dart';
-import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:places/ui/screen/place_search_screen/place_search_screen_widget_model.dart';
+import 'package:places/ui/widget/common/custom_icon_button.dart';
+import 'package:places/ui/widget/place_search/place_search_error_placeholder.dart';
+import 'package:places/ui/widget/place_search/place_search_history_list.dart';
+import 'package:places/ui/widget/place_search/place_search_loading_indicator.dart';
+import 'package:places/ui/widget/place_search/place_search_no_results_placeholder.dart';
+import 'package:places/ui/widget/place_search/place_search_results_list.dart';
+import 'package:places/ui/widget/place_search/search_bar.dart';
 
 /// Экран поиска мест
-class PlaceSearchScreen extends StatefulWidget {
+class PlaceSearchScreen
+    extends ElementaryWidget<IPlaceSearchScreenWidgetModel> {
   static const String routeName = '/search';
-  final FiltersManager filtersManager;
 
   const PlaceSearchScreen({
-    required this.filtersManager,
+    required WidgetModelFactory widgetModelFactory,
     Key? key,
-  }) : super(key: key);
+  }) : super(widgetModelFactory, key: key);
 
   @override
-  State<PlaceSearchScreen> createState() => _PlaceSearchScreenState();
-}
-
-class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
-  final _searchStream = PublishSubject<String>();
-  late final TextEditingController _searchController;
-  String _searchString = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController = TextEditingController();
-    _searchStream
-        .debounceTime(const Duration(milliseconds: 500))
-        .listen(_requestForSearchResults);
-  }
-
-  @override
-  void dispose() {
-    _searchStream.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(IPlaceSearchScreenWidgetModel wm) {
     return Scaffold(
       appBar: AppBar(
         leading: CustomIconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: wm.onBackButtonPressed,
           icon: const Icon(
             Icons.arrow_back_ios_rounded,
             size: AppConstants.defaultIcon2Size,
@@ -73,11 +37,11 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
         title: Text(
           AppStrings.searchTitle,
           style: AppTypography.subtitleTextStyle.copyWith(
-            color: Theme.of(context).colorScheme.primary,
+            color: wm.colorScheme.primary,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: wm.theme.scaffoldBackgroundColor,
         elevation: 0,
       ),
       body: Column(
@@ -87,85 +51,58 @@ class _PlaceSearchScreenState extends State<PlaceSearchScreen> {
               horizontal: AppConstants.defaultPadding,
               vertical: AppConstants.defaultPaddingX0_5,
             ),
-            child: SearchBar(
-              onSearch: _searchStream.add,
-              controller: _searchController,
+            child: StateNotifierBuilder<bool>(
+              listenableState: wm.searchBarClearButtonState,
+              builder: (_, isClearButtonActive) {
+                return SearchBar(
+                  theme: wm.theme,
+                  controller: wm.searchController,
+                  focusNode: wm.searchBarFocusNode,
+                  isClearButtonActive: isClearButtonActive,
+                );
+              },
             ),
           ),
           Expanded(
-            child: StoreConnector<AppState, SearchState>(
-              converter: (store) {
-                return store.state.searchState;
-              },
-              builder: (context, vm) {
-                if (_searchString.isEmpty) {
-                  return PlaceSearchHistoryList(
-                    searchHistoryManager:
-                        context.read<SearchInteractor>().searchHistoryManager,
-                    onHistoryPressed: (historySearchString) {
-                      _searchController
-                        ..text = historySearchString
-                        ..selection = TextSelection.collapsed(
-                          offset: historySearchString.length,
-                        );
-                    },
-                  );
-                }
-
-                if (vm is SearchLoadingState) {
-                  return const PlaceSearchLoadingIndicator();
-                } else if (vm is SearchSuccessState) {
-                  final foundPlaces = vm.foundPlaces;
-
-                  if (foundPlaces.isEmpty) {
-                    return const PlaceSearchNoResultsPlaceholder();
-                  }
-
-                  return PlaceSearchResultsList(
-                    searchString: _searchString,
-                    results: vm.foundPlaces,
-                    onPlacePressed: (place) {
-                      _openPlaceDetailsBottomSheet(
-                        context,
-                        place,
+            child: EntityStateNotifierBuilder<List<Place>>(
+              listenableEntityState: wm.listFoundPlacesState,
+              builder: (_, foundPlaces) {
+                if (wm.searchString.isEmpty) {
+                  return StateNotifierBuilder<List<String>>(
+                    listenableState: wm.searchHistoryState,
+                    builder: (_, history) {
+                      return PlaceSearchHistoryList(
+                        onHistoryItemPressed: wm.onHistoryItemPressed,
+                        scrollController: wm.scrollController,
+                        colorScheme: wm.colorScheme,
+                        onHistoryItemRemoved: wm.onHistoryItemRemoved,
+                        onHistoryCleared: wm.onHistoryCleared,
+                        history: history,
                       );
                     },
                   );
                 }
 
-                return const PlaceSearchErrorPlaceholder();
+                if (foundPlaces == null) {
+                  return const PlaceSearchErrorPlaceholder();
+                }
+
+                if (foundPlaces.isEmpty) {
+                  return const PlaceSearchNoResultsPlaceholder();
+                }
+
+                return PlaceSearchResultsList(
+                  searchString: wm.searchString,
+                  results: foundPlaces,
+                  onPlacePressed: wm.onPlaceCardPressed,
+                );
               },
+              loadingBuilder: (_, __) => const PlaceSearchLoadingIndicator(),
+              errorBuilder: (_, __, ___) => const PlaceSearchErrorPlaceholder(),
             ),
           ),
         ],
       ),
     );
-  }
-
-  /// Метод открытия окна детальной информации о месте
-  Future<void> _openPlaceDetailsBottomSheet(
-    BuildContext context,
-    Place place,
-  ) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.24),
-      isScrollControlled: true,
-      useRootNavigator: true,
-      builder: (_) {
-        return PlaceDetailsBottomSheet(place: place, isExpanded: true);
-      },
-    );
-  }
-
-  /// Функция поиска мест по запросу [searchString]
-  Future<void> _requestForSearchResults(String searchString) async {
-    _searchString = searchString;
-    StoreProvider.of<AppState>(context).dispatch(GetSearchResultsAction(
-      filtersManager: context.read<FiltersManager>(),
-      currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
-      searchString: searchString,
-    ));
   }
 }

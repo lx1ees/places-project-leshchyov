@@ -85,14 +85,10 @@ class PlaceInteractor {
 
   /// Метод добавления нового места
   Future<Place> addNewPlace(Place newPlace) async {
-    try {
-      final addedPlaceDto =
-          await _repository.addPlace(PlaceMapper.toDto(newPlace));
+    final addedPlaceDto =
+        await _repository.addPlace(PlaceMapper.toDto(newPlace));
 
-      return PlaceMapper.fromDto(addedPlaceDto);
-    } on NetworkException catch (_) {
-      return newPlace;
-    }
+    return PlaceMapper.fromDto(addedPlaceDto);
   }
 
   /// Метод получения места по id

@@ -1,22 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mwwm/mwwm.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/model/place_type.dart';
-import 'package:places/ui/bloc/visiting/visiting_bloc.dart';
-import 'package:places/ui/mwwm/add_place/add_place_widget_model.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
-import 'package:places/ui/screen/add_place_screen/select_place_type.dart';
+import 'package:places/ui/screen/add_place_screen/add_place_screen_widget_model.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
+import 'package:places/ui/screen/filters_screen/filters_screen_widget_model.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
+import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_model.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
+import 'package:places/ui/screen/place_search_screen/place_search_screen_widget_model.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
+import 'package:places/ui/screen/settings_screen/settings_screen_widget_model.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
+import 'package:places/ui/screen/visiting_screen/visiting_screen_widget_model.dart';
+import 'package:places/ui/widget/add_place/select_place_type.dart';
 
 /// Класс роутинга
 abstract class AppRoutes {
@@ -33,29 +34,25 @@ abstract class AppRoutes {
 
   static final Map<String, Widget Function(BuildContext context)>
       bottomNavigationRoutes = {
-    PlaceListScreen.routeName: (context) =>
-        PlaceListScreen(filtersManager: context.read<FiltersManager>()),
-    VisitingScreen.routeName: (_) => BlocProvider(
-          create: (context) => VisitingBloc(
-            placeInteractor: context.read<PlaceInteractor>(),
-          )..add(const PlacesRequested()),
-          child: const VisitingScreen(),
+    PlaceListScreen.routeName: (context) => const PlaceListScreen(
+          widgetModelFactory: placeListScreenWidgetModelFactory,
         ),
-    SettingsScreen.routeName: (_) => const SettingsScreen(),
+    VisitingScreen.routeName: (_) => const VisitingScreen(
+          widgetModelFactory: visitingScreenWidgetModelFactory,
+        ),
+    SettingsScreen.routeName: (context) => const SettingsScreen(
+          widgetModelFactory: settingsScreenWidgetModelFactory,
+        ),
   };
 
   static final Map<String, Widget Function(Object? argument)>
       _mainNavigationRoutes = {
-    SplashScreen.routeName: (argument) => const SplashScreen(),
-    HomeScreen.routeName: (argument) => const HomeScreen(),
-    AddPlaceScreen.routeName: (argument) => AddPlaceScreen(
-          widgetModelBuilder: (context) => AddPlaceWidgetModel(
-            const WidgetModelDependencies(),
-            placeInteractor: context.read<PlaceInteractor>(),
-            navigator: Navigator.of(context),
-          ),
+    SplashScreen.routeName: (_) => const SplashScreen(),
+    HomeScreen.routeName: (_) => const HomeScreen(),
+    AddPlaceScreen.routeName: (_) => const AddPlaceScreen(
+          widgetModelFactory: addPlaceScreenWidgetModelFactory,
         ),
-    OnboardingScreen.routeName: (argument) => const OnboardingScreen(),
+    OnboardingScreen.routeName: (_) => const OnboardingScreen(),
     SelectPlaceTypeScreen.routeName: (argument) {
       final selectedPlaceType = argument as PlaceType?;
 
@@ -64,13 +61,14 @@ abstract class AppRoutes {
     FiltersScreen.routeName: (argument) {
       final args = argument as FiltersManager;
 
-      return FiltersScreen(filtersManager: args);
+      return FiltersScreen(
+        filtersManager: args,
+        widgetModelFactory: filtersScreenWidgetModelFactory,
+      );
     },
     PlaceSearchScreen.routeName: (argument) {
-      final args = argument as FiltersManager;
-
-      return PlaceSearchScreen(
-        filtersManager: args,
+      return const PlaceSearchScreen(
+        widgetModelFactory: placeSearchScreenWidgetModelFactory,
       );
     },
   };
@@ -136,11 +134,9 @@ abstract class AppRoutes {
 
   static Future<void> navigateToSearchScreen({
     required BuildContext context,
-    required FiltersManager filtersManager,
   }) {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               PlaceSearchScreen.routeName,
-              arguments: filtersManager,
             ) ??
         Future.value(null);
   }
