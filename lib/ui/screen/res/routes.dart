@@ -15,6 +15,7 @@ import 'package:places/ui/screen/place_search_screen/place_search_screen_widget_
 import 'package:places/ui/screen/settings_screen/settings_screen.dart';
 import 'package:places/ui/screen/settings_screen/settings_screen_widget_model.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
+import 'package:places/ui/screen/splash_screen/splash_screen_widget_model.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen_widget_model.dart';
 import 'package:places/ui/widget/add_place/select_place_type.dart';
@@ -47,7 +48,9 @@ abstract class AppRoutes {
 
   static final Map<String, Widget Function(Object? argument)>
       _mainNavigationRoutes = {
-    SplashScreen.routeName: (_) => const SplashScreen(),
+    SplashScreen.routeName: (_) => const SplashScreen(
+          widgetModelFactory: splashScreenWidgetModelFactory,
+        ),
     HomeScreen.routeName: (_) => const HomeScreen(),
     AddPlaceScreen.routeName: (_) => const AddPlaceScreen(
           widgetModelFactory: addPlaceScreenWidgetModelFactory,
