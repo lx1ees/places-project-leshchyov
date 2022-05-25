@@ -87,6 +87,7 @@ abstract class AppConstants {
   static const double onboardingIconBottomMargin = 40;
   static const double onboardingActiveIndicatorWidth = 24;
   static const double indicatorStartIndent = 88;
+  static const int onboardingAnimationDurationInMillis = 250;
 
   /// Константы сетевого взаимодействия
   static const String baseUrl = 'https://test-backend-flutter.surfstudio.ru';

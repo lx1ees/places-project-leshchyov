@@ -8,6 +8,7 @@ import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_widget_model.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
+import 'package:places/ui/screen/onboarding_screen/onboarding_screen_widget_model.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_model.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
@@ -55,7 +56,9 @@ abstract class AppRoutes {
     AddPlaceScreen.routeName: (_) => const AddPlaceScreen(
           widgetModelFactory: addPlaceScreenWidgetModelFactory,
         ),
-    OnboardingScreen.routeName: (_) => const OnboardingScreen(),
+    OnboardingScreen.routeName: (_) => const OnboardingScreen(
+          widgetModelFactory: onboardingScreenWidgetModelFactory,
+        ),
     SelectPlaceTypeScreen.routeName: (argument) {
       final selectedPlaceType = argument as PlaceType?;
 

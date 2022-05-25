@@ -1,47 +1,24 @@
+import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/model/onboarding_item.dart';
+import 'package:places/ui/screen/onboarding_screen/onboarding_screen_widget_model.dart';
 import 'package:places/ui/widget/common/custom_elevated_button.dart';
 import 'package:places/ui/widget/common/custom_text_button.dart';
 import 'package:places/ui/widget/onboarding/onboarding_indicator_line.dart';
+import 'package:places/ui/widget/onboarding/onboarding_logo.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ElementaryWidget<IOnboardingScreenWidgetModel> {
   static const String routeName = '/onboarding';
-  const OnboardingScreen({Key? key}) : super(key: key);
+
+  const OnboardingScreen({
+    required WidgetModelFactory widgetModelFactory,
+    Key? key,
+  }) : super(widgetModelFactory, key: key);
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final List<OnboardingItem> _onboardingItems = [
-    const OnboardingItem(
-      title: AppStrings.tutorial1Title,
-      subtitle: AppStrings.tutorial1Subtitle,
-      iconPath: AppAssets.tutorial1Icon,
-    ),
-    const OnboardingItem(
-      title: AppStrings.tutorial2Title,
-      subtitle: AppStrings.tutorial2Subtitle,
-      iconPath: AppAssets.tutorial2Icon,
-    ),
-    const OnboardingItem(
-      title: AppStrings.tutorial3Title,
-      subtitle: AppStrings.tutorial3Subtitle,
-      iconPath: AppAssets.tutorial3Icon,
-    ),
-  ];
-
-  int _currentPage = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
+  Widget build(IOnboardingScreenWidgetModel wm) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -50,24 +27,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             padding: const EdgeInsets.only(right: AppConstants.defaultPadding),
             child: CustomTextButton(
               label: AppStrings.skip,
-              foregroundColor: Theme.of(context).colorScheme.secondary,
-              onPressed: () => Navigator.of(context).pop(),
+              foregroundColor: wm.colorScheme.secondary,
+              onPressed: wm.onClose,
             ),
           ),
         ],
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: wm.theme.scaffoldBackgroundColor,
         elevation: 0,
       ),
       body: SafeArea(
         child: Stack(
           children: [
             PageView.builder(
-              itemCount: _onboardingItems.length,
-              onPageChanged: (pageNumber) => setState(() {
-                _currentPage = pageNumber;
-              }),
+              itemCount: wm.onboardingItems.length,
+              onPageChanged: wm.onPageChanged,
               itemBuilder: (context, index) {
-                final onboardingItem = _onboardingItems[index];
+                final onboardingItem = wm.onboardingItems[index];
 
                 return Stack(
                   alignment: Alignment.center,
@@ -75,9 +50,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                          onboardingItem.iconPath,
-                          color: colorScheme.primary,
+                        OnboardingLogo(
+                          onboardingItem: onboardingItem,
+                          colorScheme: wm.colorScheme,
                         ),
                         const SizedBox(
                           height: AppConstants.onboardingIconBottomMargin,
@@ -86,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           onboardingItem.title,
                           textAlign: TextAlign.center,
                           style: AppTypography.titleTextStyle.copyWith(
-                            color: colorScheme.primary,
+                            color: wm.colorScheme.primary,
                           ),
                         ),
                         const SizedBox(height: AppConstants.defaultPaddingX0_5),
@@ -94,13 +69,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           onboardingItem.subtitle,
                           textAlign: TextAlign.center,
                           style: AppTypography.smallTextStyle.copyWith(
-                            color: colorScheme.secondaryContainer,
+                            color: wm.colorScheme.secondaryContainer,
                           ),
                         ),
                       ],
                     ),
                     Visibility(
-                      visible: index == _onboardingItems.length - 1,
+                      visible: index == wm.onboardingItems.length - 1,
                       child: Positioned(
                         bottom: 0,
                         left: 0,
@@ -113,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             child: CustomElevatedButton(
                               label: AppStrings.startButtonTitle,
-                              onPressed: () => Navigator.of(context).pop(),
+                              onPressed: wm.onClose,
                             ),
                           ),
                         ),
@@ -127,9 +102,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               bottom: AppConstants.indicatorStartIndent,
               left: 0,
               right: 0,
-              child: OnboardingIndicatorLine(
-                currentPage: _currentPage,
-                numberOfSegments: _onboardingItems.length,
+              child: StateNotifierBuilder<int>(
+                listenableState: wm.currentPageState,
+                builder: (_, currentPage) {
+                  if (currentPage == null) return const SizedBox.shrink();
+
+                  return OnboardingIndicatorLine(
+                    currentPage: currentPage,
+                    numberOfSegments: wm.onboardingItems.length,
+                  );
+                },
               ),
             ),
           ],
