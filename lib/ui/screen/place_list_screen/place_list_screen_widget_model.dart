@@ -104,6 +104,8 @@ class PlaceListScreenWidgetModel
   /// Получение списка мест из модели
   Future<void> _requestForPlaces() async {
     _listPlacesEntityState.loading();
+    /// Искусственная задержка
+    await Future.delayed(const Duration(seconds: 1), (){});
     try {
       await for (final places in model.getPlaces(
         filtersManager: _filtersManager,

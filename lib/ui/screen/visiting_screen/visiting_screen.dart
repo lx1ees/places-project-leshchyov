@@ -7,6 +7,7 @@ import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen_widget_model.dart';
 import 'package:places/ui/widget/common/custom_tab_bar.dart';
+import 'package:places/ui/widget/common/loading_indicator.dart';
 import 'package:places/ui/widget/common/no_items_placeholder.dart';
 import 'package:places/ui/widget/place_card/place_to_visit_card.dart';
 import 'package:places/ui/widget/place_card/place_visited_card.dart';
@@ -79,7 +80,7 @@ class VisitingScreen extends ElementaryWidget<IVisitingScreenWidgetModel> {
               },
               loadingBuilder: (_, __) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingIndicator(),
                 );
               },
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
@@ -114,7 +115,7 @@ class VisitingScreen extends ElementaryWidget<IVisitingScreenWidgetModel> {
               },
               loadingBuilder: (_, __) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: LoadingIndicator(),
                 );
               },
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),

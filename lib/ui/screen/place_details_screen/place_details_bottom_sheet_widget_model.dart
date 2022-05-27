@@ -39,7 +39,7 @@ class PlaceDetailsBottomSheetWidgetModel
 
   final _isExpandedState = StateNotifier<bool>();
 
-  final _currentPlaceState = StateNotifier<Place>();
+  final _currentPlaceState = EntityStateNotifier<Place>();
 
   final DraggableScrollableController _scrollController =
       DraggableScrollableController();
@@ -54,7 +54,8 @@ class PlaceDetailsBottomSheetWidgetModel
   ThemeData get theme => _theme;
 
   @override
-  ListenableState<Place> get currentPlaceState => _currentPlaceState;
+  ListenableState<EntityState<Place>> get currentPlaceState =>
+      _currentPlaceState;
 
   @override
   ListenableState<bool> get isExpandedState => _isExpandedState;
@@ -68,7 +69,7 @@ class PlaceDetailsBottomSheetWidgetModel
   @override
   void initWidgetModel() {
     super.initWidgetModel();
-    _currentPlaceState.accept(widget.place);
+    _currentPlaceState.content(widget.place);
     _isExpandedState.accept(widget.isExpanded);
     _colorScheme = _themeWrapper.getTheme(context).colorScheme;
     _theme = _themeWrapper.getTheme(context);
@@ -96,7 +97,7 @@ class PlaceDetailsBottomSheetWidgetModel
 
   @override
   void onAddPlaceInFavoritesPressed() {
-    final currentPlace = _currentPlaceState.value;
+    final currentPlace = _currentPlaceState.value?.data;
     if (currentPlace == null) return;
 
     model.changeFavorite(currentPlace);
@@ -108,12 +109,14 @@ class PlaceDetailsBottomSheetWidgetModel
 
   /// Обновление места (временная мера пока нет стейтменеджмента)
   Future<void> _requestForPlaceDetails() async {
-    final currentPlace = _currentPlaceState.value;
+    final currentPlace = _currentPlaceState.value?.data;
 
     if (currentPlace == null) return;
-
+    _currentPlaceState.loading();
+    /// Искуственная задержка
+    await Future.delayed(const Duration(seconds: 1), () {});
     final place = await model.getPlaceDetails(currentPlace);
-    _currentPlaceState.accept(place);
+    _currentPlaceState.content(place);
   }
 
   /// Установка состояния признака развертки боттом шита
@@ -142,7 +145,7 @@ abstract class IPlaceDetailsBottomSheetWidgetModel extends IWidgetModel {
   ListenableState<bool> get isExpandedState;
 
   /// Состояние текущего просматриваемого места
-  ListenableState<Place> get currentPlaceState;
+  ListenableState<EntityState<Place>> get currentPlaceState;
 
   /// Обработчик нотификации о скролле боттом шита
   bool onDraggableScrollableNotification(

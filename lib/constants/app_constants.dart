@@ -56,6 +56,11 @@ abstract class AppConstants {
   static const double smallScreenWidth = 480;
   static const double smallScreenHeight = 800;
   static const int splashAnimationDurationInMillis = 1600;
+  static const int favoriteButtonAnimationDurationInMillis = 250;
+  static const int imageAppearanceAnimationDurationInMillis = 350;
+  static const int circleLoaderTimeInSec = 60;
+  static const double circleLoaderTurnsInOneSec = 1;
+
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double placeCardImageHeight = 96;

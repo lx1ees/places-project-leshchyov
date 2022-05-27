@@ -142,14 +142,20 @@ class _PlaceViewCardActionButtonsState
               currentFavValue = !currentFavValue;
               _favoritesStreamController.sink.add(currentFavValue);
               widget.onFavoritePressed(widget.place);
+              // setState(() {});
             },
-            icon: SvgPicture.asset(
-              isInFavorites
-                  ? AppAssets.heartFullIcon
-                  : AppAssets.heartIcon,
-              height: AppConstants.defaultIconSize,
-              width: AppConstants.defaultIconSize,
-              color: Theme.of(context).white,
+            icon: AnimatedSwitcher(
+              duration: const Duration(
+                milliseconds:
+                    AppConstants.favoriteButtonAnimationDurationInMillis,
+              ),
+              child: SvgPicture.asset(
+                isInFavorites ? AppAssets.heartFullIcon : AppAssets.heartIcon,
+                key: UniqueKey(),
+                height: AppConstants.defaultIconSize,
+                width: AppConstants.defaultIconSize,
+                color: Theme.of(context).white,
+              ),
             ),
           );
         }

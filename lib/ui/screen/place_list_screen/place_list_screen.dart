@@ -7,6 +7,7 @@ import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_model.dart';
 import 'package:places/ui/widget/common/gradient_extended_fab.dart';
+import 'package:places/ui/widget/common/loading_indicator.dart';
 import 'package:places/ui/widget/place_card/place_view_card.dart';
 import 'package:places/ui/widget/place_list/place_list.dart';
 import 'package:places/ui/widget/place_list/place_list_error_placeholder.dart';
@@ -76,11 +77,7 @@ class PlaceListScreen extends ElementaryWidget<IPlaceListScreenWidgetModel> {
                   );
                 },
                 loadingBuilder: (_, __) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: wm.colorScheme.secondary,
-                    ),
-                  );
+                  return const LoadingIndicator();
                 },
                 errorBuilder: (_, __, ___) => const PlaceListErrorPlaceholder(),
               ),

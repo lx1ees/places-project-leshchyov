@@ -6,7 +6,7 @@ import 'package:places/ui/widget/common/image_placeholder.dart';
 
 /// Виджет для отображения верхней части карточки достопримечательности
 /// с информацией о типе [type] и картинкой по ссылке [url]
-class PlaceCardTop extends StatelessWidget {
+class PlaceCardTop extends StatefulWidget {
   final String type;
   final String? url;
 
@@ -16,6 +16,11 @@ class PlaceCardTop extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<PlaceCardTop> createState() => _PlaceCardTopState();
+}
+
+class _PlaceCardTopState extends State<PlaceCardTop> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -27,20 +32,34 @@ class PlaceCardTop extends StatelessWidget {
         child: SizedBox(
           height: AppConstants.placeCardImageHeight,
           width: double.infinity,
-          child: url != null
+          child: widget.url != null
               ? Image.network(
-                  url ?? '',
+                  widget.url ?? '',
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) {
                     return const ImagePlaceholder();
                   },
-                  loadingBuilder: (_, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
-
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                  frameBuilder: (_, child, frame, __) {
+                    return AnimatedCrossFade(
+                      firstChild: Center(
+                        child: frame != null
+                            ? const SizedBox.shrink()
+                            : const CircularProgressIndicator(),
+                      ),
+                      secondChild: Row(
+                        children: [
+                          Expanded(child: child),
+                        ],
+                      ),
+                      firstCurve: Curves.easeIn,
+                      secondCurve: Curves.easeIn,
+                      duration: const Duration(
+                        milliseconds: AppConstants
+                            .imageAppearanceAnimationDurationInMillis,
+                      ),
+                      crossFadeState: frame != null
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
                     );
                   },
                 )
@@ -58,7 +77,7 @@ class PlaceCardTop extends StatelessWidget {
                 top: AppConstants.defaultPadding,
               ),
               child: Text(
-                type,
+                widget.type,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.smallBoldTextStyle
