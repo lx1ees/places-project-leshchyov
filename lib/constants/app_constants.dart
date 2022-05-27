@@ -55,6 +55,7 @@ abstract class AppConstants {
   static const Locale locale = Locale('ru', 'RU');
   static const double smallScreenWidth = 480;
   static const double smallScreenHeight = 800;
+  static const int splashAnimationDurationInMillis = 1600;
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double placeCardImageHeight = 96;
@@ -86,9 +87,10 @@ abstract class AppConstants {
   static const double onboardingIconBottomMargin = 40;
   static const double onboardingActiveIndicatorWidth = 24;
   static const double indicatorStartIndent = 88;
+  static const int onboardingAnimationDurationInMillis = 250;
 
   /// Константы сетевого взаимодействия
-  static const String baseUrl =  'https://test-backend-flutter.surfstudio.ru';
+  static const String baseUrl = 'https://test-backend-flutter.surfstudio.ru';
   static const String filteredPlacesPath = '/filtered_places';
   static const String placesPath = '/place';
   static const int connectTimeout = 5000;
