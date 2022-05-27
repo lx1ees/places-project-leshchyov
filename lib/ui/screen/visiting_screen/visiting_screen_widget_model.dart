@@ -142,8 +142,11 @@ class VisitingScreenWidgetModel
   }
 
   /// Получение списка избранных мест
-  void _requestForFavoritesPlaces() {
+  Future<void> _requestForFavoritesPlaces() async {
     _listFavoritePlacesEntityState.loading();
+
+    /// Искуственная задержка
+    await Future.delayed(const Duration(seconds: 1), () {});
     try {
       final favoritePlaces = model.favoritePlaces();
       _listFavoritePlacesEntityState.content(favoritePlaces);
@@ -153,8 +156,11 @@ class VisitingScreenWidgetModel
   }
 
   /// Получение списка посещенных мест
-  void _requestForVisitedPlaces() {
+  Future<void> _requestForVisitedPlaces() async {
     _listVisitedPlacesEntityState.loading();
+
+    /// Искуственная задержка
+    await Future.delayed(const Duration(seconds: 1), () {});
     try {
       final visitedPlaces = model.visitedPlaces();
       _listVisitedPlacesEntityState.content(visitedPlaces);

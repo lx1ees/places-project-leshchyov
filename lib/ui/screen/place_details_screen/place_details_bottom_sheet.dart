@@ -12,6 +12,7 @@ import 'package:places/ui/widget/common/bottom_sheet_close_button.dart';
 import 'package:places/ui/widget/common/bottom_sheet_indicator.dart';
 import 'package:places/ui/widget/common/custom_elevated_button.dart';
 import 'package:places/ui/widget/common/custom_text_icon_button.dart';
+import 'package:places/ui/widget/common/loading_indicator.dart';
 import 'package:places/ui/widget/place_details/place_details_description.dart';
 import 'package:places/ui/widget/place_details/place_details_dynamic_action_button.dart';
 import 'package:places/ui/widget/place_details/place_details_screen_sliver_app_bar.dart';
@@ -65,8 +66,9 @@ class PlaceDetailsBottomSheet
                     children: [
                       Container(
                         color: wm.theme.backgroundColor,
-                        child: StateNotifierBuilder<Place>(
-                          listenableState: wm.currentPlaceState,
+                        child: EntityStateNotifierBuilder<Place>(
+                          listenableEntityState: wm.currentPlaceState,
+                          loadingBuilder: (_, __) => const LoadingIndicator(),
                           builder: (_, place) {
                             if (place == null) return const SizedBox.shrink();
 

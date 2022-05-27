@@ -116,7 +116,9 @@ class PlaceInteractor {
       isVisited: true,
       cardLook: CardLook.visited,
     );
-    if (!_visitedPlaces.contains(place)) _visitedPlaces.add(visitedPlace);
+    if (_favoritePlaces.indexWhere((e) => e.id == place.id) == -1) {
+      _visitedPlaces.add(visitedPlace);
+    }
   }
 
   /// Метод удаления места из списка посещенных
@@ -174,7 +176,9 @@ class PlaceInteractor {
       isInFavorites: true,
       cardLook: CardLook.toVisit,
     );
-    if (!_favoritePlaces.contains(place)) _favoritePlaces.add(favoritePlace);
+    if (_favoritePlaces.indexWhere((e) => e.id == place.id) == -1) {
+      _favoritePlaces.add(favoritePlace);
+    }
     final index = _places.indexOf(place);
     if (index != -1) {
       final localPlace = _places[index];

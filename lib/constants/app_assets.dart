@@ -40,4 +40,6 @@ abstract class AppAssets {
   static const String cameraIcon = 'res/images/camera_icon.svg';
   static const String fileIcon = 'res/images/file_icon.svg';
   static const String errorIcon = 'res/images/error_icon.svg';
+  static const String loadIndicator = 'res/images/load_indicator.png';
+  static const String loadIndicatorDark = 'res/images/load_indicator_dark.png';
 }
