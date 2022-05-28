@@ -10,12 +10,10 @@ import 'package:places/utils/extensions.dart';
 class PlaceDetailsScreenSliverAppBar extends StatefulWidget {
   final Place place;
   final ScrollController scrollController;
-  final bool isBackButtonVisible;
 
   const PlaceDetailsScreenSliverAppBar({
     required this.place,
     required this.scrollController,
-    this.isBackButtonVisible = false,
     Key? key,
   }) : super(key: key);
 
@@ -47,16 +45,14 @@ class _PlaceDetailsScreenSliverAppBarState
       pinned: true,
       stretch: true,
       elevation: 0,
-      leading: widget.isBackButtonVisible
-          ? CustomIconWithBackgroundButton(
-              icon: Icon(
-                Icons.arrow_back_ios_rounded,
-                size: AppConstants.defaultButtonIconSize,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-              onPressed: () => Navigator.pop(context),
-            )
-          : const SizedBox.shrink(),
+      leading: CustomIconWithBackgroundButton(
+        icon: Icon(
+          Icons.arrow_back_ios_rounded,
+          size: AppConstants.defaultButtonIconSize,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        onPressed: () => Navigator.pop(context),
+      ),
       expandedHeight: AppConstants.placeDetailsGalleryHeight,
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.only(

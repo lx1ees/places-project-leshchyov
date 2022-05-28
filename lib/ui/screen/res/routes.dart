@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:places/domain/filters_manager.dart';
+import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen_widget_model.dart';
@@ -9,6 +10,8 @@ import 'package:places/ui/screen/filters_screen/filters_screen_widget_model.dart
 import 'package:places/ui/screen/home_screen/home_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen_widget_model.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_screen_widget_model.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_model.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
@@ -70,6 +73,14 @@ abstract class AppRoutes {
       return FiltersScreen(
         filtersManager: args,
         widgetModelFactory: filtersScreenWidgetModelFactory,
+      );
+    },
+    PlaceDetailsScreen.routeName: (argument) {
+      final args = argument as Place;
+
+      return PlaceDetailsScreen(
+        place: args,
+        widgetModelFactory: placeDetailsScreenWidgetModelFactory,
       );
     },
     PlaceSearchScreen.routeName: (argument) {
@@ -134,6 +145,17 @@ abstract class AppRoutes {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               FiltersScreen.routeName,
               arguments: filtersManager,
+            ) ??
+        Future.value(null);
+  }
+
+  static Future<void> navigateToPlaceDetailsScreen({
+    required BuildContext context,
+    required Place place,
+  }) {
+    return navigators[mainNavigatorKey]?.currentState?.pushNamed(
+              PlaceDetailsScreen.routeName,
+              arguments: place,
             ) ??
         Future.value(null);
   }
