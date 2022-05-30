@@ -81,12 +81,11 @@ class SplashScreenWidgetModel
       if (isNavigationAllowed) {
         if (model.isFirstLaunch) {
           _navigator.pop();
-          model.setIsFirstLaunch();
           await AppRoutes.navigateToOnboardingScreen(context: context);
+          model.setIsFirstLaunch();
         } else {
           await AppRoutes.navigateToHomeScreen(context: context);
         }
-
       }
     } on Exception catch (_) {}
   }
