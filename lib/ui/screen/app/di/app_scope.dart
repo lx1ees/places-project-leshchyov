@@ -41,9 +41,10 @@ class AppScope implements IAppScope {
   ThemeWrapper get themeWrapper => _themeWrapper;
 
   AppScope() {
+    final preferencesStorage = SharedPreferencesStorage();
     final placeRepository = PlaceRepository(
       networkService: NetworkService(),
-      filtersStorage: SharedPreferencesStorage(),
+      filtersStorage: preferencesStorage,
     );
     _errorHandler = DefaultErrorHandler();
     _themeWrapper = ThemeWrapper();
@@ -55,7 +56,7 @@ class AppScope implements IAppScope {
       repository: placeRepository,
       searchHistoryManager: searchHistoryManager,
     );
-    _settingsManager = SettingsManager();
+    _settingsManager = SettingsManager(settingsStorage: preferencesStorage);
   }
 }
 

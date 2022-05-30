@@ -58,9 +58,14 @@ abstract class AppRoutes {
     AddPlaceScreen.routeName: (_) => const AddPlaceScreen(
           widgetModelFactory: addPlaceScreenWidgetModelFactory,
         ),
-    OnboardingScreen.routeName: (_) => const OnboardingScreen(
-          widgetModelFactory: onboardingScreenWidgetModelFactory,
-        ),
+    OnboardingScreen.routeName: (argument) {
+      final fromLaunch = argument as bool;
+
+      return OnboardingScreen(
+        widgetModelFactory: onboardingScreenWidgetModelFactory,
+        fromLaunch: fromLaunch,
+      );
+    },
     SelectPlaceTypeScreen.routeName: (argument) {
       final selectedPlaceType = argument as PlaceType?;
 
@@ -165,9 +170,11 @@ abstract class AppRoutes {
 
   static Future<void> navigateToOnboardingScreen({
     required BuildContext context,
+    bool fromLaunch = true,
   }) {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               OnboardingScreen.routeName,
+              arguments: fromLaunch,
             ) ??
         Future.value(null);
   }

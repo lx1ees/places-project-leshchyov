@@ -3,15 +3,24 @@ import 'dart:math';
 import 'package:elementary/elementary.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:places/constants/app_constants.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen_model.dart';
+import 'package:provider/provider.dart';
 
 /// Фабрика для [SplashScreenWidgetModel]
 SplashScreenWidgetModel splashScreenWidgetModelFactory(
-  BuildContext _,
+  BuildContext context,
 ) {
-  return SplashScreenWidgetModel(SplashScreenModel());
+  final dependencies = context.read<IAppScope>();
+
+  return SplashScreenWidgetModel(
+    model: SplashScreenModel(
+      settingsManager: dependencies.settingsManager,
+    ),
+    navigator: Navigator.of(context),
+  );
 }
 
 /// Виджет-модель для [SplashScreen]
@@ -22,13 +31,20 @@ class SplashScreenWidgetModel
   late final AnimationController _animationController;
   late final Animation<double> _animation;
 
+  /// Навигатор
+  final NavigatorState _navigator;
+
   @override
   double get animationValue => _animation.value;
 
   @override
   AnimationController get controller => _animationController;
 
-  SplashScreenWidgetModel(SplashScreenModel model) : super(model);
+  SplashScreenWidgetModel({
+    required SplashScreenModel model,
+    required NavigatorState navigator,
+  })  : _navigator = navigator,
+        super(model);
 
   @override
   void initWidgetModel() {
@@ -63,7 +79,14 @@ class SplashScreenWidgetModel
       final isNavigationAllowed = await model.isSplashOver();
 
       if (isNavigationAllowed) {
-        await AppRoutes.navigateToHomeScreen(context: context);
+        if (model.isFirstLaunch) {
+          _navigator.pop();
+          model.setIsFirstLaunch();
+          await AppRoutes.navigateToOnboardingScreen(context: context);
+        } else {
+          await AppRoutes.navigateToHomeScreen(context: context);
+        }
+
       }
     } on Exception catch (_) {}
   }
