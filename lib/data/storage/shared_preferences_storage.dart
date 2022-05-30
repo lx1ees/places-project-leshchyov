@@ -1,13 +1,16 @@
 import 'package:places/data/storage/filters_storage.dart';
+import 'package:places/data/storage/search_history_storage.dart';
 import 'package:places/data/storage/settings_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Хранилище SharedPreferences
-class SharedPreferencesStorage implements IFiltersStorage, ISettingsStorage {
+class SharedPreferencesStorage
+    implements IFiltersStorage, ISettingsStorage, ISearchHistoryStorage {
   static const String distanceFilterKey = 'distanceFilterKey';
   static const String placeTypesFilterKey = 'placeTypesFilterKey';
   static const String themeSettingKey = 'themeSettingKey';
   static const String isFirstLaunchSettingKey = 'isFirstLaunchSettingKey';
+  static const String searchHistoryKey = 'searchHistoryKey';
 
   final _preferences = SharedPreferences.getInstance();
 
@@ -42,4 +45,12 @@ class SharedPreferencesStorage implements IFiltersStorage, ISettingsStorage {
   @override
   Future<bool> writeIsFirstLaunch() async =>
       (await _preferences).setBool(isFirstLaunchSettingKey, true);
+
+  @override
+  Future<List<String>?> readSearchHistory() async =>
+      (await _preferences).getStringList(searchHistoryKey);
+
+  @override
+  Future<bool> writeSearchHistory(List<String> searchHistory) async =>
+      (await _preferences).setStringList(searchHistoryKey, searchHistory);
 }
