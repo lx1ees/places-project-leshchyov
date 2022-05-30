@@ -22,7 +22,6 @@ FiltersScreenWidgetModel filtersScreenWidgetModelFactory(BuildContext context) {
 
   return FiltersScreenWidgetModel(
     model: model,
-    filtersManager: dependencies.filtersManager,
     navigator: Navigator.of(context),
   );
 }
@@ -31,9 +30,6 @@ FiltersScreenWidgetModel filtersScreenWidgetModelFactory(BuildContext context) {
 class FiltersScreenWidgetModel
     extends WidgetModel<FiltersScreen, FiltersScreenModel>
     implements IFiltersScreenWidgetModel {
-  /// Менеджер фильтров
-  final FiltersManager _filtersManager;
-
   /// Признак размера экрана
   late final bool _isSmallScreen;
 
@@ -73,18 +69,14 @@ class FiltersScreenWidgetModel
 
   FiltersScreenWidgetModel({
     required FiltersScreenModel model,
-    required FiltersManager filtersManager,
     required NavigatorState navigator,
-  })  : _filtersManager = filtersManager,
-        _navigator = navigator,
+  })  : _navigator = navigator,
         super(model);
 
   @override
   void initWidgetModel() {
     super.initWidgetModel();
-    _localFiltersManager.updateWith(_filtersManager);
-    _updateFiltersStates(_localFiltersManager);
-    _requestForPlaces(_localFiltersManager);
+    _initFiltersManagerAndGetPlaces();
   }
 
   @override
@@ -132,8 +124,8 @@ class FiltersScreenWidgetModel
   }
 
   @override
-  void onFilteredListShown() {
-    _filtersManager.updateWith(_localFiltersManager);
+  Future<void> onFilteredListShown() async{
+    await model.saveFiltersManager(_localFiltersManager);
     _navigator.pop();
   }
 
@@ -155,6 +147,14 @@ class FiltersScreenWidgetModel
   void _updateFiltersStates(FiltersManager filtersManager) {
     _placeTypesFilterState.accept([...filtersManager.placeTypeFilters]);
     _distanceFilterState.accept(filtersManager.distanceFilter);
+  }
+
+  Future<void> _initFiltersManagerAndGetPlaces() async {
+    final filtersManager = await model.getFiltersManager();
+    _localFiltersManager.updateWith(filtersManager);
+    _placeTypesFilterState.accept([...filtersManager.placeTypeFilters]);
+    _distanceFilterState.accept(filtersManager.distanceFilter);
+    await _requestForPlaces(_localFiltersManager);
   }
 
   /// Формирование строки с информацией о выбранной дистанции
@@ -227,5 +227,5 @@ abstract class IFiltersScreenWidgetModel extends IWidgetModel {
   void onDistanceChangeEnded(RangeValues values);
 
   /// Обработчик нажатия на кнопку применения фильтров
-  void onFilteredListShown();
+  Future<void> onFilteredListShown();
 }

@@ -52,6 +52,13 @@ class PlaceTypeFilterEntity extends Equatable {
     required this.placeType,
   });
 
+  static List<PlaceTypeFilterEntity> listByIds(Iterable<String> ids) {
+    return availablePlaceTypeFilters
+        .where((e) => ids.contains(e.placeType.id))
+        // .map((e) => e.copyWith(isSelected: ids.contains(e.placeType.id)))
+        .toList();
+  }
+
   PlaceTypeFilterEntity copyWith({bool? isSelected}) {
     return PlaceTypeFilterEntity(
       isSelected: isSelected ?? this.isSelected,

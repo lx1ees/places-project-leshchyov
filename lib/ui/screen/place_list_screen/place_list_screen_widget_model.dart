@@ -1,6 +1,5 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
@@ -22,7 +21,6 @@ PlaceListScreenWidgetModel placeListScreenWidgetModelFactory(
 
   return PlaceListScreenWidgetModel(
     themeWrapper: dependencies.themeWrapper,
-    filtersManager: dependencies.filtersManager,
     model: model,
   );
 }
@@ -32,9 +30,6 @@ class PlaceListScreenWidgetModel
     extends WidgetModel<PlaceListScreen, PlaceListScreenModel>
     with DefferedExecutionProvider
     implements IPlaceListScreenWidgetModel {
-  /// Менеджер фильтров
-  final FiltersManager _filtersManager;
-
   /// Контроллер прокрутки списка
   final ScrollController _scrollController = ScrollController();
 
@@ -65,10 +60,8 @@ class PlaceListScreenWidgetModel
 
   PlaceListScreenWidgetModel({
     required PlaceListScreenModel model,
-    required FiltersManager filtersManager,
     required ThemeWrapper themeWrapper,
-  })  : _filtersManager = filtersManager,
-        _themeWrapper = themeWrapper,
+  })  : _themeWrapper = themeWrapper,
         super(model);
 
   @override
@@ -77,7 +70,6 @@ class PlaceListScreenWidgetModel
     _theme = _themeWrapper.getTheme(context);
     _colorScheme = _theme.colorScheme;
     _listPlacesEntityState.content([]);
-
     _requestForPlaces();
   }
 
@@ -105,9 +97,10 @@ class PlaceListScreenWidgetModel
   /// Получение списка мест из модели
   Future<void> _requestForPlaces() async {
     deffered(_listPlacesEntityState.loading, delay: 2);
+    final filtersManager = await model.getFiltersManager();
     try {
       await for (final places in model.getPlaces(
-        filtersManager: _filtersManager,
+        filtersManager: filtersManager,
         currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
       )) {
         cancelDeffered();
@@ -120,7 +113,10 @@ class PlaceListScreenWidgetModel
 
   /// Метод открытия окна детальной информации о месте
   Future<void> _navigateToPlaceDetailsScreen(Place place) async {
-    await AppRoutes.navigateToPlaceDetailsScreen(context: context, place: place);
+    await AppRoutes.navigateToPlaceDetailsScreen(
+      context: context,
+      place: place,
+    );
     Future.delayed(const Duration(milliseconds: 200), _requestForPlaces);
   }
 
@@ -134,7 +130,6 @@ class PlaceListScreenWidgetModel
   Future<void> _openFiltersScreen() async {
     await AppRoutes.navigateToFiltersScreen(
       context: context,
-      filtersManager: _filtersManager,
     );
     await _requestForPlaces();
   }

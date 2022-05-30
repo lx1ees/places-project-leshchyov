@@ -1,6 +1,5 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/search_history_manager.dart';
@@ -25,7 +24,6 @@ PlaceSearchScreenWidgetModel placeSearchScreenWidgetModelFactory(
     model: model,
     themeWrapper: dependencies.themeWrapper,
     navigator: Navigator.of(context),
-    filtersManager: dependencies.filtersManager,
   );
 }
 
@@ -33,9 +31,6 @@ PlaceSearchScreenWidgetModel placeSearchScreenWidgetModelFactory(
 class PlaceSearchScreenWidgetModel
     extends WidgetModel<PlaceSearchScreen, PlaceSearchScreenModel>
     implements IPlaceSearchScreenWidgetModel {
-  /// Менеджер фильтров
-  final FiltersManager _filtersManager;
-
   /// Обертка над темой приложения
   final ThemeWrapper _themeWrapper;
 
@@ -104,11 +99,9 @@ class PlaceSearchScreenWidgetModel
 
   PlaceSearchScreenWidgetModel({
     required PlaceSearchScreenModel model,
-    required FiltersManager filtersManager,
     required ThemeWrapper themeWrapper,
     required NavigatorState navigator,
   })  : _themeWrapper = themeWrapper,
-        _filtersManager = filtersManager,
         _navigator = navigator,
         super(model);
 
@@ -170,8 +163,9 @@ class PlaceSearchScreenWidgetModel
     _searchString = searchString;
     _foundPlacesEntityState.loading();
     try {
+      final filtersManager = await model.getFiltersManager();
       final foundPlaces = await model.searchForPlaces(
-        filtersManager: _filtersManager,
+        filtersManager: filtersManager,
         searchString: searchString,
         currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
       );

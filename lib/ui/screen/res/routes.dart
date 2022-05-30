@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
@@ -68,10 +67,7 @@ abstract class AppRoutes {
       return SelectPlaceTypeScreen(selectedPlaceType: selectedPlaceType);
     },
     FiltersScreen.routeName: (argument) {
-      final args = argument as FiltersManager;
-
-      return FiltersScreen(
-        filtersManager: args,
+      return const FiltersScreen(
         widgetModelFactory: filtersScreenWidgetModelFactory,
       );
     },
@@ -140,11 +136,9 @@ abstract class AppRoutes {
 
   static Future<void> navigateToFiltersScreen({
     required BuildContext context,
-    required FiltersManager filtersManager,
   }) {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               FiltersScreen.routeName,
-              arguments: filtersManager,
             ) ??
         Future.value(null);
   }

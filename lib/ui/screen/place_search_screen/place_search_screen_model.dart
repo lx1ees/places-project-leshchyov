@@ -49,4 +49,8 @@ class PlaceSearchScreenModel extends ElementaryModel {
   /// Удаление элемента [toRemove] в истории поиска
   List<String> removeFromHistory(String toRemove) =>
       searchHistoryManager.remove(toRemove);
+
+  /// Метод получения фильтров
+  Future<FiltersManager> getFiltersManager() async =>
+      _searchInteractor.getFiltersManager();
 }

@@ -13,11 +13,9 @@ import 'package:places/ui/widget/filters/show_filtered_list_button.dart';
 /// Экран с фильтрами по категории и дистанции от текущего местоположения
 class FiltersScreen extends ElementaryWidget<IFiltersScreenWidgetModel> {
   static const String routeName = '/filters';
-  final FiltersManager filtersManager;
 
   const FiltersScreen({
     required WidgetModelFactory widgetModelFactory,
-    required this.filtersManager,
     Key? key,
   }) : super(widgetModelFactory, key: key);
 

@@ -41,4 +41,12 @@ class PlaceListScreenModel extends ElementaryModel {
 
   /// Метод добавления/удаления места [place] в/из избранно-е/го
   void changeFavorite(Place place) => _placeInteractor.changeFavorite(place);
+
+  /// Метод сохранения фильтров [filtersManager]
+  Future<void> saveFiltersManager(FiltersManager filtersManager) async =>
+      _placeInteractor.saveFilterValues(filtersManager);
+
+  /// Метод получения фильтров
+  Future<FiltersManager> getFiltersManager() async =>
+      _placeInteractor.getFiltersManager();
 }

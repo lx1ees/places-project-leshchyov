@@ -1,7 +1,7 @@
 import 'package:elementary/elementary.dart';
 import 'package:places/data/api/network_service.dart';
 import 'package:places/data/repository/place_repository.dart';
-import 'package:places/domain/filters_manager.dart';
+import 'package:places/data/storage/shared_preferences_storage.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/search_history_manager.dart';
@@ -14,8 +14,6 @@ class AppScope implements IAppScope {
 
   late final ThemeWrapper _themeWrapper;
 
-  late final FiltersManager _filtersManager;
-
   late final SearchHistoryManager _searchHistoryManager;
 
   late final PlaceInteractor _placeInteractor;
@@ -26,9 +24,6 @@ class AppScope implements IAppScope {
 
   @override
   ErrorHandler get errorHandler => _errorHandler;
-
-  @override
-  FiltersManager get filtersManager => _filtersManager;
 
   @override
   PlaceInteractor get placeInteractor => _placeInteractor;
@@ -46,17 +41,18 @@ class AppScope implements IAppScope {
   ThemeWrapper get themeWrapper => _themeWrapper;
 
   AppScope() {
-    final placeRepository = PlaceRepository(NetworkService());
+    final placeRepository = PlaceRepository(
+      networkService: NetworkService(),
+      filtersStorage: SharedPreferencesStorage(),
+    );
     _errorHandler = DefaultErrorHandler();
     _themeWrapper = ThemeWrapper();
-    _filtersManager = FiltersManager();
     _searchHistoryManager = SearchHistoryManager();
     _placeInteractor = PlaceInteractor(
       repository: placeRepository,
     );
     _searchInteractor = SearchInteractor(
       repository: placeRepository,
-      filtersManager: filtersManager,
       searchHistoryManager: searchHistoryManager,
     );
     _settingsManager = SettingsManager();
@@ -70,9 +66,6 @@ abstract class IAppScope {
 
   /// Тема
   ThemeWrapper get themeWrapper;
-
-  /// Менеджер фильтров
-  FiltersManager get filtersManager;
 
   /// Менеджер истории поиска
   SearchHistoryManager get searchHistoryManager;
