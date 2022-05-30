@@ -1,33 +1,36 @@
+import 'dart:async';
+
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_model.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
+import 'package:places/ui/screen/place_details_screen/place_details_screen_model.dart';
 import 'package:places/utils/datetime_utils.dart';
+import 'package:places/utils/deffered_execution_provider.dart';
 import 'package:provider/provider.dart';
 
-/// Фабрика для [PlaceDetailsBottomSheetWidgetModel]
-PlaceDetailsBottomSheetWidgetModel placeDetailsBottomSheetWidgetModelFactory(
+/// Фабрика для [PlaceDetailsWidgetModel]
+PlaceDetailsWidgetModel placeDetailsScreenWidgetModelFactory(
   BuildContext context,
 ) {
   final dependencies = context.read<IAppScope>();
-  final model = PlaceDetailsBottomSheetModel(
+  final model = PlaceDetailsScreenModel(
     placeInteractor: dependencies.placeInteractor,
     errorHandler: dependencies.errorHandler,
   );
 
-  return PlaceDetailsBottomSheetWidgetModel(
+  return PlaceDetailsWidgetModel(
     model: model,
     themeWrapper: dependencies.themeWrapper,
   );
 }
 
-/// Виджет-модель для [PlaceDetailsBottomSheetModel]
-class PlaceDetailsBottomSheetWidgetModel
-    extends WidgetModel<PlaceDetailsBottomSheet, PlaceDetailsBottomSheetModel>
-    implements IPlaceDetailsBottomSheetWidgetModel {
+/// Виджет-модель для [PlaceDetailsScreenModel]
+class PlaceDetailsWidgetModel
+    extends WidgetModel<PlaceDetailsScreen, PlaceDetailsScreenModel>
+    with DefferedExecutionProvider
+    implements IPlaceDetailsScreenWidgetModel {
   /// Обертка над темой приложения
   final ThemeWrapper _themeWrapper;
 
@@ -37,15 +40,12 @@ class PlaceDetailsBottomSheetWidgetModel
   /// Текущая тема приложения
   late final ThemeData _theme;
 
-  final _isExpandedState = StateNotifier<bool>();
-
   final _currentPlaceState = EntityStateNotifier<Place>();
 
-  final DraggableScrollableController _scrollController =
-      DraggableScrollableController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
-  DraggableScrollableController get scrollController => _scrollController;
+  ScrollController get scrollController => _scrollController;
 
   @override
   ColorScheme get colorScheme => _colorScheme;
@@ -57,11 +57,8 @@ class PlaceDetailsBottomSheetWidgetModel
   ListenableState<EntityState<Place>> get currentPlaceState =>
       _currentPlaceState;
 
-  @override
-  ListenableState<bool> get isExpandedState => _isExpandedState;
-
-  PlaceDetailsBottomSheetWidgetModel({
-    required PlaceDetailsBottomSheetModel model,
+  PlaceDetailsWidgetModel({
+    required PlaceDetailsScreenModel model,
     required ThemeWrapper themeWrapper,
   })  : _themeWrapper = themeWrapper,
         super(model);
@@ -70,19 +67,18 @@ class PlaceDetailsBottomSheetWidgetModel
   void initWidgetModel() {
     super.initWidgetModel();
     _currentPlaceState.content(widget.place);
-    _isExpandedState.accept(widget.isExpanded);
     _colorScheme = _themeWrapper.getTheme(context).colorScheme;
     _theme = _themeWrapper.getTheme(context);
-    _requestForPlaceDetails();
   }
 
   @override
-  bool onDraggableScrollableNotification(
-    DraggableScrollableNotification notification,
-  ) {
-    _setExpanded(notification.maxExtent - notification.extent < 0.001);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    return true;
+    // /// Даем возможность евентлупу сначала выполнить события отрисовки анимации hero,
+    // /// а потом после его текущей итерации выполняем запрос в сеть за инфой по месту.
+    // /// Иначе анимация hero не успевает проиграться
+    // Future.delayed(Duration.zero, _requestForPlaceDetails);
   }
 
   @override
@@ -112,45 +108,29 @@ class PlaceDetailsBottomSheetWidgetModel
     final currentPlace = _currentPlaceState.value?.data;
 
     if (currentPlace == null) return;
-    _currentPlaceState.loading();
-    /// Искуственная задержка
-    await Future.delayed(const Duration(seconds: 1), () {});
-    final place = await model.getPlaceDetails(currentPlace);
-    _currentPlaceState.content(place);
-  }
+    /// Выполняем лоадинг отложенно через 1 секунду (на случай, если данные
+    /// придут мгновенно, чтобы не показывать лоадер и не создать эффект мерцания)
+    deffered(_currentPlaceState.loading);
 
-  /// Установка состояния признака развертки боттом шита
-  void _setExpanded(bool isExpanded) {
-    if (_isExpandedState.value != isExpanded) {
-      _isExpandedState.accept(isExpanded);
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor:
-            isExpanded ? _theme.backgroundColor : Colors.transparent,
-      ));
-    }
+    final place = await model.getPlaceDetails(currentPlace);
+    cancelDeffered();
+
+    _currentPlaceState.content(place);
   }
 }
 
-abstract class IPlaceDetailsBottomSheetWidgetModel extends IWidgetModel {
+abstract class IPlaceDetailsScreenWidgetModel extends IWidgetModel {
   /// Цветовая схема текущей темы приложения
   ColorScheme get colorScheme;
 
   /// Текущая тема приложения
   ThemeData get theme;
 
-  /// Контроллер боттом шита
-  DraggableScrollableController get scrollController;
-
-  /// Состояние развертки боттом шита на весь экран
-  ListenableState<bool> get isExpandedState;
+  /// Контроллер прокрутки
+  ScrollController get scrollController;
 
   /// Состояние текущего просматриваемого места
   ListenableState<EntityState<Place>> get currentPlaceState;
-
-  /// Обработчик нотификации о скролле боттом шита
-  bool onDraggableScrollableNotification(
-    DraggableScrollableNotification notification,
-  );
 
   /// Обработчик планирования даты посещения места [place]
   void onPlanPlacePressed(Place place);

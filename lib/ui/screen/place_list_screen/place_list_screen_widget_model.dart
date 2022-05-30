@@ -4,11 +4,10 @@ import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_model.dart';
 import 'package:places/ui/screen/res/routes.dart';
+import 'package:places/utils/deffered_execution_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [PlaceListScreenWidgetModel]
@@ -31,6 +30,7 @@ PlaceListScreenWidgetModel placeListScreenWidgetModelFactory(
 /// Виджет-модель для [PlaceListScreenModel]
 class PlaceListScreenWidgetModel
     extends WidgetModel<PlaceListScreen, PlaceListScreenModel>
+    with DefferedExecutionProvider
     implements IPlaceListScreenWidgetModel {
   /// Менеджер фильтров
   final FiltersManager _filtersManager;
@@ -76,6 +76,7 @@ class PlaceListScreenWidgetModel
     super.initWidgetModel();
     _theme = _themeWrapper.getTheme(context);
     _colorScheme = _theme.colorScheme;
+    _listPlacesEntityState.content([]);
 
     _requestForPlaces();
   }
@@ -90,7 +91,7 @@ class PlaceListScreenWidgetModel
   void onFavoritePressed(Place place) => model.changeFavorite(place);
 
   @override
-  void onPlaceCardPressed(Place place) => _openPlaceDetailsBottomSheet(place);
+  void onPlaceCardPressed(Place place) => _navigateToPlaceDetailsScreen(place);
 
   @override
   void onAddNewPlacePressed() => _openAddNewPlaceScreen();
@@ -103,14 +104,13 @@ class PlaceListScreenWidgetModel
 
   /// Получение списка мест из модели
   Future<void> _requestForPlaces() async {
-    _listPlacesEntityState.loading();
-    /// Искусственная задержка
-    await Future.delayed(const Duration(seconds: 1), (){});
+    deffered(_listPlacesEntityState.loading, delay: 2);
     try {
       await for (final places in model.getPlaces(
         filtersManager: _filtersManager,
         currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
       )) {
+        cancelDeffered();
         _listPlacesEntityState.content(places);
       }
     } on Exception catch (e) {
@@ -119,21 +119,9 @@ class PlaceListScreenWidgetModel
   }
 
   /// Метод открытия окна детальной информации о месте
-  Future<void> _openPlaceDetailsBottomSheet(Place place) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: _colorScheme.primary.withOpacity(0.24),
-      isScrollControlled: true,
-      useRootNavigator: true,
-      builder: (_) {
-        return PlaceDetailsBottomSheet(
-          place: place,
-          widgetModelFactory: placeDetailsBottomSheetWidgetModelFactory,
-        );
-      },
-    );
-    await _requestForPlaces();
+  Future<void> _navigateToPlaceDetailsScreen(Place place) async {
+    await AppRoutes.navigateToPlaceDetailsScreen(context: context, place: place);
+    Future.delayed(const Duration(milliseconds: 200), _requestForPlaces);
   }
 
   /// Метод открытия окна добавления нового места

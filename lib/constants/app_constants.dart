@@ -47,10 +47,6 @@ abstract class AppConstants {
   static const String space = ' ';
   static const double splashLogoSize = 160;
   static const int minSplashTimeInSec = 4;
-  static const double minDraggableBottomSheetHeight = 0.4;
-  static const double initialDraggableBottomSheetHeight = 0.65;
-  static const double bottomSheetIndicatorHeight = 7;
-  static const double bottomSheetIndicatorWidth = 40;
   static const double infinity = 1000000;
   static const Locale locale = Locale('ru', 'RU');
   static const double smallScreenWidth = 480;

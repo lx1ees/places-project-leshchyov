@@ -2,8 +2,7 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen_model.dart';
 import 'package:places/utils/datetime_utils.dart';
@@ -116,7 +115,7 @@ class VisitingScreenWidgetModel
 
   @override
   void onPlaceCardPressed(Place place) {
-    _openPlaceDetailsBottomSheet(place).then((_) {
+    _navigateToPlaceDetailsScreen(place).then((_) {
       if (place.isInFavorites) {
         _requestForFavoritesPlaces();
       } else if (place.isVisited) {
@@ -145,8 +144,6 @@ class VisitingScreenWidgetModel
   Future<void> _requestForFavoritesPlaces() async {
     _listFavoritePlacesEntityState.loading();
 
-    /// Искуственная задержка
-    await Future.delayed(const Duration(seconds: 1), () {});
     try {
       final favoritePlaces = model.favoritePlaces();
       _listFavoritePlacesEntityState.content(favoritePlaces);
@@ -158,9 +155,6 @@ class VisitingScreenWidgetModel
   /// Получение списка посещенных мест
   Future<void> _requestForVisitedPlaces() async {
     _listVisitedPlacesEntityState.loading();
-
-    /// Искуственная задержка
-    await Future.delayed(const Duration(seconds: 1), () {});
     try {
       final visitedPlaces = model.visitedPlaces();
       _listVisitedPlacesEntityState.content(visitedPlaces);
@@ -170,22 +164,12 @@ class VisitingScreenWidgetModel
   }
 
   /// Метод открытия окна детальной информации о месте
-  Future<void> _openPlaceDetailsBottomSheet(
+  Future<void> _navigateToPlaceDetailsScreen(
     Place place,
   ) async {
-    return showModalBottomSheet<void>(
+    await AppRoutes.navigateToPlaceDetailsScreen(
       context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: _colorScheme.primary.withOpacity(0.24),
-      isScrollControlled: true,
-      isDismissible: true,
-      useRootNavigator: true,
-      builder: (_) {
-        return PlaceDetailsBottomSheet(
-          place: place,
-          widgetModelFactory: placeDetailsBottomSheetWidgetModelFactory,
-        );
-      },
+      place: place,
     );
   }
 }

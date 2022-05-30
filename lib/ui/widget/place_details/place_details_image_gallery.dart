@@ -52,21 +52,24 @@ class _PlaceDetailsImageGalleryState extends State<PlaceDetailsImageGallery> {
                   controller: _pageController,
                   itemCount: widget.urls.length,
                   itemBuilder: (context, index) {
-                    return Image.network(
-                      widget.urls[index],
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) {
-                        return const ImagePlaceholder();
-                      },
-                      loadingBuilder: (_, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
+                    return Hero(
+                      tag: widget.urls[0],
+                      child: Image.network(
+                        widget.urls[index],
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) {
+                          return const ImagePlaceholder();
+                        },
+                        loadingBuilder: (_, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
 
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

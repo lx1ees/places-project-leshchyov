@@ -23,70 +23,77 @@ class PlaceCardTop extends StatefulWidget {
 class _PlaceCardTopState extends State<PlaceCardTop> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(AppConstants.cardBorderRadius),
-          topRight: Radius.circular(AppConstants.cardBorderRadius),
+    final imageUrl = widget.url;
+
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(AppConstants.cardBorderRadius),
+            topRight: Radius.circular(AppConstants.cardBorderRadius),
+          ),
+          child: SizedBox(
+            height: AppConstants.placeCardImageHeight,
+            width: double.infinity,
+            child: imageUrl != null
+                ? Hero(
+                    tag: imageUrl,
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) {
+                        return const ImagePlaceholder();
+                      },
+                      frameBuilder: (_, child, frame, __) {
+                        return AnimatedCrossFade(
+                          firstChild: Center(
+                            child: frame != null
+                                ? const SizedBox.shrink()
+                                : const CircularProgressIndicator(),
+                          ),
+                          secondChild: Row(
+                            children: [
+                              Expanded(child: child),
+                            ],
+                          ),
+                          firstCurve: Curves.easeIn,
+                          secondCurve: Curves.easeIn,
+                          duration: const Duration(
+                            milliseconds: AppConstants
+                                .imageAppearanceAnimationDurationInMillis,
+                          ),
+                          crossFadeState: frame != null
+                              ? CrossFadeState.showSecond
+                              : CrossFadeState.showFirst,
+                        );
+                      },
+                    ),
+                  )
+                : const ImagePlaceholder(),
+          ),
         ),
-        child: SizedBox(
-          height: AppConstants.placeCardImageHeight,
-          width: double.infinity,
-          child: widget.url != null
-              ? Image.network(
-                  widget.url ?? '',
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) {
-                    return const ImagePlaceholder();
-                  },
-                  frameBuilder: (_, child, frame, __) {
-                    return AnimatedCrossFade(
-                      firstChild: Center(
-                        child: frame != null
-                            ? const SizedBox.shrink()
-                            : const CircularProgressIndicator(),
-                      ),
-                      secondChild: Row(
-                        children: [
-                          Expanded(child: child),
-                        ],
-                      ),
-                      firstCurve: Curves.easeIn,
-                      secondCurve: Curves.easeIn,
-                      duration: const Duration(
-                        milliseconds: AppConstants
-                            .imageAppearanceAnimationDurationInMillis,
-                      ),
-                      crossFadeState: frame != null
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                    );
-                  },
-                )
-              : const ImagePlaceholder(),
-        ),
-      ),
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: AppConstants.defaultPadding,
-                top: AppConstants.defaultPadding,
-              ),
-              child: Text(
-                widget.type,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.smallBoldTextStyle
-                    .copyWith(color: Theme.of(context).white),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: AppConstants.defaultPadding,
+                  top: AppConstants.defaultPadding,
+                ),
+                child: Text(
+                  widget.type,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.smallBoldTextStyle
+                      .copyWith(color: Theme.of(context).white),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    ]);
+          ],
+        ),
+      ],
+    );
   }
 }

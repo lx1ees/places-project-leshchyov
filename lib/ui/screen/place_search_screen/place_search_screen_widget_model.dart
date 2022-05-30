@@ -5,10 +5,9 @@ import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/search_history_manager.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet.dart';
-import 'package:places/ui/screen/place_details_screen/place_details_bottom_sheet_widget_model.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen_model.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -143,7 +142,7 @@ class PlaceSearchScreenWidgetModel
   void onBackButtonPressed() => _navigator.pop();
 
   @override
-  void onPlaceCardPressed(Place place) => _openPlaceDetailsBottomSheet(place);
+  void onPlaceCardPressed(Place place) => _navigateToPlaceDetailsScreen(place);
 
   @override
   void onHistoryItemPressed(String searchString) {
@@ -183,20 +182,10 @@ class PlaceSearchScreenWidgetModel
   }
 
   /// Метод открытия окна детальной информации о месте
-  Future<void> _openPlaceDetailsBottomSheet(Place place) async {
-    await showModalBottomSheet<void>(
+  Future<void> _navigateToPlaceDetailsScreen(Place place) async {
+    await AppRoutes.navigateToPlaceDetailsScreen(
       context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: _colorScheme.primary.withOpacity(0.24),
-      isScrollControlled: true,
-      useRootNavigator: true,
-      builder: (_) {
-        return PlaceDetailsBottomSheet(
-          place: place,
-          isExpanded: true,
-          widgetModelFactory: placeDetailsBottomSheetWidgetModelFactory,
-        );
-      },
+      place: place,
     );
   }
 
