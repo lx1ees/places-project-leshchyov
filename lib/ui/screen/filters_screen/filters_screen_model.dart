@@ -32,4 +32,12 @@ class FiltersScreenModel extends ElementaryModel {
       rethrow;
     }
   }
+
+  /// Метод сохранения фильтров [filtersManager]
+  Future<void> saveFiltersManager(FiltersManager filtersManager) async =>
+      _placeInteractor.saveFilterValues(filtersManager);
+
+  /// Метод получения фильтров
+  Future<FiltersManager> getFiltersManager() async =>
+      _placeInteractor.getFiltersManager();
 }

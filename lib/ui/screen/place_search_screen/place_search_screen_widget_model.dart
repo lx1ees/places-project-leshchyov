@@ -1,9 +1,7 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/domain/search_history_manager.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen_model.dart';
@@ -25,7 +23,6 @@ PlaceSearchScreenWidgetModel placeSearchScreenWidgetModelFactory(
     model: model,
     themeWrapper: dependencies.themeWrapper,
     navigator: Navigator.of(context),
-    filtersManager: dependencies.filtersManager,
   );
 }
 
@@ -33,9 +30,6 @@ PlaceSearchScreenWidgetModel placeSearchScreenWidgetModelFactory(
 class PlaceSearchScreenWidgetModel
     extends WidgetModel<PlaceSearchScreen, PlaceSearchScreenModel>
     implements IPlaceSearchScreenWidgetModel {
-  /// Менеджер фильтров
-  final FiltersManager _filtersManager;
-
   /// Обертка над темой приложения
   final ThemeWrapper _themeWrapper;
 
@@ -78,9 +72,6 @@ class PlaceSearchScreenWidgetModel
   String get searchString => _searchString;
 
   @override
-  SearchHistoryManager get searchHistoryManager => model.searchHistoryManager;
-
-  @override
   ListenableState<EntityState<List<Place>>> get listFoundPlacesState =>
       _foundPlacesEntityState;
 
@@ -104,11 +95,9 @@ class PlaceSearchScreenWidgetModel
 
   PlaceSearchScreenWidgetModel({
     required PlaceSearchScreenModel model,
-    required FiltersManager filtersManager,
     required ThemeWrapper themeWrapper,
     required NavigatorState navigator,
   })  : _themeWrapper = themeWrapper,
-        _filtersManager = filtersManager,
         _navigator = navigator,
         super(model);
 
@@ -123,7 +112,7 @@ class PlaceSearchScreenWidgetModel
     _searchStream
         .debounceTime(const Duration(milliseconds: 500))
         .listen(_requestForSearchResults);
-    _searchHistoryState.accept([...model.getHistory()]);
+    _loadSearchHistory();
     _focusNode.requestFocus();
   }
 
@@ -154,15 +143,21 @@ class PlaceSearchScreenWidgetModel
   }
 
   @override
-  void onHistoryCleared() {
-    final history = model.clearHistory();
-    _searchHistoryState.accept([...history]);
+  Future<void> onHistoryCleared() async {
+    await model.clearHistory();
+    await _loadSearchHistory();
   }
 
   @override
-  void onHistoryItemRemoved(String searchString) {
-    final history = model.removeFromHistory(searchString);
-    _searchHistoryState.accept([...history]);
+  Future<void> onHistoryItemRemoved(String searchString) async {
+    await model.removeFromHistory(searchString);
+    await _loadSearchHistory();
+  }
+
+  /// Загрузка истории поиска мест
+  Future<void> _loadSearchHistory() async {
+    final searchHistory = await model.getHistory();
+    _searchHistoryState.accept([...searchHistory]);
   }
 
   /// Поиск мест по запросу [searchString]
@@ -170,8 +165,9 @@ class PlaceSearchScreenWidgetModel
     _searchString = searchString;
     _foundPlacesEntityState.loading();
     try {
+      final filtersManager = await model.getFiltersManager();
       final foundPlaces = await model.searchForPlaces(
-        filtersManager: _filtersManager,
+        filtersManager: filtersManager,
         searchString: searchString,
         currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
       );
@@ -201,7 +197,7 @@ class PlaceSearchScreenWidgetModel
     if (onTextChangeListener != null) {
       onTextChangeListener(value);
       if (value.isEmpty) {
-        _searchHistoryState.accept([...model.getHistory()]);
+        _loadSearchHistory();
       }
     }
     _focusClearButtonState
@@ -237,9 +233,6 @@ abstract class IPlaceSearchScreenWidgetModel extends IWidgetModel {
   /// Состояние истории поиска
   ListenableState<List<String>> get searchHistoryState;
 
-  /// Менеджер истории поиска
-  SearchHistoryManager get searchHistoryManager;
-
   /// Обработчик нажатия на кнопку "Назад"
   void onBackButtonPressed();
 
@@ -250,8 +243,8 @@ abstract class IPlaceSearchScreenWidgetModel extends IWidgetModel {
   void onHistoryItemPressed(String searchString);
 
   /// Обработчик удаления позиции в истории поиска [searchString]
-  void onHistoryItemRemoved(String searchString);
+  Future<void> onHistoryItemRemoved(String searchString);
 
   /// Обработчик очистки истории поиска
-  void onHistoryCleared();
+  Future<void> onHistoryCleared();
 }

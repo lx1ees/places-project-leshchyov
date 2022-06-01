@@ -6,6 +6,7 @@ import 'package:places/domain/model/onboarding_item.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen_model.dart';
+import 'package:places/ui/screen/res/routes.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [OnboardingScreenWidgetModel]
@@ -88,7 +89,13 @@ class OnboardingScreenWidgetModel
   }
 
   @override
-  void onClose() => _navigator.pop();
+  void onClose() {
+    if (widget.fromLaunch) {
+      AppRoutes.navigateToHomeScreen(context: context);
+    } else {
+      _navigator.pop();
+    }
+  }
 
   @override
   void onPageChanged(int page) => _currentPageState.accept(page);

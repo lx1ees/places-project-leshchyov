@@ -11,9 +11,11 @@ import 'package:places/ui/widget/onboarding/onboarding_logo.dart';
 
 class OnboardingScreen extends ElementaryWidget<IOnboardingScreenWidgetModel> {
   static const String routeName = '/onboarding';
+  final bool fromLaunch;
 
   const OnboardingScreen({
     required WidgetModelFactory widgetModelFactory,
+    required this.fromLaunch,
     Key? key,
   }) : super(widgetModelFactory, key: key);
 

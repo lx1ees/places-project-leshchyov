@@ -47,6 +47,18 @@ class FiltersManager {
         ],
         distanceFilter = const DistanceFilter();
 
+  factory FiltersManager.from({
+    required double? distance,
+    required List<PlaceTypeFilterEntity>? placeTypes,
+  }) {
+    return FiltersManager()
+      ..distanceFilter = DistanceFilter(distanceRightThreshold: distance)
+      .._placeTypeFilters = [
+        ...placeTypes ?? PlaceTypeFilterEntity.availablePlaceTypeFilters,
+      ];
+  }
+
+  ///  Обновление значений мепнеджера фильтров из переданного менеджера фильтров
   void updateWith(final FiltersManager filtersManager) {
     distanceFilter = filtersManager.distanceFilter;
     _placeTypeFilters = [...filtersManager.placeTypeFilters];

@@ -52,7 +52,10 @@ class SettingsScreenWidgetModel
 
   /// Метод открытия окна  с онбордингом
   Future<void> _openOnboardingScreen() async {
-    await AppRoutes.navigateToOnboardingScreen(context: context);
+    await AppRoutes.navigateToOnboardingScreen(
+      context: context,
+      fromLaunch: false,
+    );
   }
 }
 

@@ -4,7 +4,7 @@ import 'package:places/data/repository/place_repository.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/domain/search_history_manager.dart';
+import 'package:places/domain/model/place_type_filter_entity.dart';
 
 /// Интерактор фичи Поиск
 class SearchInteractor {
@@ -14,26 +14,15 @@ class SearchInteractor {
   /// Репозиторий списка мест
   final PlaceRepository _repository;
 
-  /// Менеджер фильтров
-  final FiltersManager _filtersManager;
-
-  /// Менеджер истории поиска
-  final SearchHistoryManager _searchHistoryManager;
-
-  FiltersManager get filtersManager => _filtersManager;
-
-  SearchHistoryManager get searchHistoryManager => _searchHistoryManager;
+  /// История поиска
+  final List<String> _successSearches = [];
 
   SearchInteractor({
     required PlaceRepository repository,
-    required FiltersManager filtersManager,
-    required SearchHistoryManager searchHistoryManager,
-  })  : _repository = repository,
-        _filtersManager = filtersManager,
-        _searchHistoryManager = searchHistoryManager;
+  }) : _repository = repository;
 
   /// Метод для поиска мест по поисковому запросу [searchString], учитывая фильтры
-  /// из [_filtersManager] и текущее местоположение [currentLocation]
+  /// из [filtersManager] и текущее местоположение [currentLocation]
   Future<List<Place>> getSearchResults({
     required FiltersManager filtersManager,
     required String searchString,
@@ -58,9 +47,52 @@ class SearchInteractor {
       ..addAll(places);
 
     if (_places.isNotEmpty && searchString.isNotEmpty) {
-      _searchHistoryManager.addInHistory(searchString);
+      await _addInHistory(searchString);
     }
 
     return places;
+  }
+
+  Future<List<String>> loadSearchHistory() async {
+    final searchHistory = await _repository.getSearchHistoryValue() ?? [];
+    _successSearches
+      ..clear()
+      ..addAll(searchHistory);
+
+    return _successSearches;
+  }
+
+  /// Метод удаления элемента из истории поиска
+  Future<void> remove(String searchString) async {
+    _successSearches.remove(searchString);
+    await _repository.saveSearchHistoryValue(_successSearches);
+  }
+
+  /// Метод очистки истории поиска
+  Future<void> clearHistory() async {
+    _successSearches.clear();
+    await _repository.saveSearchHistoryValue(_successSearches);
+  }
+
+  /// Метод для получения значений фильтра из локального хранилища
+  Future<FiltersManager> getFiltersManager() async {
+    final distance = await _repository.getDistanceFilterValue();
+    final activePlaceTypes = await _repository.getPlaceTypeFilterValue();
+    final placeTypes = PlaceTypeFilterEntity.availablePlaceTypeFilters
+        .map((e) => e.copyWith(isSelected: activePlaceTypes?.contains(e)))
+        .toList();
+
+    return FiltersManager.from(distance: distance, placeTypes: placeTypes);
+  }
+
+  /// Метод обновления истории поиска
+  Future<void> _addInHistory(String searchString) async {
+    final isAlreadyRegistered = _successSearches.contains(searchString);
+    if (isAlreadyRegistered) {
+      /// Удаляем существующую запись и вставляем снова, тем самым поднимая ее наверх
+      _successSearches.remove(searchString);
+    }
+    _successSearches.insert(0, searchString);
+    await _repository.saveSearchHistoryValue(_successSearches);
   }
 }

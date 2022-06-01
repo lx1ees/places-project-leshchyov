@@ -7,6 +7,7 @@ import 'package:places/data/repository/place_repository.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
+import 'package:places/domain/model/place_type_filter_entity.dart';
 
 /// Интерастор фичи Список мест
 class PlaceInteractor {
@@ -168,6 +169,27 @@ class PlaceInteractor {
     if (indexFavorite != -1) {
       _favoritePlaces[indexFavorite] = place.copyWith(planDate: planDate);
     }
+  }
+
+  /// Метод для сохранения значений фильтра [filtersManager] в локальное хранилище
+  Future<void> saveFilterValues(FiltersManager filtersManager) async {
+    await _repository.saveDistanceFilterValue(
+      filtersManager.distanceFilter.distanceRightThreshold,
+    );
+    await _repository.savePlaceTypeFilterValue(
+      filtersManager.placeTypeFilters.where((f) => f.isSelected),
+    );
+  }
+
+  /// Метод для получения значений фильтра из локального хранилища
+  Future<FiltersManager> getFiltersManager() async {
+    final distance = await _repository.getDistanceFilterValue();
+    final activePlaceTypes = await _repository.getPlaceTypeFilterValue();
+    final placeTypes = PlaceTypeFilterEntity.availablePlaceTypeFilters
+        .map((e) => e.copyWith(isSelected: activePlaceTypes?.contains(e)))
+        .toList();
+
+    return FiltersManager.from(distance: distance, placeTypes: placeTypes);
   }
 
   /// Метод добавления места в список избранного
