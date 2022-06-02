@@ -72,16 +72,6 @@ class PlaceDetailsWidgetModel
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // /// Даем возможность евентлупу сначала выполнить события отрисовки анимации hero,
-    // /// а потом после его текущей итерации выполняем запрос в сеть за инфой по месту.
-    // /// Иначе анимация hero не успевает проиграться
-    // Future.delayed(Duration.zero, _requestForPlaceDetails);
-  }
-
-  @override
   void onPlanPlacePressed(Place place) {
     DateTimeUtils.pickPlanDate(context).then((planDate) async {
       if (planDate != null) {

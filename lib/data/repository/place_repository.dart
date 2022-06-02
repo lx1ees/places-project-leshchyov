@@ -26,6 +26,9 @@ class PlaceRepository {
   /// Список мест, которые находятся в Избранном
   final List<PlaceLocalDto> _favoritePlaces = [];
 
+  /// Список мест, которые находятся в Посещенном
+  final List<PlaceLocalDto> _visitedPlaces = [];
+
   PlaceRepository({
     required this.networkService,
     required this.filtersStorage,
@@ -209,13 +212,15 @@ class PlaceRepository {
   /// Получение списка избранных мест
   Future<List<PlaceLocalDto>> getFavoritePlaces() async {
     final localFavoritePlaces = await placesStorage.readFavoritePlaces();
-
-    _compareAndSortPlaces(
+    final result = _compareAndSortPlaces(
       incomingPlaces: localFavoritePlaces,
       target: _favoritePlaces,
     );
+    _favoritePlaces
+      ..clear()
+      ..addAll([...result]);
 
-    return _favoritePlaces;
+    return result;
   }
 
   /// Вставка или обновление места в списке избранных
@@ -226,23 +231,55 @@ class PlaceRepository {
   Future<void> deleteFromFavoritePlaces(int placeId) async =>
       placesStorage.deleteFromFavoritePlaces(placeId);
 
-  void _compareAndSortPlaces({
+  /// Метод перемещения карточки в списке помещенных мест
+  /// [index] - позиция, куда переместить
+  /// [placeToMove] - объект перемещения
+  Future<void> movePlaceInVisited({
+    required int index,
+    required Place placeToMove,
+  }) async {
+    _visitedPlaces
+      ..removeWhere((place) => place.id == placeToMove.id)
+      ..insert(index, PlaceMapper.toLocalDto(placeToMove));
+  }
+
+  /// Получение списка посещенных мест
+  Future<List<PlaceLocalDto>> getVisitedPlaces() async {
+    final localVisitedPlaces = await placesStorage.readVisitedPlaces();
+    final result = _compareAndSortPlaces(
+      incomingPlaces: localVisitedPlaces,
+      target: _visitedPlaces,
+    );
+    _visitedPlaces
+      ..clear()
+      ..addAll([...result]);
+
+    return result;
+  }
+
+  /// Вставка или обновление места в списке избранных
+  Future<void> upsertPlaceInVisitedPlaces(Place place) async =>
+      placesStorage.upsertInVisitedPlaces(PlaceMapper.toLocalDto(place));
+
+  /// Обвновляем локальный список мест с учетом предыдущей сортировки
+  /// (нужно для корректной работы функционала изменения порядка мест в списке)
+  List<PlaceLocalDto> _compareAndSortPlaces({
     required List<PlaceLocalDto> incomingPlaces,
     required List<PlaceLocalDto> target,
   }) {
-    /// Обвновляем локальный список избранных мест с учетом предыдущей сортировки
-    /// (нужно для корректной работы функционала изменения порядка мест в списке)
-    target.removeWhere(
-      (e) => incomingPlaces.indexWhere((l) => l.id == e.id) == -1,
-    );
+    final result = [...target]..removeWhere(
+        (e) => incomingPlaces.indexWhere((l) => l.id == e.id) == -1,
+      );
     for (final localPlace in incomingPlaces) {
-      final index = target.indexWhere((e) => e.id == localPlace.id);
+      final index = result.indexWhere((e) => e.id == localPlace.id);
       if (index == -1) {
-        target.add(localPlace);
+        result.add(localPlace);
       } else {
-        target[index] = localPlace;
+        result[index] = localPlace;
       }
     }
+
+    return result;
   }
 
   /// Метод для запрсоа списка мест и сформированным ранее боди [requestBody]

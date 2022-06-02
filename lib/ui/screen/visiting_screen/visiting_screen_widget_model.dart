@@ -93,24 +93,18 @@ class VisitingScreenWidgetModel
   }
 
   @override
-  void onChangeOrderInVisited(int fromIndex, int toIndex) {
-    model.changeOrderInVisited(
+  Future<void> onChangeOrderInVisited(int fromIndex, int toIndex) async {
+    await model.changeOrderInVisited(
       fromIndex: fromIndex,
       toIndex: toIndex,
     );
-    _requestForVisitedPlaces();
+    await _requestForVisitedPlaces();
   }
 
   @override
   Future<void> onDeleteFavoritePlacePressed(Place place) async {
     await model.removePlaceFromFavorites(place: place);
     await _requestForFavoritesPlaces();
-  }
-
-  @override
-  void onDeleteVisitedPlacePressed(Place place) {
-    model.removePlaceFromVisited(place: place);
-    _requestForVisitedPlaces();
   }
 
   @override
@@ -129,7 +123,13 @@ class VisitingScreenWidgetModel
     DateTimeUtils.pickPlanDate(context).then((planDate) async {
       if (planDate != null) {
         await model.setPlacePlanDate(place: place, planDate: planDate);
-        await _requestForFavoritesPlaces();
+
+        /// Временно добавляю место в список посещенных по событию выбора даты
+        /// для теестирования
+        await model.addPlaceInVisited(place: place);
+
+        // await _requestForFavoritesPlaces();
+        _requestForPlaces();
       }
     });
   }
@@ -156,7 +156,7 @@ class VisitingScreenWidgetModel
   Future<void> _requestForVisitedPlaces() async {
     _listVisitedPlacesEntityState.loading();
     try {
-      final visitedPlaces = model.visitedPlaces();
+      final visitedPlaces = await model.visitedPlaces();
       _listVisitedPlacesEntityState.content(visitedPlaces);
     } on Exception catch (e) {
       _listVisitedPlacesEntityState.error(e);
@@ -209,9 +209,6 @@ abstract class IVisitingScreenWidgetModel extends IWidgetModel {
 
   /// Обработчик удаления места [place] из списка избранного
   void onDeleteFavoritePlacePressed(Place place);
-
-  /// Обработчик удаления места [place] из списка посещенных мест
-  void onDeleteVisitedPlacePressed(Place place);
 
   /// Обработчик нажатия на карточку места [place]
   void onPlaceCardPressed(Place place);

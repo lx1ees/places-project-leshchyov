@@ -18,7 +18,7 @@ class VisitingScreenModel extends ElementaryModel {
       _placeInteractor.getFavoritePlaces();
 
   /// Получение списка посещенных мест
-  List<Place> visitedPlaces() => _placeInteractor.getVisitedPlaces();
+  Future<List<Place>> visitedPlaces() => _placeInteractor.getVisitedPlaces();
 
   /// Перемещение карточки в списке "Хочу посетить" с индекса
   /// [fromIndex] на индекс [toIndex]
@@ -36,13 +36,13 @@ class VisitingScreenModel extends ElementaryModel {
 
   /// Перемещение карточки в списке "Посещенные места" с индекса
   /// [fromIndex] на индекс [toIndex]
-  void changeOrderInVisited({
+  Future<void> changeOrderInVisited({
     required int fromIndex,
     required int toIndex,
-  }) {
-    final visitedPlaces = _placeInteractor.getVisitedPlaces();
+  }) async {
+    final visitedPlaces = await _placeInteractor.getVisitedPlaces();
 
-    _placeInteractor.movePlaceInVisited(
+    await _placeInteractor.movePlaceInVisited(
       index: toIndex,
       placeToMove: visitedPlaces[fromIndex],
     );
@@ -52,9 +52,9 @@ class VisitingScreenModel extends ElementaryModel {
   Future<void> removePlaceFromFavorites({required Place place}) async =>
       _placeInteractor.changeFavorite(place);
 
-  /// Удаление места [place] из посещенных мест
-  void removePlaceFromVisited({required Place place}) =>
-      _placeInteractor.removePlaceFromVisited(place);
+  /// Добавление места [place] в список посещенных мест
+  Future<void> addPlaceInVisited({required Place place}) async =>
+      _placeInteractor.addPlaceInVisited(place);
 
   /// Планирование даты посещения [planDate] места [place]
   Future<void> setPlacePlanDate({

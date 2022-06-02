@@ -8,7 +8,6 @@ import 'package:places/ui/widget/place_card/place_card_action_buttons.dart';
 class PlaceVisitedCard extends PlaceCard {
   PlaceVisitedCard({
     required Place place,
-    required ValueChanged<Place> onDeletePressed,
     required ValueChanged<Place> onSharePressed,
     required Key key,
     DateTime? dateOfVisit,
@@ -18,9 +17,7 @@ class PlaceVisitedCard extends PlaceCard {
           isVisitable: true,
           isVisited: true,
           dateOfVisit: dateOfVisit,
-          onDelete: onDeletePressed,
           actionButtons: PlaceVisitedCardActionButtons(
-            onDeletePressed: () => onDeletePressed(place),
             onSharePressed: () => onSharePressed(place),
           ),
           onCardTapped: onCardTapped,

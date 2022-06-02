@@ -56,11 +56,9 @@ class _PlaceToVisitCardActionButtonsState
 }
 
 class PlaceVisitedCardActionButtons extends PlaceCardActionButtons {
-  final VoidCallback onDeletePressed;
   final VoidCallback onSharePressed;
 
   const PlaceVisitedCardActionButtons({
-    required this.onDeletePressed,
     required this.onSharePressed,
     Key? key,
   }) : super(key: key);
@@ -86,7 +84,7 @@ class _PlaceVisitedCardActionButtonsState
           ),
         ),
         CustomIconButton(
-          onPressed: widget.onDeletePressed,
+          onPressed: () {},
           icon: Icon(
             Icons.close_rounded,
             color: Theme.of(context).white,

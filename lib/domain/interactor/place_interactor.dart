@@ -14,9 +14,6 @@ class PlaceInteractor {
   /// Список мест для отображения на экране Список мест
   final List<Place> _places = [];
 
-  /// Список мест, которые находятся в Посетил
-  final List<Place> _visitedPlaces = [];
-
   /// Репозиторий списка мест
   final PlaceRepository _repository;
 
@@ -48,12 +45,13 @@ class PlaceInteractor {
 
       final remotePlaces = placeDtos.map(PlaceMapper.fromDto).toList();
       final favoritePlaces = await getFavoritePlaces();
+      final visitedPlaces = await getVisitedPlaces();
 
       /// Получили свежие места от сервера -> обновили их флаги (Избранное, Посетил)
       /// на основе существующего списка мест
       final modifiedRemotePlaces = _compareAndModifyPlaces(
         favoritePlaces: favoritePlaces,
-        visitedPlaces: _visitedPlaces,
+        visitedPlaces: visitedPlaces,
         remotePlaces: remotePlaces,
         cardLook: CardLook.view,
       );
@@ -82,8 +80,10 @@ class PlaceInteractor {
   }
 
   /// Метод получения списка мест, которые находятся в избранном
-  List<Place> getVisitedPlaces() {
-    return _visitedPlaces;
+  Future<List<Place>> getVisitedPlaces() async {
+    final visitedPlacesDtos = await _repository.getVisitedPlaces();
+
+    return visitedPlacesDtos.map(PlaceMapper.fromLocalDto).toList();
   }
 
   /// Метод добавления нового места
@@ -100,10 +100,11 @@ class PlaceInteractor {
       final placeDto = await _repository.getPlace(place.id.toString());
       final updatedPlace = PlaceMapper.fromDto(placeDto);
       final favoritePlaces = await getFavoritePlaces();
+      final visitedPlaces = await getVisitedPlaces();
 
       final modifiedRemotePlaces = _compareAndModifyPlaces(
         favoritePlaces: favoritePlaces,
-        visitedPlaces: _visitedPlaces,
+        visitedPlaces: visitedPlaces,
         remotePlaces: [updatedPlace],
         cardLook: place.cardLook,
       );
@@ -120,16 +121,13 @@ class PlaceInteractor {
       isVisited: true,
       cardLook: CardLook.visited,
     );
-    final favoritePlaces = await getFavoritePlaces();
 
-    if (favoritePlaces.indexWhere((e) => e.id == place.id) == -1) {
-      _visitedPlaces.add(visitedPlace);
+    await _repository.upsertPlaceInVisitedPlaces(visitedPlace);
+    final index = _places.indexOf(place);
+    if (index != -1) {
+      final localPlace = _places[index];
+      _places[index] = localPlace.copyWith(isVisited: true);
     }
-  }
-
-  /// Метод удаления места из списка посещенных
-  void removePlaceFromVisited(Place place) {
-    _visitedPlaces.removeWhere((p) => p.id == place.id);
   }
 
   /// Метод добавления/удаления места в/из избранно-е/го
@@ -157,13 +155,14 @@ class PlaceInteractor {
   /// Метод перемещения картчочки в списке посещенных мест
   /// [index] - позиция, куда переместить
   /// [placeToMove] - объект перемещения
-  void movePlaceInVisited({
+  Future<void> movePlaceInVisited({
     required int index,
     required Place placeToMove,
-  }) {
-    _visitedPlaces
-      ..removeWhere((place) => place.id == placeToMove.id)
-      ..insert(index, placeToMove);
+  }) async {
+    await _repository.movePlaceInVisited(
+      index: index,
+      placeToMove: placeToMove,
+    );
   }
 
   /// Метод для установки даты посещения [planDate] месту из списка избранного

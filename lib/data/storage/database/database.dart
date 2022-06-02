@@ -7,10 +7,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:places/data/storage/database/favorite_places_table.dart';
 import 'package:places/data/storage/database/place_images_table.dart';
 import 'package:places/data/storage/database/search_history_table.dart';
+import 'package:places/data/storage/database/visited_places_table.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [SearchHistoryRequests, PlaceImages, FavoritePlaces])
+@DriftDatabase(tables: [SearchHistoryRequests, PlaceImages, FavoritePlaces, VisitedPlaces])
 class PlacesDatabase extends _$PlacesDatabase {
   @override
   int get schemaVersion => 1;

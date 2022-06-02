@@ -12,6 +12,12 @@ abstract class IPlacesStorage {
 
   /// Удаление избранного места с идентификатором [placeId]
   Future<void> deleteFromFavoritePlaces(int placeId);
+
+  /// Чтение посещенных мест
+  Future<List<PlaceLocalDto>> readVisitedPlaces();
+
+  /// Вставка посещенного места [place]
+  Future<void> upsertInVisitedPlaces(PlaceLocalDto place);
 }
 
 class PlacesStorage extends IPlacesStorage {
@@ -30,7 +36,9 @@ class PlacesStorage extends IPlacesStorage {
 
     for (final place in placesRaw) {
       final urls = urlsRaw
-          .where((e) => e.placeId == place.id)
+          .where((e) =>
+              e.placeId == place.id &&
+              e.table == _database.favoritePlaces.aliasedName)
           .map((e) => e.url)
           .toList();
 
@@ -74,7 +82,11 @@ class PlacesStorage extends IPlacesStorage {
             ),
           );
 
-      await _insertUrls(urls: place.urls, toPlace: place);
+      await _insertUrls(
+        urls: place.urls,
+        toPlace: place,
+        table: _database.favoritePlaces.aliasedName,
+      );
     });
   }
 
@@ -84,19 +96,85 @@ class PlacesStorage extends IPlacesStorage {
           ..where((tbl) => tbl.id.isIn([placeId])))
         .go();
     await (_database.delete(_database.placeImages)
-          ..where((tbl) => tbl.placeId.isIn([placeId])))
+          ..where((tbl) => tbl.placeId.isIn([placeId]))
+          ..where((tbl) => tbl.table.isIn([_database.placeImages.aliasedName])))
         .go();
+  }
+
+  @override
+  Future<List<PlaceLocalDto>> readVisitedPlaces() async {
+    final result = <PlaceLocalDto>[];
+
+    final placesRaw = await _database.select(_database.visitedPlaces).get();
+    final urlsRaw = await _database.select(_database.placeImages).get();
+
+    for (final place in placesRaw) {
+      final urls = urlsRaw
+          .where((e) =>
+              e.placeId == place.id &&
+              e.table == _database.visitedPlaces.aliasedName)
+          .map((e) => e.url)
+          .toList();
+
+      result.add(
+        PlaceLocalDto(
+          id: place.id,
+          lat: place.lat,
+          lng: place.lng,
+          name: place.name,
+          placeType: place.placeType,
+          description: place.description,
+          urls: urls,
+          cardLook: place.cardLook,
+          isInFavorites: place.isInFavorites,
+          isVisited: place.isVisited,
+          distance: place.distance,
+          planDate: place.planDate,
+        ),
+      );
+    }
+
+    return result;
+  }
+
+  @override
+  Future<void> upsertInVisitedPlaces(PlaceLocalDto place) {
+    return _database.transaction(() async {
+      await _database.into(_database.visitedPlaces).insertOnConflictUpdate(
+            VisitedPlacesCompanion.insert(
+              id: Value(place.id),
+              lat: place.lat,
+              lng: place.lng,
+              name: place.name,
+              placeType: place.placeType,
+              description: place.description,
+              isInFavorites: place.isInFavorites,
+              isVisited: place.isVisited,
+              cardLook: place.cardLook,
+              distance: Value(place.distance),
+              planDate: Value(place.planDate),
+            ),
+          );
+
+      await _insertUrls(
+        urls: place.urls,
+        toPlace: place,
+        table: _database.visitedPlaces.aliasedName,
+      );
+    });
   }
 
   Future<void> _insertUrls({
     required List<String> urls,
     required PlaceLocalDto toPlace,
+    required String table,
   }) async {
     await _database.batch((batch) {
-      batch.insertAll(
+      batch.insertAllOnConflictUpdate(
         _database.placeImages,
         urls.map(
           (url) => PlaceImagesCompanion.insert(
+            table: table,
             placeId: toPlace.id,
             url: url,
           ),
