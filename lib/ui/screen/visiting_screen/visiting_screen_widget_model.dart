@@ -84,12 +84,12 @@ class VisitingScreenWidgetModel
   }
 
   @override
-  void onChangeOrderInFavorites(int fromIndex, int toIndex) {
-    model.changeOrderInFavorites(
+  Future<void> onChangeOrderInFavorites(int fromIndex, int toIndex) async {
+    await model.changeOrderInFavorites(
       fromIndex: fromIndex,
       toIndex: toIndex,
     );
-    _requestForFavoritesPlaces();
+    await _requestForFavoritesPlaces();
   }
 
   @override
@@ -102,9 +102,9 @@ class VisitingScreenWidgetModel
   }
 
   @override
-  void onDeleteFavoritePlacePressed(Place place) {
-    model.removePlaceFromFavorites(place: place);
-    _requestForFavoritesPlaces();
+  Future<void> onDeleteFavoritePlacePressed(Place place) async {
+    await model.removePlaceFromFavorites(place: place);
+    await _requestForFavoritesPlaces();
   }
 
   @override
@@ -126,10 +126,10 @@ class VisitingScreenWidgetModel
 
   @override
   void onPlanPlacePressed(Place place) {
-    DateTimeUtils.pickPlanDate(context).then((planDate) {
+    DateTimeUtils.pickPlanDate(context).then((planDate) async {
       if (planDate != null) {
-        model.setPlacePlanDate(place: place, planDate: planDate);
-        _requestForFavoritesPlaces();
+        await model.setPlacePlanDate(place: place, planDate: planDate);
+        await _requestForFavoritesPlaces();
       }
     });
   }
@@ -145,7 +145,7 @@ class VisitingScreenWidgetModel
     _listFavoritePlacesEntityState.loading();
 
     try {
-      final favoritePlaces = model.favoritePlaces();
+      final favoritePlaces = await model.favoritePlaces();
       _listFavoritePlacesEntityState.content(favoritePlaces);
     } on Exception catch (e) {
       _listFavoritePlacesEntityState.error(e);

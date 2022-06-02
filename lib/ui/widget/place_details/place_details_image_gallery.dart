@@ -24,7 +24,7 @@ class _PlaceDetailsImageGalleryState extends State<PlaceDetailsImageGallery> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         /// Вычисляем ширину индикатора один раз при отрисовке первого кадра
         _indicatorWidth = _calculateIndicatorWidth(

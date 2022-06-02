@@ -14,9 +14,6 @@ class PlaceInteractor {
   /// Список мест для отображения на экране Список мест
   final List<Place> _places = [];
 
-  /// Список мест, которые находятся в Избранном
-  final List<Place> _favoritePlaces = [];
-
   /// Список мест, которые находятся в Посетил
   final List<Place> _visitedPlaces = [];
 
@@ -50,11 +47,12 @@ class PlaceInteractor {
       placeDtos.sort((a, b) => a.distance?.compareTo(b.distance ?? 0) ?? -1);
 
       final remotePlaces = placeDtos.map(PlaceMapper.fromDto).toList();
+      final favoritePlaces = await getFavoritePlaces();
 
       /// Получили свежие места от сервера -> обновили их флаги (Избранное, Посетил)
       /// на основе существующего списка мест
       final modifiedRemotePlaces = _compareAndModifyPlaces(
-        favoritePlaces: _favoritePlaces,
+        favoritePlaces: favoritePlaces,
         visitedPlaces: _visitedPlaces,
         remotePlaces: remotePlaces,
         cardLook: CardLook.view,
@@ -67,6 +65,8 @@ class PlaceInteractor {
       return _places;
     } on NetworkException catch (_) {
       rethrow;
+    } on Exception catch (_) {
+      rethrow;
     }
   }
 
@@ -75,8 +75,10 @@ class PlaceInteractor {
   List<Place> getLocalPlaces() => _places;
 
   /// Метод получения списка мест, которые находятся в избранном
-  List<Place> getFavoritePlaces() {
-    return _favoritePlaces;
+  Future<List<Place>> getFavoritePlaces() async {
+    final favoritePlacesDtos = await _repository.getFavoritePlaces();
+
+    return favoritePlacesDtos.map(PlaceMapper.fromLocalDto).toList();
   }
 
   /// Метод получения списка мест, которые находятся в избранном
@@ -97,9 +99,10 @@ class PlaceInteractor {
     try {
       final placeDto = await _repository.getPlace(place.id.toString());
       final updatedPlace = PlaceMapper.fromDto(placeDto);
+      final favoritePlaces = await getFavoritePlaces();
 
       final modifiedRemotePlaces = _compareAndModifyPlaces(
-        favoritePlaces: _favoritePlaces,
+        favoritePlaces: favoritePlaces,
         visitedPlaces: _visitedPlaces,
         remotePlaces: [updatedPlace],
         cardLook: place.cardLook,
@@ -112,12 +115,14 @@ class PlaceInteractor {
   }
 
   /// Метод добавления места в список посещенных
-  void addPlaceInVisited(Place place) {
+  Future<void> addPlaceInVisited(Place place) async {
     final visitedPlace = place.copyWith(
       isVisited: true,
       cardLook: CardLook.visited,
     );
-    if (_favoritePlaces.indexWhere((e) => e.id == place.id) == -1) {
+    final favoritePlaces = await getFavoritePlaces();
+
+    if (favoritePlaces.indexWhere((e) => e.id == place.id) == -1) {
       _visitedPlaces.add(visitedPlace);
     }
   }
@@ -128,24 +133,25 @@ class PlaceInteractor {
   }
 
   /// Метод добавления/удаления места в/из избранно-е/го
-  void changeFavorite(Place place) {
+  Future<void> changeFavorite(Place place) async {
     if (place.isInFavorites) {
-      _removePlaceFromFavorites(place);
+      await _removePlaceFromFavorites(place);
     } else {
-      _addPlaceInFavorites(place);
+      await _addPlaceInFavorites(place);
     }
   }
 
-  /// Метод перемещения картчочки в списке избранного
+  /// Метод перемещения карточки в списке избранного
   /// [index] - позиция, куда переместить
   /// [placeToMove] - объект перемещения
-  void movePlaceInFavorites({
+  Future<void> movePlaceInFavorites({
     required int index,
     required Place placeToMove,
-  }) {
-    _favoritePlaces
-      ..removeWhere((place) => place.id == placeToMove.id)
-      ..insert(index, placeToMove);
+  }) async {
+    await _repository.movePlaceInFavorites(
+      index: index,
+      placeToMove: placeToMove,
+    );
   }
 
   /// Метод перемещения картчочки в списке посещенных мест
@@ -161,14 +167,12 @@ class PlaceInteractor {
   }
 
   /// Метод для установки даты посещения [planDate] месту из списка избранного
-  void setPlanDate({
+  Future<void> setPlanDate({
     required Place place,
     required DateTime? planDate,
-  }) {
-    final indexFavorite = _favoritePlaces.indexOf(place);
-    if (indexFavorite != -1) {
-      _favoritePlaces[indexFavorite] = place.copyWith(planDate: planDate);
-    }
+  }) async {
+    final newPlace = place.copyWith(planDate: planDate);
+    await _repository.upsertPlaceInFavoritePlaces(newPlace);
   }
 
   /// Метод для сохранения значений фильтра [filtersManager] в локальное хранилище
@@ -193,14 +197,13 @@ class PlaceInteractor {
   }
 
   /// Метод добавления места в список избранного
-  void _addPlaceInFavorites(Place place) {
+  Future<void> _addPlaceInFavorites(Place place) async {
     final favoritePlace = place.copyWith(
       isInFavorites: true,
       cardLook: CardLook.toVisit,
     );
-    if (_favoritePlaces.indexWhere((e) => e.id == place.id) == -1) {
-      _favoritePlaces.add(favoritePlace);
-    }
+
+    await _repository.upsertPlaceInFavoritePlaces(favoritePlace);
     final index = _places.indexOf(place);
     if (index != -1) {
       final localPlace = _places[index];
@@ -209,9 +212,8 @@ class PlaceInteractor {
   }
 
   /// Метод удаления места из списка избраннога
-  void _removePlaceFromFavorites(Place place) {
-    _favoritePlaces
-        .removeWhere((favoritePlace) => favoritePlace.id == place.id);
+  Future<void> _removePlaceFromFavorites(Place place) async {
+    await _repository.deleteFromFavoritePlaces(place.id);
     final index = _places.indexOf(place);
     if (index != -1) {
       final localPlace = _places[index];

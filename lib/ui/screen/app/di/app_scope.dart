@@ -1,6 +1,9 @@
 import 'package:elementary/elementary.dart';
 import 'package:places/data/api/network_service.dart';
 import 'package:places/data/repository/place_repository.dart';
+import 'package:places/data/storage/database/database.dart';
+import 'package:places/data/storage/places_storage.dart';
+import 'package:places/data/storage/search_history_storage.dart';
 import 'package:places/data/storage/shared_preferences_storage.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/interactor/search_interactor.dart';
@@ -19,6 +22,8 @@ class AppScope implements IAppScope {
 
   late final SettingsManager _settingsManager;
 
+  late final PlacesDatabase _database;
+
   @override
   ErrorHandler get errorHandler => _errorHandler;
 
@@ -35,11 +40,14 @@ class AppScope implements IAppScope {
   ThemeWrapper get themeWrapper => _themeWrapper;
 
   AppScope() {
+    _database = PlacesDatabase();
     final preferencesStorage = SharedPreferencesStorage();
+    final searchHistoryStorage = SearchHistoryStorage(database: _database);
     final placeRepository = PlaceRepository(
       networkService: NetworkService(),
       filtersStorage: preferencesStorage,
-      searchHistoryStorage: preferencesStorage,
+      searchHistoryStorage: searchHistoryStorage,
+      placesStorage: PlacesStorage(database: _database),
     );
     _errorHandler = DefaultErrorHandler();
     _themeWrapper = ThemeWrapper();
@@ -50,6 +58,11 @@ class AppScope implements IAppScope {
       repository: placeRepository,
     );
     _settingsManager = SettingsManager(settingsStorage: preferencesStorage);
+  }
+
+  @override
+  void dispose() {
+    _database.close();
   }
 }
 
@@ -69,4 +82,7 @@ abstract class IAppScope {
 
   /// Бизнес-логика фичи Настройки
   SettingsManager get settingsManager;
+
+  /// Обработчик очистки ресурсов (нужен для вызова очистки БД)
+  void dispose();
 }

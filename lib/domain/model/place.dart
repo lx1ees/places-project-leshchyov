@@ -2,7 +2,21 @@ import 'package:equatable/equatable.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place_type.dart';
 
-enum CardLook { view, toVisit, visited }
+enum CardLook {
+  view('view'),
+  toVisit('toVisit'),
+  visited('visited');
+
+  final String literal;
+
+  const CardLook(this.literal);
+
+  /// Получение экземпляра класса по строковому значению
+  static CardLook byLiteral(String literal) {
+    return CardLook.values
+        .firstWhere((e) => e.literal == literal, orElse: () => CardLook.view);
+  }
+}
 
 /// Класс, описывающий модель данных достопримечательности
 /// [id] - идентификатор
@@ -54,13 +68,14 @@ class Place extends Equatable {
   });
 
   Place copyWith({
+    int? id,
     bool? isInFavorites,
     bool? isVisited,
     DateTime? planDate,
     CardLook? cardLook,
   }) {
     return Place(
-      id: id,
+      id: id ?? this.id,
       name: name,
       point: point,
       description: description,

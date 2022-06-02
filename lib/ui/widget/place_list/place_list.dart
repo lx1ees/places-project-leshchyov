@@ -38,7 +38,7 @@ class PlaceList extends StatelessWidget {
 
     return OrientationBuilder(builder: (context, orientation) {
       final isKeyboardOpened =
-          (WidgetsBinding.instance?.window.viewInsets.bottom ?? 0.0) > 0.0;
+          WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
 
       return orientation == Orientation.landscape && !isKeyboardOpened
           ? Center(

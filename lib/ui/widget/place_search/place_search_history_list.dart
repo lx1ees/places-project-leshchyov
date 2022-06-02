@@ -50,7 +50,7 @@ class PlaceSearchHistoryList extends StatelessWidget {
             ),
             Flexible(
               child: Scrollbar(
-                isAlwaysShown: true,
+                thumbVisibility: true,
                 controller: scrollController,
                 child: ListView.separated(
                   itemCount: historyList.length,

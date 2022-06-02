@@ -36,7 +36,7 @@ class _PlaceListScreenSliverAppBarState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       /// При отрисовке первого кадра инициализируем ограничения заголовка аппбара
       /// и его контейнера
       _initConstraints(context);
