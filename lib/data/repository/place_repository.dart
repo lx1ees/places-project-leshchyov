@@ -5,11 +5,15 @@ import 'package:places/constants/app_constants.dart';
 import 'package:places/data/api/exceptions/network_exception.dart';
 import 'package:places/data/api/network_service.dart';
 import 'package:places/data/model/place_dto.dart';
+import 'package:places/data/model/place_local_dto.dart';
 import 'package:places/data/model/places_filter_request_dto.dart';
+import 'package:places/data/repository/place_mapper.dart';
 import 'package:places/data/storage/filters_storage.dart';
+import 'package:places/data/storage/places_storage.dart';
 import 'package:places/data/storage/search_history_storage.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/model/location_point.dart';
+import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type_filter_entity.dart';
 
 /// Репозиторий мест
@@ -17,11 +21,19 @@ class PlaceRepository {
   final NetworkService networkService;
   final IFiltersStorage filtersStorage;
   final ISearchHistoryStorage searchHistoryStorage;
+  final IPlacesStorage placesStorage;
+
+  /// Список мест, которые находятся в Избранном
+  final List<PlaceLocalDto> _favoritePlaces = [];
+
+  /// Список мест, которые находятся в Посещенном
+  final List<PlaceLocalDto> _visitedPlaces = [];
 
   PlaceRepository({
     required this.networkService,
     required this.filtersStorage,
     required this.searchHistoryStorage,
+    required this.placesStorage,
   });
 
   /// Метод для запроса из сети списка мест с фильтрами из [filtersManager] и
@@ -185,7 +197,92 @@ class PlaceRepository {
     return searchHistoryStorage.writeSearchHistory(searchHistory);
   }
 
-  /// Метод для запрсоа списка мест и сорфмированным ранее боди [requestBody]
+  /// Метод перемещения карточки в списке избранного
+  /// [index] - позиция, куда переместить
+  /// [placeToMove] - объект перемещения
+  Future<void> movePlaceInFavorites({
+    required int index,
+    required Place placeToMove,
+  }) async {
+    _favoritePlaces
+      ..removeWhere((place) => place.id == placeToMove.id)
+      ..insert(index, PlaceMapper.toLocalDto(placeToMove));
+  }
+
+  /// Получение списка избранных мест
+  Future<List<PlaceLocalDto>> getFavoritePlaces() async {
+    final localFavoritePlaces = await placesStorage.readFavoritePlaces();
+    final result = _compareAndSortPlaces(
+      incomingPlaces: localFavoritePlaces,
+      target: _favoritePlaces,
+    );
+    _favoritePlaces
+      ..clear()
+      ..addAll([...result]);
+
+    return result;
+  }
+
+  /// Вставка или обновление места в списке избранных
+  Future<void> upsertPlaceInFavoritePlaces(Place place) async =>
+      placesStorage.upsertInFavoritePlaces(PlaceMapper.toLocalDto(place));
+
+  /// Удаление места из списка избранных
+  Future<void> deleteFromFavoritePlaces(int placeId) async =>
+      placesStorage.deleteFromFavoritePlaces(placeId);
+
+  /// Метод перемещения карточки в списке помещенных мест
+  /// [index] - позиция, куда переместить
+  /// [placeToMove] - объект перемещения
+  Future<void> movePlaceInVisited({
+    required int index,
+    required Place placeToMove,
+  }) async {
+    _visitedPlaces
+      ..removeWhere((place) => place.id == placeToMove.id)
+      ..insert(index, PlaceMapper.toLocalDto(placeToMove));
+  }
+
+  /// Получение списка посещенных мест
+  Future<List<PlaceLocalDto>> getVisitedPlaces() async {
+    final localVisitedPlaces = await placesStorage.readVisitedPlaces();
+    final result = _compareAndSortPlaces(
+      incomingPlaces: localVisitedPlaces,
+      target: _visitedPlaces,
+    );
+    _visitedPlaces
+      ..clear()
+      ..addAll([...result]);
+
+    return result;
+  }
+
+  /// Вставка или обновление места в списке избранных
+  Future<void> upsertPlaceInVisitedPlaces(Place place) async =>
+      placesStorage.upsertInVisitedPlaces(PlaceMapper.toLocalDto(place));
+
+  /// Обвновляем локальный список мест с учетом предыдущей сортировки
+  /// (нужно для корректной работы функционала изменения порядка мест в списке)
+  List<PlaceLocalDto> _compareAndSortPlaces({
+    required List<PlaceLocalDto> incomingPlaces,
+    required List<PlaceLocalDto> target,
+  }) {
+    final result = [...target]..removeWhere(
+        (e) => incomingPlaces.indexWhere((l) => l.id == e.id) == -1,
+      );
+    for (final localPlace in incomingPlaces) {
+      final index = result.indexWhere((e) => e.id == localPlace.id);
+      if (index == -1) {
+        result.add(localPlace);
+      } else {
+        result[index] = localPlace;
+      }
+    }
+
+    return result;
+  }
+
+  /// Метод для запрсоа списка мест и сформированным ранее боди [requestBody]
   Future<List<PlaceDto>> _getFilteredPlaces({
     required PlacesFilterRequestDto requestBody,
   }) async {

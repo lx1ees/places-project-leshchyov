@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [T] - класса-обертки с зависимостями
 typedef ScopeFactory<T> = T Function();
 
 /// Обертка над виджетом с предоставлением класса с зависимости вниз по дереву
-class DiScope<T> extends StatefulWidget {
+class DiScope<T extends IAppScope> extends StatefulWidget {
   final ScopeFactory<T> factory;
 
   final Widget child;
@@ -20,7 +21,7 @@ class DiScope<T> extends StatefulWidget {
   State<DiScope> createState() => _DiScopeState<T>();
 }
 
-class _DiScopeState<T> extends State<DiScope<T>> {
+class _DiScopeState<T extends IAppScope> extends State<DiScope<T>> {
   late final T scope;
 
   @override
@@ -34,6 +35,7 @@ class _DiScopeState<T> extends State<DiScope<T>> {
     return Provider<T>(
       create: (_) => scope,
       child: widget.child,
+      dispose: (_, T) => T.dispose(),
     );
   }
 }

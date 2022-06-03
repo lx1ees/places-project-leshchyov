@@ -17,11 +17,15 @@ class PlaceDetailsScreenModel extends ElementaryModel {
       _placeInteractor.getPlaceDetails(place: place);
 
   /// Метод добавления/удаления места в/из избранно-е/го
-  void changeFavorite(Place place) => _placeInteractor.changeFavorite(place);
+  Future<void> changeFavorite(Place place) =>
+      _placeInteractor.changeFavorite(place);
 
   /// Планирование даты посещения [planDate] места [place]
-  void setPlacePlanDate({required Place place, required DateTime planDate}) {
-    _placeInteractor.setPlanDate(
+  Future<void> setPlacePlanDate({
+    required Place place,
+    required DateTime planDate,
+  }) async {
+    await _placeInteractor.setPlanDate(
       place: place,
       planDate: planDate,
     );

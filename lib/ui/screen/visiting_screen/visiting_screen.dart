@@ -101,7 +101,6 @@ class VisitingScreen extends ElementaryWidget<IVisitingScreenWidgetModel> {
                           place: place,
                           dateOfVisit: place.planDate,
                           onSharePressed: (_) {},
-                          onDeletePressed: wm.onDeleteVisitedPlacePressed,
                           onCardTapped: wm.onPlaceCardPressed,
                         ),
                       )

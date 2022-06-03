@@ -72,42 +72,33 @@ class PlaceDetailsWidgetModel
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // /// Даем возможность евентлупу сначала выполнить события отрисовки анимации hero,
-    // /// а потом после его текущей итерации выполняем запрос в сеть за инфой по месту.
-    // /// Иначе анимация hero не успевает проиграться
-    // Future.delayed(Duration.zero, _requestForPlaceDetails);
-  }
-
-  @override
   void onPlanPlacePressed(Place place) {
-    DateTimeUtils.pickPlanDate(context).then((planDate) {
+    DateTimeUtils.pickPlanDate(context).then((planDate) async {
       if (planDate != null) {
-        model.setPlacePlanDate(place: place, planDate: planDate);
-        _requestForPlaceDetails();
+        await model.setPlacePlanDate(place: place, planDate: planDate);
+        await _requestForPlaceDetails();
       }
     });
   }
 
   @override
-  void onAddPlaceInFavoritesPressed() {
+  Future<void> onAddPlaceInFavoritesPressed() async {
     final currentPlace = _currentPlaceState.value?.data;
     if (currentPlace == null) return;
 
-    model.changeFavorite(currentPlace);
-    _requestForPlaceDetails();
+    await model.changeFavorite(currentPlace);
+    await _requestForPlaceDetails();
   }
 
   @override
   void onSharePlacePressed(Place place) {}
 
-  /// Обновление места (временная мера пока нет стейтменеджмента)
+  /// Обновление места
   Future<void> _requestForPlaceDetails() async {
     final currentPlace = _currentPlaceState.value?.data;
 
     if (currentPlace == null) return;
+
     /// Выполняем лоадинг отложенно через 1 секунду (на случай, если данные
     /// придут мгновенно, чтобы не показывать лоадер и не создать эффект мерцания)
     deffered(_currentPlaceState.loading);

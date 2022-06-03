@@ -116,7 +116,7 @@ abstract class AppRoutes {
     return navigators[mainNavigatorKey]?.currentState?.pushReplacementNamed(
               HomeScreen.routeName,
             ) ??
-        Future.value(null);
+        Future.value();
   }
 
   static Future<Object?> navigateToCategoriesScreen({
@@ -127,7 +127,7 @@ abstract class AppRoutes {
               SelectPlaceTypeScreen.routeName,
               arguments: selectedPlaceType,
             ) ??
-        Future.value(null);
+        Future.value();
   }
 
   static Future<void> navigateToAddNewPlaceScreen({
@@ -136,7 +136,7 @@ abstract class AppRoutes {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               AddPlaceScreen.routeName,
             ) ??
-        Future.value(null);
+        Future.value();
   }
 
   static Future<void> navigateToFiltersScreen({
@@ -145,7 +145,7 @@ abstract class AppRoutes {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               FiltersScreen.routeName,
             ) ??
-        Future.value(null);
+        Future.value();
   }
 
   static Future<void> navigateToPlaceDetailsScreen({
@@ -156,7 +156,7 @@ abstract class AppRoutes {
               PlaceDetailsScreen.routeName,
               arguments: place,
             ) ??
-        Future.value(null);
+        Future.value();
   }
 
   static Future<void> navigateToSearchScreen({
@@ -165,7 +165,7 @@ abstract class AppRoutes {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed(
               PlaceSearchScreen.routeName,
             ) ??
-        Future.value(null);
+        Future.value();
   }
 
   static Future<void> navigateToOnboardingScreen({
@@ -176,6 +176,6 @@ abstract class AppRoutes {
               OnboardingScreen.routeName,
               arguments: fromLaunch,
             ) ??
-        Future.value(null);
+        Future.value();
   }
 }

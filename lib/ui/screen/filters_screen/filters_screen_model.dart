@@ -30,6 +30,9 @@ class FiltersScreenModel extends ElementaryModel {
     } on NetworkException catch (e) {
       handleError(e);
       rethrow;
+    } on Exception catch (e){
+      handleError(e);
+      rethrow;
     }
   }
 
