@@ -169,7 +169,6 @@ class PlaceSearchScreenWidgetModel
       final foundPlaces = await model.searchForPlaces(
         filtersManager: filtersManager,
         searchString: searchString,
-        currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
       );
       _foundPlacesEntityState.content(foundPlaces);
     } on Exception catch (e) {

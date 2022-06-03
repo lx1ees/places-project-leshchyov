@@ -21,6 +21,8 @@ abstract class AppStrings {
       'Что-то пошло не так.\nПопробуйте позже.';
   static const String errorWhileAddingPlace =
       'Возникла ошибка при добавлении места. Проверьте интернет-соединение';
+  static const String errorLocationPermissionDenied =
+      'Предоставьте разрешение на местоположение, чтобы мы знали, какие поблизости с вами есть места :)';
 
   /// Тексты карточки и окна детальной информации достопримечательности
   static const String placeShortDescriptionMock = 'Закрыто до 9:00';
@@ -35,6 +37,8 @@ abstract class AppStrings {
       'Отмечайте понравившиеся\nместа и они появятся здесь.';
   static const String placeholderNoVisitedPlacesText =
       'Завершите маршрут,\nчтобы место попало сюда.';
+  static const String placeholderNoPlacesText =
+      'Измените фильтры\nили добавьте новое место';
   static const String datePickerHelpText = 'Запланируйте дату визита';
   static const String datePickerFieldLabelText = 'Введите дату';
 
@@ -57,6 +61,9 @@ abstract class AppStrings {
   static const String placeTypeFiltersTitle = 'КАТЕГОРИИ';
   static const String distanceFilterTitle = 'Расстояние';
   static const String showFiltered = 'ПОКАЗАТЬ';
+
+  /// Тексты окна с картой
+  static const String mapScreenAppBarTitle = 'Карта';
 
   /// Тексты окна с настройками
   static const String settingsScreenAppBarTitle = 'Настройки';

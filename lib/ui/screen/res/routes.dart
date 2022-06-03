@@ -7,6 +7,8 @@ import 'package:places/ui/screen/add_place_screen/add_place_screen_widget_model.
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_widget_model.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
+import 'package:places/ui/screen/map_screen/map_screen.dart';
+import 'package:places/ui/screen/map_screen/map_screen_widget_model.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen_widget_model.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
@@ -40,6 +42,9 @@ abstract class AppRoutes {
       bottomNavigationRoutes = {
     PlaceListScreen.routeName: (context) => const PlaceListScreen(
           widgetModelFactory: placeListScreenWidgetModelFactory,
+        ),
+    MapScreen.routeName: (context) => const MapScreen(
+          widgetModelFactory: mapScreenWidgetModelFactory,
         ),
     VisitingScreen.routeName: (_) => const VisitingScreen(
           widgetModelFactory: visitingScreenWidgetModelFactory,

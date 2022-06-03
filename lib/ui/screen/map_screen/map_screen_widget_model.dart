@@ -1,38 +1,36 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:places/constants/app_strings.dart';
-import 'package:places/constants/app_typography.dart';
+import 'package:places/constants/app_constants.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
-import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
-import 'package:places/ui/screen/place_list_screen/place_list_screen_model.dart';
+import 'package:places/ui/screen/map_screen/map_screen.dart';
+import 'package:places/ui/screen/map_screen/map_screen_model.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/utils/deffered_execution_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-/// Фабрика для [PlaceListScreenWidgetModel]
-PlaceListScreenWidgetModel placeListScreenWidgetModelFactory(
+/// Фабрика для [MapScreenWidgetModel]
+MapScreenWidgetModel mapScreenWidgetModelFactory(
   BuildContext context,
 ) {
   final dependencies = context.read<IAppScope>();
-  final model = PlaceListScreenModel(
+  final model = MapScreenModel(
     errorHandler: dependencies.errorHandler,
     placeInteractor: dependencies.placeInteractor,
   );
 
-  return PlaceListScreenWidgetModel(
+  return MapScreenWidgetModel(
     themeWrapper: dependencies.themeWrapper,
     model: model,
   );
 }
 
-/// Виджет-модель для [PlaceListScreenModel]
-class PlaceListScreenWidgetModel
-    extends WidgetModel<PlaceListScreen, PlaceListScreenModel>
+/// Виджет-модель для [MapScreenModel]
+class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
     with DefferedExecutionProvider
-    implements IPlaceListScreenWidgetModel {
+    implements IMapScreenWidgetModel {
   /// Контроллер прокрутки списка
   final ScrollController _scrollController = ScrollController();
 
@@ -49,7 +47,7 @@ class PlaceListScreenWidgetModel
   final _listPlacesEntityState = EntityStateNotifier<List<Place>>();
 
   @override
-  ColorScheme get colorScheme => _themeWrapper.getTheme(context).colorScheme;
+  ColorScheme get colorScheme => _colorScheme;
 
   @override
   ThemeData get theme => _theme;
@@ -61,8 +59,8 @@ class PlaceListScreenWidgetModel
   ListenableState<EntityState<List<Place>>> get listPlacesState =>
       _listPlacesEntityState;
 
-  PlaceListScreenWidgetModel({
-    required PlaceListScreenModel model,
+  MapScreenWidgetModel({
+    required MapScreenModel model,
     required ThemeWrapper themeWrapper,
   })  : _themeWrapper = themeWrapper,
         super(model);
@@ -73,7 +71,7 @@ class PlaceListScreenWidgetModel
     _theme = _themeWrapper.getTheme(context);
     _colorScheme = _theme.colorScheme;
     _listPlacesEntityState.content([]);
-    _updateCurrentLocationAndRequestForPlaces();
+    _requestForPlaces();
   }
 
   @override
@@ -97,40 +95,13 @@ class PlaceListScreenWidgetModel
   @override
   void onSearchPressed() => _openSearchScreen();
 
-  Future<void> _updateCurrentLocationAndRequestForPlaces() async {
-    await _updateCurrentLocation();
-    await _requestForPlaces();
-  }
+  @override
+  void onMapCreated(YandexMapController mapController) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-  Future<void> _updateCurrentLocation() async {
-    try {
-      await model.updateCurrentLocation();
-    } on PermissionDeniedException catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppStrings.errorLocationPermissionDenied,
-            style: AppTypography.smallTextStyle.copyWith(
-              color: colorScheme.onSurface,
-            ),
-          ),
-          backgroundColor: colorScheme.surface,
-          action: SnackBarAction(
-            label: 'Разрешить',
-            textColor: colorScheme.secondary,
-            onPressed: _onRequestForLocationPermission,
-          ),
-        ),
-      );
-    }
-  }
-
-  Future<void> _onRequestForLocationPermission() async {
-    final permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.always ||
-        permission == LocationPermission.whileInUse) {
-      await _requestForPlaces();
-    }
+    mapController.setMapStyle(
+      isDark ? AppConstants.mapDarkStyle : AppConstants.mapStyle,
+    );
   }
 
   /// Получение списка мест из модели
@@ -145,7 +116,6 @@ class PlaceListScreenWidgetModel
         _listPlacesEntityState.content(places);
       }
     } on Exception catch (e) {
-      cancelDeffered();
       _listPlacesEntityState.error(e);
     }
   }
@@ -180,7 +150,7 @@ class PlaceListScreenWidgetModel
   }
 }
 
-abstract class IPlaceListScreenWidgetModel extends IWidgetModel {
+abstract class IMapScreenWidgetModel extends IWidgetModel {
   /// Цветовая схема текущей темы приложения
   ColorScheme get colorScheme;
 
@@ -208,4 +178,9 @@ abstract class IPlaceListScreenWidgetModel extends IWidgetModel {
 
   /// Обработчик нажатия на строку поиска
   void onSearchPressed();
+
+  /// ----------
+
+  /// Обработчик создания карты
+  void onMapCreated(YandexMapController mapController);
 }

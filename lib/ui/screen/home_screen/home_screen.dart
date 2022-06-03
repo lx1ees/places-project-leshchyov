@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const CustomDivider(),
           BottomNavigationBar(
             currentIndex: _selectedIndex,
+            type: BottomNavigationBarType.fixed,
             onTap: _onNavigationItemTapped,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -54,6 +55,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 activeIcon: SvgPicture.asset(
                   AppAssets.listFullIcon,
+                  color: bottomNavigationBarTheme.selectedItemColor,
+                ),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  AppAssets.mapIcon,
+                  color: bottomNavigationBarTheme.unselectedItemColor,
+                ),
+                activeIcon: SvgPicture.asset(
+                  AppAssets.mapFullIcon,
                   color: bottomNavigationBarTheme.selectedItemColor,
                 ),
                 label: '',

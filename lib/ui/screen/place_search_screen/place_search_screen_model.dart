@@ -16,17 +16,15 @@ class PlaceSearchScreenModel extends ElementaryModel {
   })  : _searchInteractor = searchInteractor,
         super(errorHandler: errorHandler);
 
-  /// Поиск мест по запросу [searchString] в текущем местоположении [currentLocation]
+  /// Поиск мест по запросу [searchString] в текущем местоположении
   /// и с учетом фильтров [filtersManager]
   Future<List<Place>> searchForPlaces({
     required FiltersManager filtersManager,
     required String searchString,
-    LocationPoint? currentLocation,
   }) {
     try {
       return _searchInteractor.getSearchResults(
         filtersManager: filtersManager,
-        currentLocation: currentLocation,
         searchString: searchString,
       );
     } on NetworkException catch (e) {

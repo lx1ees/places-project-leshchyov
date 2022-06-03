@@ -22,13 +22,14 @@ class SearchInteractor {
   }) : _repository = repository;
 
   /// Метод для поиска мест по поисковому запросу [searchString], учитывая фильтры
-  /// из [filtersManager] и текущее местоположение [currentLocation]
+  /// из [filtersManager]
   Future<List<Place>> getSearchResults({
     required FiltersManager filtersManager,
     required String searchString,
-    LocationPoint? currentLocation,
   }) async {
     late final List<PlaceDto> placeDtos;
+    final currentLocation = _repository.currentUserLocation;
+
     placeDtos = currentLocation != null
         ? await _repository.getFilteredPlaces(
             locationPoint: currentLocation,

@@ -17,11 +17,9 @@ class PlaceListScreenModel extends ElementaryModel {
         super(errorHandler: errorHandler);
 
   /// Получение списка мест сначала из локального хранилища, после из сети
-  /// с учетом фильтров [FiltersManager] и текущего местоположения [currentLocation]
-  /// (опицонально)
+  /// с учетом фильтров [FiltersManager]
   Stream<List<Place>> getPlaces({
     required FiltersManager filtersManager,
-    LocationPoint? currentLocation,
   }) async* {
     try {
       final localPlaces = _placeInteractor.getLocalPlaces();
@@ -31,13 +29,16 @@ class PlaceListScreenModel extends ElementaryModel {
 
       yield await _placeInteractor.getPlaces(
         filtersManager: filtersManager,
-        currentLocation: currentLocation,
       );
     } on NetworkException catch (e) {
       handleError(e);
       rethrow;
     }
   }
+
+  /// Обновление текущего местоположения
+  Future<void> updateCurrentLocation() async =>
+      _placeInteractor.updateCurrentLocation();
 
   /// Метод добавления/удаления места [place] в/из избранно-е/го
   Future<void> changeFavorite(Place place) async =>

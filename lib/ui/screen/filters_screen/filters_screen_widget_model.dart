@@ -135,7 +135,6 @@ class FiltersScreenWidgetModel
     try {
       final filteredPlaces = await model.getPlaces(
         filtersManager: filtersManager,
-        currentLocation: const LocationPoint(lat: 55.752881, lon: 37.604459),
       );
       _filteredPlacesState.content(filteredPlaces);
     } on Exception catch (e) {

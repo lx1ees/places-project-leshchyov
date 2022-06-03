@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:places/constants/app_constants.dart';
@@ -25,11 +26,16 @@ class PlaceRepository {
   final ISearchHistoryStorage searchHistoryStorage;
   final IPlacesStorage placesStorage;
 
+  /// Текущее местоположение пользователя
+  LocationPoint? get currentUserLocation => _currentUserLocation;
+
   /// Список мест, которые находятся в Избранном
   final List<PlaceLocalDto> _favoritePlaces = [];
 
   /// Список мест, которые находятся в Посещенном
   final List<PlaceLocalDto> _visitedPlaces = [];
+
+  LocationPoint? _currentUserLocation;
 
   PlaceRepository({
     required this.networkService,
@@ -302,6 +308,19 @@ class PlaceRepository {
   /// Вставка или обновление места в списке избранных
   Future<void> upsertPlaceInVisitedPlaces(Place place) async =>
       placesStorage.upsertInVisitedPlaces(PlaceMapper.toLocalDto(place));
+
+  /// Обновление текущего местоположения пользователя
+  Future<void> updateCurrentLocation() async {
+    final location = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+      timeLimit: const Duration(
+        seconds: 5,
+      ),
+    );
+
+    _currentUserLocation =
+        LocationPoint(lat: location.latitude, lon: location.longitude);
+  }
 
   /// Обвновляем локальный список мест с учетом предыдущей сортировки
   /// (нужно для корректной работы функционала изменения порядка мест в списке)

@@ -2,6 +2,8 @@ abstract class AppAssets {
   /// Константы путей ресурсов
   static const String heartIcon = 'res/images/heart_icon.svg';
   static const String heartFullIcon = 'res/images/heart_full_icon.svg';
+  static const String mapIcon = 'res/images/map_icon.svg';
+  static const String mapFullIcon = 'res/images/map_full_icon.svg';
   static const String listIcon = 'res/images/list_icon.svg';
   static const String listFullIcon = 'res/images/list_full_icon.svg';
   static const String goIcon = 'res/images/go_icon.svg';

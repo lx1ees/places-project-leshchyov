@@ -98,4 +98,24 @@ abstract class AppConstants {
   static const int connectTimeout = 5000;
   static const int receiveTimeout = 5000;
   static const int sendTimeout = 5000;
+
+  /// Константы карты
+  static const String mapStyle = '''
+  [{
+    "stylers": {
+        "hue": "#252849",
+        "saturation": -1.0,
+        "lightness": 0.2
+    }
+  }]
+  ''';
+  static const String mapDarkStyle = '''
+  [{
+    "stylers": {
+        "hue": "#252849",
+        "saturation": 0,
+        "lightness": 0.1
+    }
+  }]
+  ''';
 }
