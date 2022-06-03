@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/data/api/exceptions/network_exception.dart';
 import 'package:places/data/api/network_service.dart';
@@ -89,7 +91,7 @@ class PlaceRepository {
     }
   }
 
-  /// Метода для добавления нового места [place] на сервер
+  /// Метод для добавления нового места [place] на сервер
   Future<PlaceDto> addPlace(PlaceDto place) async {
     try {
       final response = await networkService.client.post<Object>(
@@ -104,6 +106,46 @@ class PlaceRepository {
         code: e.response?.statusCode,
         errorMessage: e.message,
       );
+    }
+  }
+
+  /// Метод отправки на сервер списка изображений [imagesPaths]
+  Future<List<String>> uploadImages(List<String> imagesPaths) async {
+    try {
+      final entries = <MapEntry<String, MultipartFile>>[];
+      for (final path in imagesPaths) {
+        final filename = path.split('/').last;
+        final file = await MultipartFile.fromFile(
+          path,
+          filename: filename,
+          contentType: MediaType.parse(lookupMimeType(path) ?? ''),
+        );
+        entries.add(MapEntry('image_files', file));
+      }
+
+      final formData = FormData()..files.addAll(entries);
+
+      final response = await networkService.client.post<Object>(
+        AppConstants.uploadFilePath,
+        data: formData,
+      );
+
+      final updatedUrls = entries.length > 1
+          ? ((response.data as Map?)?['urls'] as List?)?.whereType<String>()
+          : response.headers['location'];
+
+      return updatedUrls
+              ?.map((url) => '${AppConstants.baseUrl}/$url')
+              .toList() ??
+          [];
+    } on DioError catch (e) {
+      throw NetworkException(
+        requestName: '${AppConstants.baseUrl}${AppConstants.uploadFilePath}',
+        code: e.response?.statusCode,
+        errorMessage: e.message,
+      );
+    } on Exception catch (_) {
+      rethrow;
     }
   }
 

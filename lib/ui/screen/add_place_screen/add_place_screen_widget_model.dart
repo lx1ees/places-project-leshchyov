@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:places/constants/app_assets.dart';
+import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
@@ -44,6 +46,9 @@ class AddPlaceScreenWidgetModel
 
   /// Навигатор
   final NavigatorState _navigator;
+
+  /// Помощник выбора изображения (из камеры или галереи)
+  final ImagePicker _imagePicker = ImagePicker();
 
   final _currentPlaceTypeState = StateNotifier<PlaceType?>();
   final _listImagesState = StateNotifier<List<String>>();
@@ -149,6 +154,7 @@ class AddPlaceScreenWidgetModel
           lon: _lon!,
           lat: _lat!,
           description: _description!,
+          imagesPaths: _listImagesState.value ?? [],
         );
 
         _navigator.pop();
@@ -209,16 +215,49 @@ class AddPlaceScreenWidgetModel
 
   /// Открытие диалога добавления изображения с коллбеком [onImageAdded]
   Future<void> _openAddImageDialog(ValueChanged<String> onImageAdded) async {
-    await showDialog<void>(
+    await showGeneralDialog<void>(
       context: context,
-      builder: (context) {
+      barrierDismissible: true,
+      barrierLabel: 'barrier',
+      transitionDuration: const Duration(
+        milliseconds:
+            AppConstants.imagePickerDialogAppearanceAnimationDurationInMillis,
+      ),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.0, 1.0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
         return AddImageDialog(
-          onCameraPressed: () => onImageAdded(_randomImage()),
-          onPhotoPressed: () => onImageAdded(_randomImage()),
+          onCameraPressed: () async {
+            final imagePath = await _pickImageFrom(ImageSource.camera);
+            if (imagePath != null) onImageAdded(imagePath);
+          },
+          onPhotoPressed: () async {
+            final imagePath = await _pickImageFrom(ImageSource.gallery);
+            if (imagePath != null) onImageAdded(imagePath);
+          },
           onFilePressed: () => onImageAdded(_randomImage()),
         );
       },
     );
+  }
+
+  /// Метод получения изображения из истоника [source]
+  Future<String?> _pickImageFrom(ImageSource source) async {
+    final image = await _imagePicker.pickImage(
+      source: source,
+      imageQuality: 50,
+      maxWidth: 512,
+      maxHeight: 512,
+    );
+
+    return image?.path;
   }
 
   /// Функция проверки заполненности и корректности всех обязательных для заполнения

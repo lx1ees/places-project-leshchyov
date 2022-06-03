@@ -54,9 +54,9 @@ abstract class AppConstants {
   static const int splashAnimationDurationInMillis = 1600;
   static const int favoriteButtonAnimationDurationInMillis = 250;
   static const int imageAppearanceAnimationDurationInMillis = 350;
+  static const int imagePickerDialogAppearanceAnimationDurationInMillis = 200;
   static const int circleLoaderTimeInSec = 60;
   static const double circleLoaderTurnsInOneSec = 1;
-
 
   /// Константы карточки и окна детальной информации достопримечательности
   static const double placeCardImageHeight = 96;
@@ -94,6 +94,7 @@ abstract class AppConstants {
   static const String baseUrl = 'https://test-backend-flutter.surfstudio.ru';
   static const String filteredPlacesPath = '/filtered_places';
   static const String placesPath = '/place';
+  static const String uploadFilePath = '/upload_file';
   static const int connectTimeout = 5000;
   static const int receiveTimeout = 5000;
   static const int sendTimeout = 5000;

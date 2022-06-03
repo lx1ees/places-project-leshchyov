@@ -88,8 +88,9 @@ class PlaceInteractor {
 
   /// Метод добавления нового места
   Future<Place> addNewPlace(Place newPlace) async {
+    final urls = await _repository.uploadImages(newPlace.urls);
     final addedPlaceDto =
-        await _repository.addPlace(PlaceMapper.toDto(newPlace));
+        await _repository.addPlace(PlaceMapper.toDto(newPlace.copyWith(urls: urls)));
 
     return PlaceMapper.fromDto(addedPlaceDto);
   }

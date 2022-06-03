@@ -23,12 +23,14 @@ class AddPlaceScreenModel extends ElementaryModel {
     required double lat,
     required double lon,
     required String description,
+    required List<String> imagesPaths,
   }) async {
     final newPlace = Place(
       name: name,
       point: LocationPoint(lat: lat, lon: lon),
       description: description,
       placeType: placeType,
+      urls: imagesPaths,
     );
 
     try {
