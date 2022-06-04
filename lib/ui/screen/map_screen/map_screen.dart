@@ -7,13 +7,9 @@ import 'package:places/constants/app_strings.dart';
 import 'package:places/constants/app_typography.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/map_screen/map_screen_widget_model.dart';
-import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_model.dart';
 import 'package:places/ui/widget/common/gradient_extended_fab.dart';
-import 'package:places/ui/widget/common/loading_indicator.dart';
-import 'package:places/ui/widget/place_card/place_view_card.dart';
-import 'package:places/ui/widget/place_list/place_list.dart';
-import 'package:places/ui/widget/place_list/place_list_error_placeholder.dart';
-import 'package:places/ui/widget/place_list/place_list_screen_sliver_app_bar.dart';
+import 'package:places/ui/widget/map/map_actions.dart';
+import 'package:places/ui/widget/map/map_place_card.dart';
 import 'package:places/ui/widget/place_search/search_bar.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -33,12 +29,19 @@ class MapScreen extends ElementaryWidget<IMapScreenWidgetModel> {
   Widget build(IMapScreenWidgetModel wm) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: GradientExtendedFab(
-        icon: SvgPicture.asset(AppAssets.plusIcon),
-        label: AppStrings.newPlaceTitle.toUpperCase(),
-        startColor: wm.colorScheme.surfaceVariant,
-        endColor: wm.colorScheme.secondary,
-        onPressed: wm.onAddNewPlacePressed,
+      floatingActionButton: StateNotifierBuilder<Place?>(
+        listenableState: wm.selectedPlaceState,
+        builder: (_, selectedPlace) {
+          if (selectedPlace != null) return const SizedBox.shrink();
+
+          return GradientExtendedFab(
+            icon: SvgPicture.asset(AppAssets.plusIcon),
+            label: AppStrings.newPlaceTitle.toUpperCase(),
+            startColor: wm.colorScheme.surfaceVariant,
+            endColor: wm.colorScheme.secondary,
+            onPressed: wm.onAddNewPlacePressed,
+          );
+        },
       ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -53,36 +56,83 @@ class MapScreen extends ElementaryWidget<IMapScreenWidgetModel> {
         backgroundColor: wm.theme.scaffoldBackgroundColor,
         elevation: 0,
       ),
-      body: Column(
+      body: Stack(
         children: [
-          const SizedBox(height: AppConstants.defaultPaddingX0_5),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.defaultPadding,
-            ),
-            child: SearchBar(
-              isBlocked: true,
-              onOpenFiltersPressed: wm.onFiltersPressed,
-              onTap: wm.onSearchPressed,
-              theme: wm.theme,
-            ),
+          Column(
+            children: [
+              const SizedBox(height: AppConstants.defaultPaddingX0_5),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppConstants.defaultPadding,
+                ),
+                child: SearchBar(
+                  isBlocked: true,
+                  onOpenFiltersPressed: wm.onFiltersPressed,
+                  onTap: wm.onSearchPressed,
+                  theme: wm.theme,
+                ),
+              ),
+              const SizedBox(height: AppConstants.defaultPaddingX1_5),
+              Expanded(
+                child: StateNotifierBuilder<List<PlacemarkMapObject>>(
+                  listenableState: wm.listPlacemarksState,
+                  builder: (_, placemarks) {
+                    return YandexMap(
+                      nightModeEnabled: wm.theme.brightness == Brightness.dark,
+                      onMapCreated: wm.onMapCreated,
+                      onUserLocationAdded: wm.onUserLocationAdded,
+                      mapObjects: placemarks ?? [],
+                      fastTapEnabled: true,
+                      onMapTap: wm.onMapTap,
+                      // fastTapEnabled: true,
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: AppConstants.defaultPaddingX1_5),
-          Expanded(
-            child: EntityStateNotifierBuilder<List<Place>>(
-              listenableEntityState: wm.listPlacesState,
-              builder: (_, places) {
-                if (places == null) return const PlaceListErrorPlaceholder();
-
-                return YandexMap(
-                  nightModeEnabled: wm.theme.brightness == Brightness.dark,
-                  onMapCreated: wm.onMapCreated,
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: StateNotifierBuilder<Place?>(
+              listenableState: wm.selectedPlaceState,
+              builder: (_, selectedPlace) {
+                return Column(
+                  children: [
+                    MapActions(
+                      onRefreshPressed: wm.onUpdateMap,
+                      onGeoPressed: wm.onUpdateGeo,
+                    ),
+                    AnimatedSlide(
+                      offset: selectedPlace != null
+                          ? Offset.zero
+                          : const Offset(0, 1),
+                      duration: const Duration(
+                        milliseconds: AppConstants
+                            .mapPlaceAppearanceAnimationDurationInMillis,
+                      ),
+                      child: selectedPlace != null
+                          ? Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: AppConstants.defaultPadding,
+                                  ),
+                                  child: MapPlaceCard(
+                                    place: selectedPlace,
+                                    onFavoritePressed: wm.onFavoritePressed,
+                                    onCardTapped: wm.onPlaceCardPressed,
+                                    onRoutePressed: (_) {},
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
                 );
               },
-              loadingBuilder: (_, __) {
-                return const LoadingIndicator();
-              },
-              errorBuilder: (_, __, ___) => const PlaceListErrorPlaceholder(),
             ),
           ),
         ],

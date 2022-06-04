@@ -37,6 +37,7 @@ abstract class AppConstants {
   static const double defaultTabBorderRadius = 40;
   static const double defaultTabHeight = 40;
   static const double defaultTabVerticalPadding = 6;
+  static const double defaultCardElevation = 16;
   static const double placeholderNoItemsSubtitleWidth = 200;
   static const double defaultElevatedButtonHeight = 48;
   static const double defaultTextButtonHeight = 40;
@@ -55,6 +56,7 @@ abstract class AppConstants {
   static const int favoriteButtonAnimationDurationInMillis = 250;
   static const int imageAppearanceAnimationDurationInMillis = 350;
   static const int imagePickerDialogAppearanceAnimationDurationInMillis = 200;
+  static const int mapPlaceAppearanceAnimationDurationInMillis = 200;
   static const int circleLoaderTimeInSec = 60;
   static const double circleLoaderTurnsInOneSec = 1;
 
@@ -103,9 +105,8 @@ abstract class AppConstants {
   static const String mapStyle = '''
   [{
     "stylers": {
-        "hue": "#252849",
         "saturation": -1.0,
-        "lightness": 0.2
+        "lightness": 0
     }
   }]
   ''';
@@ -114,7 +115,7 @@ abstract class AppConstants {
     "stylers": {
         "hue": "#252849",
         "saturation": 0,
-        "lightness": 0.1
+        "lightness": 0
     }
   }]
   ''';

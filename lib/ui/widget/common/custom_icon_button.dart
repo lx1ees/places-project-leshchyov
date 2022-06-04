@@ -7,19 +7,21 @@ class CustomIconButton extends StatelessWidget {
   final VoidCallback onPressed;
   final EdgeInsets? padding;
   final BoxConstraints? constraints;
+  final Color backgroundColor;
 
   const CustomIconButton({
     required this.icon,
     required this.onPressed,
     this.padding,
     this.constraints,
+    this.backgroundColor = Colors.transparent,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: backgroundColor,
       shape: const CircleBorder(),
       clipBehavior: Clip.hardEdge,
       child: IconButton(

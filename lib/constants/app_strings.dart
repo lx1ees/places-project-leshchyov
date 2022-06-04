@@ -13,6 +13,7 @@ abstract class AppStrings {
   static const String delete = 'Удалить';
   static const String skip = 'Пропустить';
   static const String apply = 'Применить';
+  static const String allow = 'Разрешить';
 
   /// Тексты ошибок
   static const String errorNotFilled = 'Поле должно быть заполненным';
@@ -22,10 +23,12 @@ abstract class AppStrings {
   static const String errorWhileAddingPlace =
       'Возникла ошибка при добавлении места. Проверьте интернет-соединение';
   static const String errorLocationPermissionDenied =
-      'Предоставьте разрешение на местоположение, чтобы мы знали, какие поблизости с вами есть места :)';
+      'Предоставьте разрешение на местоположение для корректного определения инетерсных мест поблизости';
+  static const String errorWhileUpdatingPlaces =
+      'Возникла ошибка при обновлении списка интересных мест';
 
   /// Тексты карточки и окна детальной информации достопримечательности
-  static const String placeShortDescriptionMock = 'Закрыто до 9:00';
+  static const String placeShortDescriptionMock = 'Открыто до 20:00';
   static const String placeDetailsPlanActionButtonTitle = 'Запланировать';
   static const String placeDetailsShareActionButtonTitle = 'Поделиться';
   static const String placeDetailsInFavActionButtonTitle = 'В Избранное';

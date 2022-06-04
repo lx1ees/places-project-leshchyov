@@ -22,6 +22,7 @@ class AppTheme {
         onPrimaryContainer: AppColors.secondaryColor,
         onSecondaryContainer: AppColors.secondary2Color,
         onSurface: AppColors.secondary2Color,
+        onBackground: AppColors.whiteColor,
       ),
       backgroundColor: AppColors.whiteColor,
       scaffoldBackgroundColor: AppColors.whiteColor,
@@ -57,9 +58,6 @@ class AppTheme {
           enabledThumbRadius: 8,
         ),
       ),
-      // inputDecorationTheme: theme.inputDecorationTheme.copyWith(
-      //   isDense:
-      // )
     );
   }
 
@@ -82,6 +80,7 @@ class AppTheme {
         onPrimaryContainer: AppColors.secondary2Color,
         onSecondaryContainer: AppColors.inactiveBlackColor,
         onSurface: AppColors.whiteColor,
+        onBackground: AppColors.secondaryColor,
       ),
       backgroundColor: AppColors.mainDarkColor,
       scaffoldBackgroundColor: AppColors.mainDarkColor,

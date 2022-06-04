@@ -200,6 +200,9 @@ class PlaceInteractor {
   Future<void> updateCurrentLocation() async =>
       _repository.updateCurrentLocation();
 
+  /// Получение текущего местоположения пользователя (сохраненное)
+  Future<LocationPoint?> getCurrentLocation() async => _repository.currentUserLocation;
+
   /// Метод добавления места в список избранного
   Future<void> _addPlaceInFavorites(Place place) async {
     final favoritePlace = place.copyWith(

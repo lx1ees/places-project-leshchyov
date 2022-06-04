@@ -12,6 +12,7 @@ import 'package:places/ui/screen/add_place_screen/add_place_screen_model.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widget/add_place/add_image_dialog.dart';
+import 'package:places/utils/dialog_utils.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [AddPlaceScreenWidgetModel]
@@ -159,10 +160,9 @@ class AddPlaceScreenWidgetModel
 
         _navigator.pop();
       } on Exception catch (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(AppStrings.errorWhileAddingPlace),
-          ),
+        DialogUtils.showSnackBar(
+          context: context,
+          title: AppStrings.errorWhileAddingPlace,
         );
       }
     }

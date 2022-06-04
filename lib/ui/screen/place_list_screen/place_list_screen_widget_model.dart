@@ -2,14 +2,13 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:places/constants/app_strings.dart';
-import 'package:places/constants/app_typography.dart';
-import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_model.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/utils/deffered_execution_provider.dart';
+import 'package:places/utils/dialog_utils.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [PlaceListScreenWidgetModel]
@@ -38,9 +37,6 @@ class PlaceListScreenWidgetModel
 
   /// Обертка над темой приложения
   final ThemeWrapper _themeWrapper;
-
-  /// Цветовая схема текущей темы приложения
-  late final ColorScheme _colorScheme;
 
   /// Текущая тема приложения
   late final ThemeData _theme;
@@ -71,7 +67,6 @@ class PlaceListScreenWidgetModel
   void initWidgetModel() {
     super.initWidgetModel();
     _theme = _themeWrapper.getTheme(context);
-    _colorScheme = _theme.colorScheme;
     _listPlacesEntityState.content([]);
     _updateCurrentLocationAndRequestForPlaces();
   }
@@ -106,21 +101,11 @@ class PlaceListScreenWidgetModel
     try {
       await model.updateCurrentLocation();
     } on PermissionDeniedException catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppStrings.errorLocationPermissionDenied,
-            style: AppTypography.smallTextStyle.copyWith(
-              color: colorScheme.onSurface,
-            ),
-          ),
-          backgroundColor: colorScheme.surface,
-          action: SnackBarAction(
-            label: 'Разрешить',
-            textColor: colorScheme.secondary,
-            onPressed: _onRequestForLocationPermission,
-          ),
-        ),
+      DialogUtils.showSnackBar(
+        context: context,
+        title: AppStrings.errorLocationPermissionDenied,
+        actionTitle: AppStrings.allow,
+        onPressedAction: _onRequestForLocationPermission,
       );
     }
   }
@@ -129,6 +114,7 @@ class PlaceListScreenWidgetModel
     final permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.always ||
         permission == LocationPermission.whileInUse) {
+      await _updateCurrentLocation();
       await _requestForPlaces();
     }
   }

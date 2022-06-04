@@ -1,13 +1,17 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
+import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/map_screen/map_screen.dart';
 import 'package:places/ui/screen/map_screen/map_screen_model.dart';
 import 'package:places/ui/screen/res/routes.dart';
-import 'package:places/utils/deffered_execution_provider.dart';
+import 'package:places/utils/dialog_utils.dart';
+import 'package:places/utils/ui_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
@@ -29,11 +33,8 @@ MapScreenWidgetModel mapScreenWidgetModelFactory(
 
 /// Виджет-модель для [MapScreenModel]
 class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
-    with DefferedExecutionProvider
+    with SingleTickerProviderWidgetModelMixin
     implements IMapScreenWidgetModel {
-  /// Контроллер прокрутки списка
-  final ScrollController _scrollController = ScrollController();
-
   /// Обертка над темой приложения
   final ThemeWrapper _themeWrapper;
 
@@ -43,8 +44,13 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
   /// Текущая тема приложения
   late final ThemeData _theme;
 
-  /// Состояние списка мест
-  final _listPlacesEntityState = EntityStateNotifier<List<Place>>();
+  /// Состояние списка плейсмарков на карте
+  final _listPlacemarksState = StateNotifier<List<PlacemarkMapObject>>();
+
+  /// Состояние выбрранного места на карте
+  final _selectedPlaceState = StateNotifier<Place>();
+
+  final List<Place> _listPlaces = [];
 
   @override
   ColorScheme get colorScheme => _colorScheme;
@@ -53,11 +59,17 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
   ThemeData get theme => _theme;
 
   @override
-  ScrollController get listScrollController => _scrollController;
+  ListenableState<List<PlacemarkMapObject>> get listPlacemarksState =>
+      _listPlacemarksState;
 
   @override
-  ListenableState<EntityState<List<Place>>> get listPlacesState =>
-      _listPlacesEntityState;
+  ListenableState<Place?> get selectedPlaceState => _selectedPlaceState;
+
+  YandexMapController? _mapController;
+
+  /// Флаг для определения, бало ли выбрано место на карте (нужно для того, чтобы
+  /// обработчик нажатия на карту не закрывал сразу же карточку)
+  bool _isPlacemarkTapped = false;
 
   MapScreenWidgetModel({
     required MapScreenModel model,
@@ -70,14 +82,8 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
     super.initWidgetModel();
     _theme = _themeWrapper.getTheme(context);
     _colorScheme = _theme.colorScheme;
-    _listPlacesEntityState.content([]);
-    _requestForPlaces();
-  }
 
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+    _requestForPlaces();
   }
 
   @override
@@ -96,27 +102,177 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
   void onSearchPressed() => _openSearchScreen();
 
   @override
-  void onMapCreated(YandexMapController mapController) {
+  void onMapTap(Point point) {
+    if (_isPlacemarkTapped || _selectedPlaceState.value == null) return;
+    _selectedPlaceState.accept(null);
+    _updateMapObjects();
+    _moveCameraTo(
+      LocationPoint(
+        lat: point.latitude,
+        lon: point.longitude,
+      ),
+    );
+  }
+
+  @override
+  Future<void> onMapCreated(YandexMapController mapController) async {
+    _mapController = mapController;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    mapController.setMapStyle(
+    await mapController.setMapStyle(
       isDark ? AppConstants.mapDarkStyle : AppConstants.mapStyle,
     );
+
+    await mapController.toggleUserLayer(visible: true, autoZoomEnabled: true);
+    await _moveCameraToCurrentLocation();
+    await _requestForPlaces();
+  }
+
+  @override
+  Future<UserLocationView>? onUserLocationAdded(
+    UserLocationView userLocationView,
+  ) async {
+    final customIconAssetName = UiUtils.getValueByTheme<String>(
+      context: context,
+      defaultValue: AppAssets.currentLocationIcon,
+      darkValue: AppAssets.currentLocationIconDark,
+    );
+
+    return userLocationView.copyWith(
+      pin: userLocationView.pin.copyWith(
+        opacity: 1.0,
+      ),
+      arrow: userLocationView.arrow.copyWith(
+        opacity: 1.0,
+        icon: PlacemarkIcon.single(
+          PlacemarkIconStyle(
+            image: BitmapDescriptor.fromAssetImage(customIconAssetName),
+            scale: 2,
+          ),
+        ),
+      ),
+      accuracyCircle: userLocationView.accuracyCircle.copyWith(
+        fillColor: Colors.transparent,
+        strokeColor: Colors.transparent,
+      ),
+    );
+  }
+
+  @override
+  Future<void> onUpdateGeo() async {
+    try {
+      await model.updateCurrentLocation();
+      await _moveCameraToCurrentLocation();
+    } on PermissionDeniedException catch (_) {
+      DialogUtils.showSnackBar(
+        context: context,
+        title: AppStrings.errorLocationPermissionDenied,
+        actionTitle: AppStrings.allow,
+        onPressedAction: _onRequestForLocationPermission,
+      );
+    }
+  }
+
+  @override
+  void onUpdateMap() => _requestForPlaces();
+
+  Future<void> _onRequestForLocationPermission() async {
+    final permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      await onUpdateGeo();
+    }
+  }
+
+  Future<void> _moveCameraToCurrentLocation() async {
+    final currentLocation = await model.getCurrentLocation();
+    await _moveCameraTo(currentLocation);
+  }
+
+  Future<void> _moveCameraTo(LocationPoint? point) async {
+    if (point != null) {
+      await _mapController?.moveCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: Point(
+              latitude: point.lat,
+              longitude: point.lon,
+            ),
+            zoom: 13,
+          ),
+        ),
+        animation: const MapAnimation(
+          // type: MapAnimationType.smooth,
+          duration: 0.3,
+        ),
+      );
+    }
+  }
+
+  Future<void> _updateMapObjects() async {
+    final placeIconAssetName = UiUtils.getValueByTheme<String>(
+      context: context,
+      defaultValue: AppAssets.placemarkIcon,
+      darkValue: AppAssets.placemarkIconDark,
+    );
+
+    final selectedPlaceIconAssetName = UiUtils.getValueByTheme<String>(
+      context: context,
+      defaultValue: AppAssets.placemarkSelectedIcon,
+      darkValue: AppAssets.placemarkSelectedIconDark,
+    );
+
+    final mapObjects = _listPlaces.map((place) {
+      return PlacemarkMapObject(
+        mapId: MapObjectId(place.id.toString()),
+        point: Point(
+          latitude: place.point.lat,
+          longitude: place.point.lon,
+        ),
+        opacity: 1,
+        icon: PlacemarkIcon.single(
+          PlacemarkIconStyle(
+            image: BitmapDescriptor.fromAssetImage(
+              _selectedPlaceState.value?.id == place.id
+                  ? selectedPlaceIconAssetName
+                  : placeIconAssetName,
+            ),
+            scale: _selectedPlaceState.value?.id == place.id ? 0.75 : 1,
+          ),
+        ),
+        onTap: (mapObject, point) async {
+          _isPlacemarkTapped = true;
+          if (_selectedPlaceState.value?.id == place.id) return;
+          _selectedPlaceState.accept(place);
+          await _updateMapObjects();
+          _isPlacemarkTapped = false;
+        },
+      );
+    }).toList();
+    _listPlacemarksState.accept(mapObjects);
+    await _moveCameraTo(_selectedPlaceState.value?.point);
   }
 
   /// Получение списка мест из модели
   Future<void> _requestForPlaces() async {
-    deffered(_listPlacesEntityState.loading, delay: 2);
     final filtersManager = await model.getFiltersManager();
     try {
       await for (final places in model.getPlaces(
         filtersManager: filtersManager,
       )) {
-        cancelDeffered();
-        _listPlacesEntityState.content(places);
+        _listPlaces
+          ..clear()
+          ..addAll(places);
+        if (!_listPlaces.contains(_selectedPlaceState.value)) {
+          _selectedPlaceState.accept(null);
+        }
+        await _updateMapObjects();
       }
-    } on Exception catch (e) {
-      _listPlacesEntityState.error(e);
+    } on Exception catch (_) {
+      DialogUtils.showSnackBar(
+        context: context,
+        title: AppStrings.errorWhileUpdatingPlaces,
+      );
     }
   }
 
@@ -157,11 +313,11 @@ abstract class IMapScreenWidgetModel extends IWidgetModel {
   /// Текущая тема приложения
   ThemeData get theme;
 
-  /// Контроллер прокрутки списка мест
-  ScrollController get listScrollController;
+  /// Состояние списка индикаторов мест на карте
+  ListenableState<List<PlacemarkMapObject>> get listPlacemarksState;
 
-  /// Состояние списка мест
-  ListenableState<EntityState<List<Place>>> get listPlacesState;
+  /// Состояние выбранного места на карте
+  ListenableState<Place?> get selectedPlaceState;
 
   /// Обработчик нажатия на кнопку добавления/удаления в/из избранно-е/-го
   /// места [place]
@@ -179,8 +335,20 @@ abstract class IMapScreenWidgetModel extends IWidgetModel {
   /// Обработчик нажатия на строку поиска
   void onSearchPressed();
 
-  /// ----------
-
   /// Обработчик создания карты
   void onMapCreated(YandexMapController mapController);
+
+  /// Обработчик нажатия на карту
+  void onMapTap(Point point);
+
+  /// Обработчик нажатия на кнопку Обновить карту
+  void onUpdateMap();
+
+  /// Обработчик нажатия на кнопку Запросить геолокацию
+  void onUpdateGeo();
+
+  /// Обработчик события добавления текущего метоположения на карту
+  Future<UserLocationView>? onUserLocationAdded(
+    UserLocationView userLocationView,
+  );
 }

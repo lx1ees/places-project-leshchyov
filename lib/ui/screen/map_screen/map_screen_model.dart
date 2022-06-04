@@ -36,6 +36,14 @@ class MapScreenModel extends ElementaryModel {
     }
   }
 
+  /// Обновление текущего местоположения
+  Future<void> updateCurrentLocation() async =>
+      _placeInteractor.updateCurrentLocation();
+
+  /// Получение текущего местоположения пользователя (сохраненное)
+  Future<LocationPoint?> getCurrentLocation() async =>
+      _placeInteractor.getCurrentLocation();
+
   /// Метод добавления/удаления места [place] в/из избранно-е/го
   Future<void> changeFavorite(Place place) async =>
       _placeInteractor.changeFavorite(place);
