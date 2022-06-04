@@ -160,6 +160,7 @@ class AddPlaceScreenWidgetModel
 
         _navigator.pop();
       } on Exception catch (_) {
+        if (!isMounted) return;
         DialogUtils.showSnackBar(
           context: context,
           title: AppStrings.errorWhileAddingPlace,

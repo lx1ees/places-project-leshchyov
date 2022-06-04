@@ -26,12 +26,15 @@ abstract class AppStrings {
       'Предоставьте разрешение на местоположение для корректного определения инетерсных мест поблизости';
   static const String errorWhileUpdatingPlaces =
       'Возникла ошибка при обновлении списка интересных мест';
+  static const String errorWhileFilteringPlaces =
+      'Возникла ошибка при фильтрации списка интересных мест';
 
   /// Тексты карточки и окна детальной информации достопримечательности
   static const String placeShortDescriptionMock = 'Открыто до 20:00';
   static const String placeDetailsPlanActionButtonTitle = 'Запланировать';
   static const String placeDetailsShareActionButtonTitle = 'Поделиться';
-  static const String placeDetailsInFavActionButtonTitle = 'В Избранное';
+  static const String placeDetailsToFavActionButtonTitle = 'В Избранное';
+  static const String placeDetailsInFavActionButtonTitle = 'В Избранном';
   static const String placeDetailsRouteButtonTitle = 'Построить маршрут';
   static const String placeCardVisitedText = 'Цель достигнута';
   static const String placeCardToBeVisitedText = 'Запланировано на';

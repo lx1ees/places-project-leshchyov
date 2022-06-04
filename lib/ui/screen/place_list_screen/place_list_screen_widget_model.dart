@@ -68,7 +68,7 @@ class PlaceListScreenWidgetModel
     super.initWidgetModel();
     _theme = _themeWrapper.getTheme(context);
     _listPlacesEntityState.content([]);
-    _updateCurrentLocationAndRequestForPlaces();
+    _requestForPlaces();
   }
 
   @override
@@ -78,7 +78,10 @@ class PlaceListScreenWidgetModel
   }
 
   @override
-  void onFavoritePressed(Place place) => model.changeFavorite(place);
+  Future<void> onFavoritePressed(Place place) async {
+    await model.changeFavorite(place);
+    await _requestForLocalPlaces();
+  }
 
   @override
   void onPlaceCardPressed(Place place) => _navigateToPlaceDetailsScreen(place);
@@ -92,15 +95,11 @@ class PlaceListScreenWidgetModel
   @override
   void onSearchPressed() => _openSearchScreen();
 
-  Future<void> _updateCurrentLocationAndRequestForPlaces() async {
-    await _updateCurrentLocation();
-    await _requestForPlaces();
-  }
-
   Future<void> _updateCurrentLocation() async {
     try {
       await model.updateCurrentLocation();
     } on PermissionDeniedException catch (_) {
+      if (!isMounted) return;
       DialogUtils.showSnackBar(
         context: context,
         title: AppStrings.errorLocationPermissionDenied,
@@ -121,17 +120,27 @@ class PlaceListScreenWidgetModel
 
   /// Получение списка мест из модели
   Future<void> _requestForPlaces() async {
-    deffered(_listPlacesEntityState.loading, delay: 2);
+    _listPlacesEntityState.loading();
+    await _updateCurrentLocation();
     final filtersManager = await model.getFiltersManager();
     try {
       await for (final places in model.getPlaces(
         filtersManager: filtersManager,
       )) {
-        cancelDeffered();
         _listPlacesEntityState.content(places);
       }
     } on Exception catch (e) {
-      cancelDeffered();
+      _listPlacesEntityState.error(e);
+    }
+  }
+
+  /// Получение локального списка мест из модели (например, после того как
+  /// добавили место в избранное или в помещегнные, где не требуется запрос в сеть)
+  Future<void> _requestForLocalPlaces() async {
+    try {
+      final places = await model.getLocalPlaces();
+      _listPlacesEntityState.content(places);
+    } on Exception catch (e) {
       _listPlacesEntityState.error(e);
     }
   }
@@ -142,7 +151,7 @@ class PlaceListScreenWidgetModel
       context: context,
       place: place,
     );
-    Future.delayed(const Duration(milliseconds: 200), _requestForPlaces);
+    Future.delayed(const Duration(milliseconds: 200), _requestForLocalPlaces);
   }
 
   /// Метод открытия окна добавления нового места
@@ -162,7 +171,7 @@ class PlaceListScreenWidgetModel
   /// Метод открытия окна поиска
   Future<void> _openSearchScreen() async {
     await AppRoutes.navigateToSearchScreen(context: context);
-    await _requestForPlaces();
+    // await _requestForPlaces();
   }
 }
 

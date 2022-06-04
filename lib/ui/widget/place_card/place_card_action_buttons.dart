@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
@@ -112,54 +110,26 @@ class PlaceViewCardActionButtons extends PlaceCardActionButtons {
 
 class _PlaceViewCardActionButtonsState
     extends State<PlaceViewCardActionButtons> {
-  final StreamController<bool> _favoritesStreamController = StreamController();
-  bool currentFavValue = false;
-
-  @override
-  void initState() {
-    currentFavValue = widget.place.isInFavorites;
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _favoritesStreamController.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<bool>(
-      stream: _favoritesStreamController.stream,
-      initialData: widget.place.isInFavorites,
-      builder: (context, snapshot) {
-        final isInFavorites = snapshot.data;
-        if (snapshot.hasData && isInFavorites != null) {
-          return CustomIconButton(
-            onPressed: () {
-              currentFavValue = !currentFavValue;
-              _favoritesStreamController.sink.add(currentFavValue);
-              widget.onFavoritePressed(widget.place);
-              // setState(() {});
-            },
-            icon: AnimatedSwitcher(
-              duration: const Duration(
-                milliseconds:
-                    AppConstants.favoriteButtonAnimationDurationInMillis,
-              ),
-              child: SvgPicture.asset(
-                isInFavorites ? AppAssets.heartFullIcon : AppAssets.heartIcon,
-                key: UniqueKey(),
-                height: AppConstants.defaultIconSize,
-                width: AppConstants.defaultIconSize,
-                color: Theme.of(context).white,
-              ),
-            ),
-          );
-        }
-
-        return const SizedBox.shrink();
+    return CustomIconButton(
+      onPressed: () {
+        widget.onFavoritePressed(widget.place);
       },
+      icon: AnimatedSwitcher(
+        duration: const Duration(
+          milliseconds: AppConstants.favoriteButtonAnimationDurationInMillis,
+        ),
+        child: SvgPicture.asset(
+          widget.place.isInFavorites
+              ? AppAssets.heartFullIcon
+              : AppAssets.heartIcon,
+          key: UniqueKey(),
+          height: AppConstants.defaultIconSize,
+          width: AppConstants.defaultIconSize,
+          color: Theme.of(context).white,
+        ),
+      ),
     );
   }
 }

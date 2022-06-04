@@ -87,7 +87,10 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
   }
 
   @override
-  void onFavoritePressed(Place place) => model.changeFavorite(place);
+  Future<void> onFavoritePressed(Place place) async {
+    await model.changeFavorite(place);
+    await _requestForLocalPlaces();
+  }
 
   @override
   void onPlaceCardPressed(Place place) => _navigateToPlaceDetailsScreen(place);
@@ -164,6 +167,7 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
       await model.updateCurrentLocation();
       await _moveCameraToCurrentLocation();
     } on PermissionDeniedException catch (_) {
+      if (!isMounted) return;
       DialogUtils.showSnackBar(
         context: context,
         title: AppStrings.errorLocationPermissionDenied,
@@ -269,10 +273,38 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
         await _updateMapObjects();
       }
     } on Exception catch (_) {
+      if (!isMounted) return;
       DialogUtils.showSnackBar(
         context: context,
         title: AppStrings.errorWhileUpdatingPlaces,
       );
+    }
+  }
+
+  /// Получение локального списка мест из модели (например, после того как
+  /// добавили место в избранное или в помещегнные, где не требуется запрос в сеть)
+  Future<void> _requestForLocalPlaces() async {
+    try {
+      final places = await model.getLocalPlaces();
+      _listPlaces
+        ..clear()
+        ..addAll(places);
+      _updateSelectedPlace();
+      await _updateMapObjects();
+    } on Exception catch (_) {
+      if (!isMounted) return;
+      DialogUtils.showSnackBar(
+        context: context,
+        title: AppStrings.errorWhileUpdatingPlaces,
+      );
+    }
+  }
+
+  void _updateSelectedPlace() {
+    final idx =
+        _listPlaces.indexWhere((e) => e.id == _selectedPlaceState.value?.id);
+    if (idx != -1) {
+      _selectedPlaceState.accept(_listPlaces[idx]);
     }
   }
 
@@ -282,7 +314,7 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
       context: context,
       place: place,
     );
-    Future.delayed(const Duration(milliseconds: 200), _requestForPlaces);
+    Future.delayed(const Duration(milliseconds: 200), _requestForLocalPlaces);
   }
 
   /// Метод открытия окна добавления нового места

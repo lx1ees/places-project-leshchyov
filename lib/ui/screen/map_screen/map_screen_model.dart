@@ -36,6 +36,16 @@ class MapScreenModel extends ElementaryModel {
     }
   }
 
+  /// Получение списка локального списка мест с учетом фильтров [FiltersManager]
+  Future<List<Place>> getLocalPlaces() async {
+    try {
+      return _placeInteractor.getLocalPlaces();
+    } on Exception catch (e) {
+      handleError(e);
+      rethrow;
+    }
+  }
+
   /// Обновление текущего местоположения
   Future<void> updateCurrentLocation() async =>
       _placeInteractor.updateCurrentLocation();

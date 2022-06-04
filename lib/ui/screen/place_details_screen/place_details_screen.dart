@@ -90,8 +90,11 @@ class PlaceDetailsScreen
                           ),
                           Expanded(
                             child: CustomTextIconButton(
-                              label:
-                                  AppStrings.placeDetailsInFavActionButtonTitle,
+                              label: place.isInFavorites
+                                  ? AppStrings
+                                      .placeDetailsInFavActionButtonTitle
+                                  : AppStrings
+                                      .placeDetailsToFavActionButtonTitle,
                               icon: SvgPicture.asset(
                                 place.isInFavorites
                                     ? AppAssets.heartFullIcon

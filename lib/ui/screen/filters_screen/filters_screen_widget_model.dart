@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type_filter_entity.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_model.dart';
+import 'package:places/utils/dialog_utils.dart';
 import 'package:places/utils/extensions.dart';
 import 'package:provider/provider.dart';
 
@@ -124,7 +124,7 @@ class FiltersScreenWidgetModel
   }
 
   @override
-  Future<void> onFilteredListShown() async{
+  Future<void> onFilteredListShown() async {
     await model.saveFiltersManager(_localFiltersManager);
     _navigator.pop();
   }
@@ -139,10 +139,16 @@ class FiltersScreenWidgetModel
       _filteredPlacesState.content(filteredPlaces);
     } on Exception catch (e) {
       _filteredPlacesState.error(e);
+      if (!isMounted) return;
+      DialogUtils.showSnackBar(
+        context: context,
+        title: AppStrings.errorWhileFilteringPlaces,
+      );
+      await _requestForPlaces(filtersManager);
     }
   }
 
-  /// Обвновление состояния фильтров из менеджера [filtersManager]
+  /// Обновление состояния фильтров из менеджера [filtersManager]
   void _updateFiltersStates(FiltersManager filtersManager) {
     _placeTypesFilterState.accept([...filtersManager.placeTypeFilters]);
     _distanceFilterState.accept(filtersManager.distanceFilter);

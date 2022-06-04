@@ -2,7 +2,6 @@ import 'package:elementary/elementary.dart';
 import 'package:places/data/api/exceptions/network_exception.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
-import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
 
@@ -31,6 +30,16 @@ class PlaceListScreenModel extends ElementaryModel {
         filtersManager: filtersManager,
       );
     } on NetworkException catch (e) {
+      handleError(e);
+      rethrow;
+    }
+  }
+
+  /// Получение списка локального списка мест с учетом фильтров [FiltersManager]
+  Future<List<Place>> getLocalPlaces() async {
+    try {
+      return _placeInteractor.getLocalPlaces();
+    } on Exception catch (e) {
       handleError(e);
       rethrow;
     }

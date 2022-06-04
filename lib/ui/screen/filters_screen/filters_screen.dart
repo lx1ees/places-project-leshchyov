@@ -79,6 +79,13 @@ class FiltersScreen extends ElementaryWidget<IFiltersScreenWidgetModel> {
               alignment: Alignment.bottomCenter,
               child: EntityStateNotifierBuilder<List<Place>>(
                 listenableEntityState: wm.filteredPlacesState,
+                loadingBuilder: (_, filteredPlaces) {
+                  return ShowFilteredListButton(
+                    affectedPlacesCount: filteredPlaces?.length ?? 0,
+                    isLoading: true,
+                    onShow: wm.onFilteredListShown,
+                  );
+                },
                 errorBuilder: (_, __, ___) {
                   return ShowFilteredListButton(
                     affectedPlacesCount: 0,
