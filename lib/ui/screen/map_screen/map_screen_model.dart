@@ -46,6 +46,10 @@ class MapScreenModel extends ElementaryModel {
     }
   }
 
+  /// Добавление места [place] в список посещенных мест
+  Future<void> addPlaceInVisited({required Place place}) async =>
+      _placeInteractor.addPlaceInVisited(place);
+
   /// Обновление текущего местоположения
   Future<void> updateCurrentLocation() async =>
       _placeInteractor.updateCurrentLocation();

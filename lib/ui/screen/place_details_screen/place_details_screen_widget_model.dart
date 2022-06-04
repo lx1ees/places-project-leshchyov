@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
@@ -93,6 +94,25 @@ class PlaceDetailsWidgetModel
   @override
   void onSharePlacePressed(Place place) {}
 
+  @override
+  Future<void> onMakeRoute() async {
+    final availableMaps = await MapLauncher.installedMaps;
+    final place = _currentPlaceState.value?.data;
+    final lat = place?.point.lat;
+    final lon = place?.point.lon;
+
+    if (availableMaps.isNotEmpty &&
+        place != null &&
+        lat != null &&
+        lon != null) {
+      await model.addPlaceInVisited(place: place);
+      await MapLauncher.showDirections(
+        mapType: availableMaps.first.mapType,
+        destination: Coords(lat, lon),
+      );
+    }
+  }
+
   /// Обновление места
   Future<void> _requestForPlaceDetails() async {
     final currentPlace = _currentPlaceState.value?.data;
@@ -131,4 +151,7 @@ abstract class IPlaceDetailsScreenWidgetModel extends IWidgetModel {
 
   /// Обработчик добавления места в избранное
   void onAddPlaceInFavoritesPressed();
+
+  /// Обработчик открытия нативной карты
+  void onMakeRoute();
 }

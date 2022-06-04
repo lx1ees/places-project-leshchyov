@@ -201,7 +201,8 @@ class PlaceInteractor {
       _repository.updateCurrentLocation();
 
   /// Получение текущего местоположения пользователя (сохраненное)
-  Future<LocationPoint?> getCurrentLocation() async => _repository.currentUserLocation;
+  Future<LocationPoint?> getCurrentLocation() async =>
+      _repository.currentUserLocation;
 
   /// Метод добавления места в список избранного
   Future<void> _addPlaceInFavorites(Place place) async {
@@ -216,6 +217,7 @@ class PlaceInteractor {
       final localPlace = _places[index];
       _places[index] = localPlace.copyWith(isInFavorites: true);
     }
+    await _repository.updatePlaceInVisitedPlaces(favoritePlace);
   }
 
   /// Метод удаления места из списка избраннога
@@ -226,6 +228,8 @@ class PlaceInteractor {
       final localPlace = _places[index];
       _places[index] = localPlace.copyWith(isInFavorites: false);
     }
+    await _repository
+        .updatePlaceInVisitedPlaces(place.copyWith(isInFavorites: false));
   }
 
   /// Метод для сравнения свежего списка мест из сети с существующими списками мест

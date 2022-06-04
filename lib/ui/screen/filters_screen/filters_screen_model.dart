@@ -2,7 +2,6 @@ import 'package:elementary/elementary.dart';
 import 'package:places/data/api/exceptions/network_exception.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
-import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 

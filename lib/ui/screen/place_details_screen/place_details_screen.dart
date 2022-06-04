@@ -13,6 +13,7 @@ import 'package:places/ui/widget/place_details/place_details_description.dart';
 import 'package:places/ui/widget/place_details/place_details_dynamic_action_button.dart';
 import 'package:places/ui/widget/place_details/place_details_screen_sliver_app_bar.dart';
 import 'package:places/ui/widget/place_details/place_details_title.dart';
+import 'package:places/ui/widget/place_details/place_details_visited_button.dart';
 
 /// Виджет-окно для отображения полной информации о [place] достопримечательности
 /// и выполнения действий с ней.
@@ -65,13 +66,18 @@ class PlaceDetailsScreen
                       const SizedBox(
                         height: AppConstants.defaultPaddingX1_5,
                       ),
-                      CustomElevatedButton(
-                        onPressed: () {},
-                        label: AppStrings.placeDetailsRouteButtonTitle,
-                        icon: SvgPicture.asset(
-                          AppAssets.goIcon,
+                      if (place.isVisited && place.cardLook == CardLook.visited)
+                        PlaceDetailsVisitedButton(
+                          onRoutePressed: wm.onMakeRoute,
+                        )
+                      else
+                        CustomElevatedButton(
+                          onPressed: wm.onMakeRoute,
+                          label: AppStrings.placeDetailsRouteButtonTitle,
+                          icon: SvgPicture.asset(
+                            AppAssets.goIcon,
+                          ),
                         ),
-                      ),
                       const SizedBox(
                         height: AppConstants.defaultPadding,
                       ),

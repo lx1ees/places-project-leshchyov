@@ -26,14 +26,14 @@ class PlaceRepository {
   final ISearchHistoryStorage searchHistoryStorage;
   final IPlacesStorage placesStorage;
 
-  /// Текущее местоположение пользователя
-  LocationPoint? get currentUserLocation => _currentUserLocation;
-
   /// Список мест, которые находятся в Избранном
   final List<PlaceLocalDto> _favoritePlaces = [];
 
   /// Список мест, которые находятся в Посещенном
   final List<PlaceLocalDto> _visitedPlaces = [];
+
+  /// Текущее местоположение пользователя
+  LocationPoint? get currentUserLocation => _currentUserLocation;
 
   LocationPoint? _currentUserLocation;
 
@@ -305,9 +305,16 @@ class PlaceRepository {
     return result;
   }
 
-  /// Вставка или обновление места в списке избранных
+  /// Вставка или обновление места в списке посещенных
   Future<void> upsertPlaceInVisitedPlaces(Place place) async =>
       placesStorage.upsertInVisitedPlaces(PlaceMapper.toLocalDto(place));
+
+  /// Обновление места в списке посещенных
+  Future<void> updatePlaceInVisitedPlaces(Place place) async =>
+      placesStorage.updateInVisitedPlaces(PlaceMapper.toLocalDto(place.copyWith(
+        isVisited: true,
+        cardLook: CardLook.visited,
+      )));
 
   /// Обновление текущего местоположения пользователя
   Future<void> updateCurrentLocation() async {

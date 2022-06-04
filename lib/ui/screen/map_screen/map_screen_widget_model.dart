@@ -1,6 +1,7 @@
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
@@ -179,6 +180,20 @@ class MapScreenWidgetModel extends WidgetModel<MapScreen, MapScreenModel>
 
   @override
   void onUpdateMap() => _requestForPlaces();
+
+  @override
+  Future<void> onMakeRoute(Place place) async {
+    final availableMaps = await MapLauncher.installedMaps;
+    final lat = place.point.lat;
+    final lon = place.point.lon;
+    if (availableMaps.isNotEmpty) {
+      await model.addPlaceInVisited(place: place);
+      await MapLauncher.showDirections(
+        mapType: availableMaps.first.mapType,
+        destination: Coords(lat, lon),
+      );
+    }
+  }
 
   Future<void> _onRequestForLocationPermission() async {
     final permission = await Geolocator.requestPermission();
@@ -383,4 +398,7 @@ abstract class IMapScreenWidgetModel extends IWidgetModel {
   Future<UserLocationView>? onUserLocationAdded(
     UserLocationView userLocationView,
   );
+
+  /// Обработчик открытия нативной карты
+  void onMakeRoute(Place place);
 }

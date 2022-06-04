@@ -36,6 +36,7 @@ abstract class AppStrings {
   static const String placeDetailsToFavActionButtonTitle = 'В Избранное';
   static const String placeDetailsInFavActionButtonTitle = 'В Избранном';
   static const String placeDetailsRouteButtonTitle = 'Построить маршрут';
+  static const String placeDetailsRouteFinishedButtonTitle = 'Пройдено';
   static const String placeCardVisitedText = 'Цель достигнута';
   static const String placeCardToBeVisitedText = 'Запланировано на';
   static const String placeholderNoItemsTitleText = 'Пусто';

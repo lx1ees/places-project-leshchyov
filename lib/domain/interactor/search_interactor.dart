@@ -2,7 +2,6 @@ import 'package:places/data/model/place_dto.dart';
 import 'package:places/data/repository/place_mapper.dart';
 import 'package:places/data/repository/place_repository.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type_filter_entity.dart';
 

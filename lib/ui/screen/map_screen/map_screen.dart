@@ -123,7 +123,7 @@ class MapScreen extends ElementaryWidget<IMapScreenWidgetModel> {
                                     place: selectedPlace,
                                     onFavoritePressed: wm.onFavoritePressed,
                                     onCardTapped: wm.onPlaceCardPressed,
-                                    onRoutePressed: (_) {},
+                                    onRoutePressed: wm.onMakeRoute,
                                   ),
                                 ),
                               ],

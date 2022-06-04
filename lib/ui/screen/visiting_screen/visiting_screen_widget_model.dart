@@ -110,11 +110,12 @@ class VisitingScreenWidgetModel
   @override
   void onPlaceCardPressed(Place place) {
     _navigateToPlaceDetailsScreen(place).then((_) {
-      if (place.isInFavorites) {
-        _requestForFavoritesPlaces();
-      } else if (place.isVisited) {
-        _requestForVisitedPlaces();
-      }
+      _requestForPlaces();
+      // if (place.isInFavorites) {
+      //   _requestForFavoritesPlaces();
+      // } else if (place.isVisited) {
+      //   _requestForVisitedPlaces();
+      // }
     });
   }
 
@@ -123,12 +124,6 @@ class VisitingScreenWidgetModel
     DateTimeUtils.pickPlanDate(context).then((planDate) async {
       if (planDate != null) {
         await model.setPlacePlanDate(place: place, planDate: planDate);
-
-        /// Временно добавляю место в список посещенных по событию выбора даты
-        /// для теестирования
-        await model.addPlaceInVisited(place: place);
-
-        // await _requestForFavoritesPlaces();
         _requestForPlaces();
       }
     });
