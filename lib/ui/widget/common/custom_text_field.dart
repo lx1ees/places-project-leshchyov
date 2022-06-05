@@ -14,6 +14,7 @@ import 'package:places/ui/widget/common/focus_manager_holder.dart';
 class CustomTextField extends StatefulWidget {
   final String title;
   final String? hint;
+  final String? initialValue;
   final ValueChanged<String>? onTextChange;
   final TextInputAction? textInputAction;
   final bool isMultiline;
@@ -27,6 +28,7 @@ class CustomTextField extends StatefulWidget {
     this.isMultiline = false,
     this.hint,
     this.validator,
+    this.initialValue,
     this.onFieldSubmitted,
     TextInputAction? textInputAction,
     TextInputType? textInputType,
@@ -59,6 +61,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _focusManager?.registerFocusNode(focusNode);
     _controller = TextEditingController()..addListener(_textChangesListener);
     _focusNode.addListener(_onFocusChanged);
+  }
+
+  @override
+  void didUpdateWidget(CustomTextField oldWidget) {
+    final initialValue = widget.initialValue;
+    if (initialValue != null){
+      _controller.text = initialValue;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

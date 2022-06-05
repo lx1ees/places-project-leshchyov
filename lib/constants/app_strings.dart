@@ -14,6 +14,7 @@ abstract class AppStrings {
   static const String skip = 'Пропустить';
   static const String apply = 'Применить';
   static const String allow = 'Разрешить';
+  static const String confirm = 'Готово';
 
   /// Тексты ошибок
   static const String errorNotFilled = 'Поле должно быть заполненным';
@@ -91,6 +92,7 @@ abstract class AppStrings {
   /// Тексты окна добавления нового места
   static const String placeTypeNotSelected = 'Не выбрано';
   static const String placeTypeTitle = 'Категория';
+  static const String geolocationTitle = 'Местоположение';
   static const String newPlaceTitle = 'Новое место';
   static const String placeNameTitle = 'НАЗВАНИЕ';
   static const String placeLatTitle = 'ШИРОТА';

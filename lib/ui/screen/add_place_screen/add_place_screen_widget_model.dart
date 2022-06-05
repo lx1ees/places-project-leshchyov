@@ -1,11 +1,9 @@
-import 'dart:math';
-
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:places/constants/app_assets.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen_model.dart';
@@ -52,6 +50,7 @@ class AddPlaceScreenWidgetModel
   final ImagePicker _imagePicker = ImagePicker();
 
   final _currentPlaceTypeState = StateNotifier<PlaceType?>();
+  final _currentGeolocationState = StateNotifier<LocationPoint?>();
   final _listImagesState = StateNotifier<List<String>>();
 
   @override
@@ -63,6 +62,10 @@ class AddPlaceScreenWidgetModel
   @override
   ListenableState<PlaceType?> get currentPlaceTypeState =>
       _currentPlaceTypeState;
+
+  @override
+  ListenableState<LocationPoint?> get currentGeolocationState =>
+      _currentGeolocationState;
 
   @override
   GlobalKey<State<StatefulWidget>> get formKey => _formKey;
@@ -169,6 +172,24 @@ class AddPlaceScreenWidgetModel
     }
   }
 
+  @override
+  Future<void> onSelectGeolocationPressed() async {
+    LocationPoint? selectedLocationPoint;
+    final latitude = _lat;
+    final longitude = _lon;
+    if (latitude != null && longitude != null) {
+      selectedLocationPoint = LocationPoint(lat: latitude, lon: longitude);
+    }
+
+    final selectedGeolocation =
+        await _openGeolocationSelectionScreenAndGetGeolocation(
+      selectedLocationPoint,
+    );
+    _lat = selectedGeolocation?.lat;
+    _lon = selectedGeolocation?.lon;
+    _currentGeolocationState.accept(selectedGeolocation);
+  }
+
   /// Валидация вводимого текста в инпут типа Строка
   String? _validateText(String? value) {
     if (value == null || value.isEmpty) {
@@ -203,15 +224,16 @@ class AddPlaceScreenWidgetModel
     return result as PlaceType?;
   }
 
-  /// Временный метод, который возвращает рандомную заглушку картинки места
-  String _randomImage() {
-    final images = [
-      AppAssets.newImageMock,
-      AppAssets.newImageMock2,
-      AppAssets.newImageMock3,
-    ];
+  /// Метод открытия окна выбора геопозиции и возврата выбранной геопозиции
+  Future<LocationPoint?> _openGeolocationSelectionScreenAndGetGeolocation(
+    LocationPoint? selectedLocationPoint,
+  ) async {
+    final result = await AppRoutes.navigateToSelectingGeolocationScreen(
+      context: context,
+      selectedGeolocation: selectedLocationPoint,
+    );
 
-    return images[Random().nextInt(images.length)];
+    return result as LocationPoint?;
   }
 
   /// Открытие диалога добавления изображения с коллбеком [onImageAdded]
@@ -243,7 +265,7 @@ class AddPlaceScreenWidgetModel
             final imagePath = await _pickImageFrom(ImageSource.gallery);
             if (imagePath != null) onImageAdded(imagePath);
           },
-          onFilePressed: () => onImageAdded(_randomImage()),
+          onFilePressed: () {},
         );
       },
     );
@@ -310,6 +332,9 @@ abstract class IAddPlaceScreenWidgetModel extends IWidgetModel {
   /// Состояние текущего выбранного типа места
   ListenableState<PlaceType?> get currentPlaceTypeState;
 
+  /// Состояние текущей выбранной геолокации
+  ListenableState<LocationPoint?> get currentGeolocationState;
+
   /// Обработчик нажатия на кнопку "Отмена"
   void onCancelButtonPressed();
 
@@ -322,6 +347,9 @@ abstract class IAddPlaceScreenWidgetModel extends IWidgetModel {
   /// Обработчик нажатия на кнопку для открытия окна выбора типа места
   /// [placeType] - ранее выбранное место
   Future<void> onSelectPlaceTypePressed(PlaceType? placeType);
+
+  /// Обработчик нажатия на кнопку для открытия окна выбора геопозиции
+  Future<void> onSelectGeolocationPressed();
 
   /// Обработчик изменения имени [name]
   void onNameChanged(String name);
