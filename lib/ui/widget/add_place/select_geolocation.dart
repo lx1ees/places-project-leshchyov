@@ -42,13 +42,7 @@ class _SelectGeolocationScreenState extends State<SelectGeolocationScreen> {
     selectedLocationPoint = widget.selectedLocationPoint;
     newLocationPoint = widget.selectedLocationPoint;
 
-    /// 🆘🆘🆘 ВОПРОC: насколько это допустимое решение делать задержку
-    /// в initState и didChangeDependencies в случаях, если стейт не успевает
-    /// проинициализироваться, но нужно на старте запустить что-то? В данном
-    /// случае, если убрать задержку, то метод _updateGeo не отрабатывает.
-    /// Аналогично в didChangeDependencies. Как по мне выглядит не очень красиво,
-    /// есть ли более элегантное решение? Как вы в команде решаете такую проблему?
-    Future.delayed(const Duration(milliseconds: 200), _updateGeo);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateGeo());
   }
 
   @override
