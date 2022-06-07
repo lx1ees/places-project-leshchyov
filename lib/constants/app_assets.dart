@@ -2,6 +2,8 @@ abstract class AppAssets {
   /// Константы путей ресурсов
   static const String heartIcon = 'res/images/heart_icon.svg';
   static const String heartFullIcon = 'res/images/heart_full_icon.svg';
+  static const String mapIcon = 'res/images/map_icon.svg';
+  static const String mapFullIcon = 'res/images/map_full_icon.svg';
   static const String listIcon = 'res/images/list_icon.svg';
   static const String listFullIcon = 'res/images/list_full_icon.svg';
   static const String goIcon = 'res/images/go_icon.svg';
@@ -42,4 +44,12 @@ abstract class AppAssets {
   static const String errorIcon = 'res/images/error_icon.svg';
   static const String loadIndicator = 'res/images/load_indicator.png';
   static const String loadIndicatorDark = 'res/images/load_indicator_dark.png';
+  static const String currentLocationIcon = 'res/images/current_location_icon.png';
+  static const String currentLocationIconDark = 'res/images/current_location_icon_dark.png';
+  static const String placemarkIcon = 'res/images/placemark_icon.png';
+  static const String placemarkIconDark = 'res/images/placemark_icon_dark.png';
+  static const String placemarkSelectedIcon = 'res/images/placemark_selected_icon.png';
+  static const String placemarkSelectedIconDark = 'res/images/placemark_selected_icon_dark.png';
+  static const String refreshIcon = 'res/images/refresh_icon.svg';
+  static const String geolocationIcon = 'res/images/geolocation_icon.svg';
 }

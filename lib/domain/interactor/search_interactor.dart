@@ -2,7 +2,6 @@ import 'package:places/data/model/place_dto.dart';
 import 'package:places/data/repository/place_mapper.dart';
 import 'package:places/data/repository/place_repository.dart';
 import 'package:places/domain/filters_manager.dart';
-import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type_filter_entity.dart';
 
@@ -22,13 +21,14 @@ class SearchInteractor {
   }) : _repository = repository;
 
   /// Метод для поиска мест по поисковому запросу [searchString], учитывая фильтры
-  /// из [filtersManager] и текущее местоположение [currentLocation]
+  /// из [filtersManager]
   Future<List<Place>> getSearchResults({
     required FiltersManager filtersManager,
     required String searchString,
-    LocationPoint? currentLocation,
   }) async {
     late final List<PlaceDto> placeDtos;
+    final currentLocation = _repository.currentUserLocation;
+
     placeDtos = currentLocation != null
         ? await _repository.getFilteredPlaces(
             locationPoint: currentLocation,

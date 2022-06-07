@@ -2,7 +2,6 @@ import 'package:elementary/elementary.dart';
 import 'package:places/data/api/exceptions/network_exception.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/search_interactor.dart';
-import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/place_search_screen/place_search_screen.dart';
 
@@ -16,17 +15,15 @@ class PlaceSearchScreenModel extends ElementaryModel {
   })  : _searchInteractor = searchInteractor,
         super(errorHandler: errorHandler);
 
-  /// Поиск мест по запросу [searchString] в текущем местоположении [currentLocation]
+  /// Поиск мест по запросу [searchString] в текущем местоположении
   /// и с учетом фильтров [filtersManager]
   Future<List<Place>> searchForPlaces({
     required FiltersManager filtersManager,
     required String searchString,
-    LocationPoint? currentLocation,
   }) {
     try {
       return _searchInteractor.getSearchResults(
         filtersManager: filtersManager,
-        currentLocation: currentLocation,
         searchString: searchString,
       );
     } on NetworkException catch (e) {

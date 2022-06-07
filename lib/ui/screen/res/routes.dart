@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
@@ -7,6 +8,8 @@ import 'package:places/ui/screen/add_place_screen/add_place_screen_widget_model.
 import 'package:places/ui/screen/filters_screen/filters_screen.dart';
 import 'package:places/ui/screen/filters_screen/filters_screen_widget_model.dart';
 import 'package:places/ui/screen/home_screen/home_screen.dart';
+import 'package:places/ui/screen/map_screen/map_screen.dart';
+import 'package:places/ui/screen/map_screen/map_screen_widget_model.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen.dart';
 import 'package:places/ui/screen/onboarding_screen/onboarding_screen_widget_model.dart';
 import 'package:places/ui/screen/place_details_screen/place_details_screen.dart';
@@ -21,6 +24,7 @@ import 'package:places/ui/screen/splash_screen/splash_screen.dart';
 import 'package:places/ui/screen/splash_screen/splash_screen_widget_model.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen.dart';
 import 'package:places/ui/screen/visiting_screen/visiting_screen_widget_model.dart';
+import 'package:places/ui/widget/add_place/select_geolocation.dart';
 import 'package:places/ui/widget/add_place/select_place_type.dart';
 
 /// Класс роутинга
@@ -40,6 +44,9 @@ abstract class AppRoutes {
       bottomNavigationRoutes = {
     PlaceListScreen.routeName: (context) => const PlaceListScreen(
           widgetModelFactory: placeListScreenWidgetModelFactory,
+        ),
+    MapScreen.routeName: (context) => const MapScreen(
+          widgetModelFactory: mapScreenWidgetModelFactory,
         ),
     VisitingScreen.routeName: (_) => const VisitingScreen(
           widgetModelFactory: visitingScreenWidgetModelFactory,
@@ -70,6 +77,13 @@ abstract class AppRoutes {
       final selectedPlaceType = argument as PlaceType?;
 
       return SelectPlaceTypeScreen(selectedPlaceType: selectedPlaceType);
+    },
+    SelectGeolocationScreen.routeName: (argument) {
+      final selectedGeolocation = argument as LocationPoint?;
+
+      return SelectGeolocationScreen(
+        selectedLocationPoint: selectedGeolocation,
+      );
     },
     FiltersScreen.routeName: (argument) {
       return const FiltersScreen(
@@ -126,6 +140,17 @@ abstract class AppRoutes {
     return navigators[mainNavigatorKey]?.currentState?.pushNamed<Object?>(
               SelectPlaceTypeScreen.routeName,
               arguments: selectedPlaceType,
+            ) ??
+        Future.value();
+  }
+
+  static Future<Object?> navigateToSelectingGeolocationScreen({
+    required BuildContext context,
+    required LocationPoint? selectedGeolocation,
+  }) {
+    return navigators[mainNavigatorKey]?.currentState?.pushNamed<Object?>(
+              SelectGeolocationScreen.routeName,
+              arguments: selectedGeolocation,
             ) ??
         Future.value();
   }

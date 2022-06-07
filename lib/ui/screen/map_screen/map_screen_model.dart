@@ -2,14 +2,15 @@ import 'package:elementary/elementary.dart';
 import 'package:places/data/api/exceptions/network_exception.dart';
 import 'package:places/domain/filters_manager.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
+import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place.dart';
-import 'package:places/ui/screen/place_list_screen/place_list_screen.dart';
+import 'package:places/ui/screen/map_screen/map_screen.dart';
 
-/// Модель для [PlaceListScreen]
-class PlaceListScreenModel extends ElementaryModel {
+/// Модель для [MapScreen]
+class MapScreenModel extends ElementaryModel {
   final PlaceInteractor _placeInteractor;
 
-  PlaceListScreenModel({
+  MapScreenModel({
     required PlaceInteractor placeInteractor,
     required ErrorHandler errorHandler,
   })  : _placeInteractor = placeInteractor,
@@ -45,9 +46,17 @@ class PlaceListScreenModel extends ElementaryModel {
     }
   }
 
+  /// Добавление места [place] в список посещенных мест
+  Future<void> addPlaceInVisited({required Place place}) async =>
+      _placeInteractor.addPlaceInVisited(place);
+
   /// Обновление текущего местоположения
   Future<void> updateCurrentLocation() async =>
       _placeInteractor.updateCurrentLocation();
+
+  /// Получение текущего местоположения пользователя (сохраненное)
+  Future<LocationPoint?> getCurrentLocation() async =>
+      _placeInteractor.getCurrentLocation();
 
   /// Метод добавления/удаления места [place] в/из избранно-е/го
   Future<void> changeFavorite(Place place) async =>

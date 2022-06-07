@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:places/constants/app_assets.dart';
@@ -33,8 +35,8 @@ class NewImageCard extends StatelessWidget {
             child: SizedBox(
               height: AppConstants.addNewPlaceImageSize,
               width: AppConstants.addNewPlaceImageSize,
-              child: Image.asset(
-                path,
+              child: Image.file(
+                File(path),
                 fit: BoxFit.cover,
               ),
             ),

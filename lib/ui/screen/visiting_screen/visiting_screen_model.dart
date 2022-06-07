@@ -52,10 +52,6 @@ class VisitingScreenModel extends ElementaryModel {
   Future<void> removePlaceFromFavorites({required Place place}) async =>
       _placeInteractor.changeFavorite(place);
 
-  /// Добавление места [place] в список посещенных мест
-  Future<void> addPlaceInVisited({required Place place}) async =>
-      _placeInteractor.addPlaceInVisited(place);
-
   /// Планирование даты посещения [planDate] места [place]
   Future<void> setPlacePlanDate({
     required Place place,

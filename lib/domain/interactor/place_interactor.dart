@@ -22,13 +22,13 @@ class PlaceInteractor {
   }) : _repository = repository;
 
   /// Метод для получения списка мест от сервера на основе фильтров [filtersManager]
-  /// и текущего местоположения [currentLocation]
   Future<List<Place>> getPlaces({
     required FiltersManager filtersManager,
-    LocationPoint? currentLocation,
   }) async {
     try {
       late final List<PlaceDto> placeDtos;
+      final currentLocation = _repository.currentUserLocation;
+
       if (currentLocation != null) {
         placeDtos = await _repository.getFilteredPlaces(
           locationPoint: currentLocation,
@@ -88,8 +88,9 @@ class PlaceInteractor {
 
   /// Метод добавления нового места
   Future<Place> addNewPlace(Place newPlace) async {
-    final addedPlaceDto =
-        await _repository.addPlace(PlaceMapper.toDto(newPlace));
+    final urls = await _repository.uploadImages(newPlace.urls);
+    final addedPlaceDto = await _repository
+        .addPlace(PlaceMapper.toDto(newPlace.copyWith(urls: urls)));
 
     return PlaceMapper.fromDto(addedPlaceDto);
   }
@@ -195,6 +196,14 @@ class PlaceInteractor {
     return FiltersManager.from(distance: distance, placeTypes: placeTypes);
   }
 
+  /// Обновление текущего местоположения пользователя
+  Future<void> updateCurrentLocation() async =>
+      _repository.updateCurrentLocation();
+
+  /// Получение текущего местоположения пользователя (сохраненное)
+  Future<LocationPoint?> getCurrentLocation() async =>
+      _repository.currentUserLocation;
+
   /// Метод добавления места в список избранного
   Future<void> _addPlaceInFavorites(Place place) async {
     final favoritePlace = place.copyWith(
@@ -208,6 +217,7 @@ class PlaceInteractor {
       final localPlace = _places[index];
       _places[index] = localPlace.copyWith(isInFavorites: true);
     }
+    await _repository.updatePlaceInVisitedPlaces(favoritePlace);
   }
 
   /// Метод удаления места из списка избраннога
@@ -218,6 +228,8 @@ class PlaceInteractor {
       final localPlace = _places[index];
       _places[index] = localPlace.copyWith(isInFavorites: false);
     }
+    await _repository
+        .updatePlaceInVisitedPlaces(place.copyWith(isInFavorites: false));
   }
 
   /// Метод для сравнения свежего списка мест из сети с существующими списками мест

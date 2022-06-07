@@ -13,8 +13,13 @@ class PlaceDetailsScreenModel extends ElementaryModel {
   })  : _placeInteractor = placeInteractor,
         super(errorHandler: errorHandler);
 
+  /// Получение деталей по месту [place]
   Future<Place> getPlaceDetails(Place place) =>
       _placeInteractor.getPlaceDetails(place: place);
+
+  /// Добавление места [place] в список посещенных мест
+  Future<void> addPlaceInVisited({required Place place}) async =>
+      _placeInteractor.addPlaceInVisited(place);
 
   /// Метод добавления/удаления места в/из избранно-е/го
   Future<void> changeFavorite(Place place) =>

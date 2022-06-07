@@ -2,6 +2,7 @@ import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
 import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen_widget_model.dart';
 import 'package:places/ui/widget/add_place/add_image_section.dart';
@@ -80,29 +81,41 @@ class AddPlaceScreen extends ElementaryWidget<IAddPlaceScreenWidgetModel> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppConstants.defaultPadding,
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: CustomTextField(
-                                title: AppStrings.placeLatTitle,
-                                textInputType: TextInputType.number,
-                                textInputAction: TextInputAction.go,
-                                onTextChange: wm.onLatChanged,
-                                validator: wm.validatorNumber,
-                              ),
-                            ),
-                            const SizedBox(width: AppConstants.defaultPadding),
-                            Expanded(
-                              child: CustomTextField(
-                                title: AppStrings.placeLonTitle,
-                                textInputType: TextInputType.number,
-                                textInputAction: TextInputAction.go,
-                                onTextChange: wm.onLonChanged,
-                                validator: wm.validatorNumber,
-                              ),
-                            ),
-                          ],
+                        child: StateNotifierBuilder<LocationPoint?>(
+                          listenableState: wm.currentGeolocationState,
+                          builder: (_, geolocation) {
+                            final lat = geolocation?.lat.toString() ?? '';
+                            final lon = geolocation?.lon.toString() ?? '';
+
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: CustomTextField(
+                                    title: AppStrings.placeLatTitle,
+                                    initialValue: lat,
+                                    textInputType: TextInputType.number,
+                                    textInputAction: TextInputAction.go,
+                                    onTextChange: wm.onLatChanged,
+                                    validator: wm.validatorNumber,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: AppConstants.defaultPadding,
+                                ),
+                                Expanded(
+                                  child: CustomTextField(
+                                    title: AppStrings.placeLonTitle,
+                                    initialValue: lon,
+                                    textInputType: TextInputType.number,
+                                    textInputAction: TextInputAction.go,
+                                    onTextChange: wm.onLonChanged,
+                                    validator: wm.validatorNumber,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ),
                       Padding(
@@ -112,7 +125,7 @@ class AddPlaceScreen extends ElementaryWidget<IAddPlaceScreenWidgetModel> {
                         child: CustomTextButton(
                           label: AppStrings.pointLocationOnMap,
                           foregroundColor: wm.colorScheme.secondary,
-                          onPressed: () {},
+                          onPressed: wm.onSelectGeolocationPressed,
                         ),
                       ),
                       const SizedBox(height: AppConstants.defaultPaddingX2_25),

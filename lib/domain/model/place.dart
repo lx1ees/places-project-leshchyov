@@ -73,6 +73,7 @@ class Place extends Equatable {
     bool? isVisited,
     DateTime? planDate,
     CardLook? cardLook,
+    List<String>? urls,
   }) {
     return Place(
       id: id ?? this.id,
@@ -80,7 +81,7 @@ class Place extends Equatable {
       point: point,
       description: description,
       placeType: placeType,
-      urls: urls,
+      urls: urls ?? this.urls,
       isVisited: isVisited ?? this.isVisited,
       isInFavorites: isInFavorites ?? this.isInFavorites,
       planDate: planDate ?? this.planDate,

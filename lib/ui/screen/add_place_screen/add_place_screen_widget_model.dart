@@ -1,15 +1,16 @@
-import 'dart:math';
-
 import 'package:elementary/elementary.dart';
 import 'package:flutter/material.dart';
-import 'package:places/constants/app_assets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:places/constants/app_constants.dart';
 import 'package:places/constants/app_strings.dart';
+import 'package:places/domain/model/location_point.dart';
 import 'package:places/domain/model/place_type.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen.dart';
 import 'package:places/ui/screen/add_place_screen/add_place_screen_model.dart';
 import 'package:places/ui/screen/app/di/app_scope.dart';
 import 'package:places/ui/screen/res/routes.dart';
 import 'package:places/ui/widget/add_place/add_image_dialog.dart';
+import 'package:places/utils/dialog_utils.dart';
 import 'package:provider/provider.dart';
 
 /// Фабрика для [AddPlaceScreenWidgetModel]
@@ -45,7 +46,11 @@ class AddPlaceScreenWidgetModel
   /// Навигатор
   final NavigatorState _navigator;
 
+  /// Помощник выбора изображения (из камеры или галереи)
+  final ImagePicker _imagePicker = ImagePicker();
+
   final _currentPlaceTypeState = StateNotifier<PlaceType?>();
+  final _currentGeolocationState = StateNotifier<LocationPoint?>();
   final _listImagesState = StateNotifier<List<String>>();
 
   @override
@@ -57,6 +62,10 @@ class AddPlaceScreenWidgetModel
   @override
   ListenableState<PlaceType?> get currentPlaceTypeState =>
       _currentPlaceTypeState;
+
+  @override
+  ListenableState<LocationPoint?> get currentGeolocationState =>
+      _currentGeolocationState;
 
   @override
   GlobalKey<State<StatefulWidget>> get formKey => _formKey;
@@ -149,17 +158,36 @@ class AddPlaceScreenWidgetModel
           lon: _lon!,
           lat: _lat!,
           description: _description!,
+          imagesPaths: _listImagesState.value ?? [],
         );
 
         _navigator.pop();
       } on Exception catch (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(AppStrings.errorWhileAddingPlace),
-          ),
+        if (!isMounted) return;
+        DialogUtils.showSnackBar(
+          context: context,
+          title: AppStrings.errorWhileAddingPlace,
         );
       }
     }
+  }
+
+  @override
+  Future<void> onSelectGeolocationPressed() async {
+    LocationPoint? selectedLocationPoint;
+    final latitude = _lat;
+    final longitude = _lon;
+    if (latitude != null && longitude != null) {
+      selectedLocationPoint = LocationPoint(lat: latitude, lon: longitude);
+    }
+
+    final selectedGeolocation =
+        await _openGeolocationSelectionScreenAndGetGeolocation(
+      selectedLocationPoint,
+    );
+    _lat = selectedGeolocation?.lat;
+    _lon = selectedGeolocation?.lon;
+    _currentGeolocationState.accept(selectedGeolocation);
   }
 
   /// Валидация вводимого текста в инпут типа Строка
@@ -196,29 +224,63 @@ class AddPlaceScreenWidgetModel
     return result as PlaceType?;
   }
 
-  /// Временный метод, который возвращает рандомную заглушку картинки места
-  String _randomImage() {
-    final images = [
-      AppAssets.newImageMock,
-      AppAssets.newImageMock2,
-      AppAssets.newImageMock3,
-    ];
+  /// Метод открытия окна выбора геопозиции и возврата выбранной геопозиции
+  Future<LocationPoint?> _openGeolocationSelectionScreenAndGetGeolocation(
+    LocationPoint? selectedLocationPoint,
+  ) async {
+    final result = await AppRoutes.navigateToSelectingGeolocationScreen(
+      context: context,
+      selectedGeolocation: selectedLocationPoint,
+    );
 
-    return images[Random().nextInt(images.length)];
+    return result as LocationPoint?;
   }
 
   /// Открытие диалога добавления изображения с коллбеком [onImageAdded]
   Future<void> _openAddImageDialog(ValueChanged<String> onImageAdded) async {
-    await showDialog<void>(
+    await showGeneralDialog<void>(
       context: context,
-      builder: (context) {
+      barrierDismissible: true,
+      barrierLabel: 'barrier',
+      transitionDuration: const Duration(
+        milliseconds:
+            AppConstants.imagePickerDialogAppearanceAnimationDurationInMillis,
+      ),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.0, 1.0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
         return AddImageDialog(
-          onCameraPressed: () => onImageAdded(_randomImage()),
-          onPhotoPressed: () => onImageAdded(_randomImage()),
-          onFilePressed: () => onImageAdded(_randomImage()),
+          onCameraPressed: () async {
+            final imagePath = await _pickImageFrom(ImageSource.camera);
+            if (imagePath != null) onImageAdded(imagePath);
+          },
+          onPhotoPressed: () async {
+            final imagePath = await _pickImageFrom(ImageSource.gallery);
+            if (imagePath != null) onImageAdded(imagePath);
+          },
+          onFilePressed: () {},
         );
       },
     );
+  }
+
+  /// Метод получения изображения из истоника [source]
+  Future<String?> _pickImageFrom(ImageSource source) async {
+    final image = await _imagePicker.pickImage(
+      source: source,
+      imageQuality: 50,
+      maxWidth: 512,
+      maxHeight: 512,
+    );
+
+    return image?.path;
   }
 
   /// Функция проверки заполненности и корректности всех обязательных для заполнения
@@ -270,6 +332,9 @@ abstract class IAddPlaceScreenWidgetModel extends IWidgetModel {
   /// Состояние текущего выбранного типа места
   ListenableState<PlaceType?> get currentPlaceTypeState;
 
+  /// Состояние текущей выбранной геолокации
+  ListenableState<LocationPoint?> get currentGeolocationState;
+
   /// Обработчик нажатия на кнопку "Отмена"
   void onCancelButtonPressed();
 
@@ -282,6 +347,9 @@ abstract class IAddPlaceScreenWidgetModel extends IWidgetModel {
   /// Обработчик нажатия на кнопку для открытия окна выбора типа места
   /// [placeType] - ранее выбранное место
   Future<void> onSelectPlaceTypePressed(PlaceType? placeType);
+
+  /// Обработчик нажатия на кнопку для открытия окна выбора геопозиции
+  Future<void> onSelectGeolocationPressed();
 
   /// Обработчик изменения имени [name]
   void onNameChanged(String name);

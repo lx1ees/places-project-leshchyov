@@ -18,6 +18,9 @@ abstract class IPlacesStorage {
 
   /// Вставка посещенного места [place]
   Future<void> upsertInVisitedPlaces(PlaceLocalDto place);
+
+  /// Обновление посещенного места [place]
+  Future<void> updateInVisitedPlaces(PlaceLocalDto place);
 }
 
 class PlacesStorage extends IPlacesStorage {
@@ -160,6 +163,29 @@ class PlacesStorage extends IPlacesStorage {
         urls: place.urls,
         toPlace: place,
         table: _database.visitedPlaces.aliasedName,
+      );
+    });
+  }
+
+  @override
+  Future<void> updateInVisitedPlaces(PlaceLocalDto place) {
+    return _database.transaction(() async {
+      await (_database.update(_database.visitedPlaces)
+            ..where((tbl) => tbl.id.isIn([place.id])))
+          .write(
+        VisitedPlacesCompanion.insert(
+          id: Value(place.id),
+          lat: place.lat,
+          lng: place.lng,
+          name: place.name,
+          placeType: place.placeType,
+          description: place.description,
+          isInFavorites: place.isInFavorites,
+          isVisited: place.isVisited,
+          cardLook: place.cardLook,
+          distance: Value(place.distance),
+          planDate: Value(place.planDate),
+        ),
       );
     });
   }

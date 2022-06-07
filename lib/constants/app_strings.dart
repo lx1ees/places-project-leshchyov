@@ -13,6 +13,8 @@ abstract class AppStrings {
   static const String delete = 'Удалить';
   static const String skip = 'Пропустить';
   static const String apply = 'Применить';
+  static const String allow = 'Разрешить';
+  static const String confirm = 'Готово';
 
   /// Тексты ошибок
   static const String errorNotFilled = 'Поле должно быть заполненным';
@@ -21,13 +23,21 @@ abstract class AppStrings {
       'Что-то пошло не так.\nПопробуйте позже.';
   static const String errorWhileAddingPlace =
       'Возникла ошибка при добавлении места. Проверьте интернет-соединение';
+  static const String errorLocationPermissionDenied =
+      'Предоставьте разрешение на местоположение для корректного определения инетерсных мест поблизости';
+  static const String errorWhileUpdatingPlaces =
+      'Возникла ошибка при обновлении списка интересных мест';
+  static const String errorWhileFilteringPlaces =
+      'Возникла ошибка при фильтрации списка интересных мест';
 
   /// Тексты карточки и окна детальной информации достопримечательности
-  static const String placeShortDescriptionMock = 'Закрыто до 9:00';
+  static const String placeShortDescriptionMock = 'Открыто до 20:00';
   static const String placeDetailsPlanActionButtonTitle = 'Запланировать';
   static const String placeDetailsShareActionButtonTitle = 'Поделиться';
-  static const String placeDetailsInFavActionButtonTitle = 'В Избранное';
+  static const String placeDetailsToFavActionButtonTitle = 'В Избранное';
+  static const String placeDetailsInFavActionButtonTitle = 'В Избранном';
   static const String placeDetailsRouteButtonTitle = 'Построить маршрут';
+  static const String placeDetailsRouteFinishedButtonTitle = 'Пройдено';
   static const String placeCardVisitedText = 'Цель достигнута';
   static const String placeCardToBeVisitedText = 'Запланировано на';
   static const String placeholderNoItemsTitleText = 'Пусто';
@@ -35,6 +45,8 @@ abstract class AppStrings {
       'Отмечайте понравившиеся\nместа и они появятся здесь.';
   static const String placeholderNoVisitedPlacesText =
       'Завершите маршрут,\nчтобы место попало сюда.';
+  static const String placeholderNoPlacesText =
+      'Измените фильтры\nили добавьте новое место';
   static const String datePickerHelpText = 'Запланируйте дату визита';
   static const String datePickerFieldLabelText = 'Введите дату';
 
@@ -58,6 +70,9 @@ abstract class AppStrings {
   static const String distanceFilterTitle = 'Расстояние';
   static const String showFiltered = 'ПОКАЗАТЬ';
 
+  /// Тексты окна с картой
+  static const String mapScreenAppBarTitle = 'Карта';
+
   /// Тексты окна с настройками
   static const String settingsScreenAppBarTitle = 'Настройки';
   static const String darkThemeOption = 'Тёмная тема';
@@ -77,6 +92,7 @@ abstract class AppStrings {
   /// Тексты окна добавления нового места
   static const String placeTypeNotSelected = 'Не выбрано';
   static const String placeTypeTitle = 'Категория';
+  static const String geolocationTitle = 'Местоположение';
   static const String newPlaceTitle = 'Новое место';
   static const String placeNameTitle = 'НАЗВАНИЕ';
   static const String placeLatTitle = 'ШИРОТА';

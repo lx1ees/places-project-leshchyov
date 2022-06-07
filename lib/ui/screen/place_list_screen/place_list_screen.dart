@@ -8,6 +8,7 @@ import 'package:places/domain/model/place.dart';
 import 'package:places/ui/screen/place_list_screen/place_list_screen_widget_model.dart';
 import 'package:places/ui/widget/common/gradient_extended_fab.dart';
 import 'package:places/ui/widget/common/loading_indicator.dart';
+import 'package:places/ui/widget/common/no_items_placeholder.dart';
 import 'package:places/ui/widget/place_card/place_view_card.dart';
 import 'package:places/ui/widget/place_list/place_list.dart';
 import 'package:places/ui/widget/place_list/place_list_error_placeholder.dart';
@@ -74,6 +75,11 @@ class PlaceListScreen extends ElementaryWidget<IPlaceListScreenWidgetModel> {
                               onCardTapped: wm.onPlaceCardPressed,
                             ))
                         .toList(),
+                    emptyListPlaceholder: const NoItemsPlaceholder(
+                      iconPath: AppAssets.noToVisitPlacesIcon,
+                      title: AppStrings.placeholderNoItemsTitleText,
+                      subtitle: AppStrings.placeholderNoPlacesText,
+                    ),
                   );
                 },
                 loadingBuilder: (_, __) {
