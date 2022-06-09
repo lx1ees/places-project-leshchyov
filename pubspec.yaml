@@ -43,7 +43,7 @@ dev_dependencies:
 flutter_icons:
   image_path: "res/images/launch_icon_dev.png"
   android: true
-  ios: false
+  ios: true
 
 flutter:
   uses-material-design: true

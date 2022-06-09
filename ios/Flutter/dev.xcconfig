@@ -1,0 +1,14 @@
+//
+//  dev.xcconfig
+//  Runner
+//
+//  Created by Alexander on 09.06.2022.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "Generated.xcconfig"
+
+bundle_suffix=.dev
+name=Путеводитель.dev
