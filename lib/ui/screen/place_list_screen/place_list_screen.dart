@@ -44,6 +44,7 @@ class PlaceListScreen extends ElementaryWidget<IPlaceListScreenWidgetModel> {
         headerSliverBuilder: (_, __) => [
           PlaceListScreenSliverAppBar(
             scrollController: wm.listScrollController,
+            extraTitle: wm.environmentAppBarTitle,
           ),
         ],
         body: Column(

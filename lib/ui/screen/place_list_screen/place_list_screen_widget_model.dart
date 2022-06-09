@@ -54,6 +54,10 @@ class PlaceListScreenWidgetModel
   ScrollController get listScrollController => _scrollController;
 
   @override
+  String get environmentAppBarTitle =>
+      context.read<IAppScope>().environment.buildConfig.envTitle;
+
+  @override
   ListenableState<EntityState<List<Place>>> get listPlacesState =>
       _listPlacesEntityState;
 
@@ -184,6 +188,9 @@ abstract class IPlaceListScreenWidgetModel extends IWidgetModel {
 
   /// Контроллер прокрутки списка мест
   ScrollController get listScrollController;
+
+  /// Метка вида сборки приложения для отображения в аппбаре
+  String get environmentAppBarTitle;
 
   /// Состояние списка мест
   ListenableState<EntityState<List<Place>>> get listPlacesState;

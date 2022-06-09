@@ -10,9 +10,11 @@ import 'package:places/utils/widget_utils.dart';
 /// двустрочного заголовка в однострочный при скролле
 class PlaceListScreenSliverAppBar extends StatefulWidget {
   final ScrollController scrollController;
+  final String extraTitle;
 
   const PlaceListScreenSliverAppBar({
     required this.scrollController,
+    required this.extraTitle,
     Key? key,
   }) : super(key: key);
 
@@ -106,6 +108,14 @@ class _PlaceListScreenSliverAppBarState
                   ),
                 ),
               ),
+              if (widget.extraTitle.isNotEmpty)
+                Text(
+                  widget.extraTitle,
+                  style: AppTypography.smallTextStyle.copyWith(
+                    fontSize: 8,
+                    color: Theme.of(context).errorColor,
+                  ),
+                ),
             ],
           ),
         ),
