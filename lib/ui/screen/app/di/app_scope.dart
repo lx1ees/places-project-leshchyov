@@ -8,6 +8,7 @@ import 'package:places/data/storage/shared_preferences_storage.dart';
 import 'package:places/domain/interactor/place_interactor.dart';
 import 'package:places/domain/interactor/search_interactor.dart';
 import 'package:places/domain/settings_manager.dart';
+import 'package:places/environment/environment.dart';
 import 'package:places/utils/default_error_handler.dart';
 
 /// Окружение зависимостей, которые нужны на протяжении всего жизненного цикла приложения
@@ -24,6 +25,8 @@ class AppScope implements IAppScope {
 
   late final PlacesDatabase _database;
 
+  late final Environment _environment;
+
   @override
   ErrorHandler get errorHandler => _errorHandler;
 
@@ -39,7 +42,11 @@ class AppScope implements IAppScope {
   @override
   ThemeWrapper get themeWrapper => _themeWrapper;
 
+  @override
+  Environment get environment => _environment;
+
   AppScope() {
+    _environment = Environment.instance();
     _database = PlacesDatabase();
     final preferencesStorage = SharedPreferencesStorage();
     final searchHistoryStorage = SearchHistoryStorage(database: _database);
@@ -82,6 +89,9 @@ abstract class IAppScope {
 
   /// Бизнес-логика фичи Настройки
   SettingsManager get settingsManager;
+
+  /// Окружение
+  Environment get environment;
 
   /// Обработчик очистки ресурсов (нужен для вызова очистки БД)
   void dispose();

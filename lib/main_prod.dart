@@ -23,13 +23,13 @@ void _defineEnvironment({
 }) {
   Environment.init(
     buildConfig: buildConfig,
-    buildType: BuildType.dev,
+    buildType: BuildType.prod,
   );
 }
 
 BuildConfig _setupConfig() {
   return const BuildConfig(
-    envString: 'Debug',
-    envTitle: 'Debug сборка приложения',
+    envString: 'Prod',
+    envTitle: '',
   );
 }

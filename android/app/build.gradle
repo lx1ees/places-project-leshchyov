@@ -63,6 +63,24 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
+    flavorDimensions "app"
+    productFlavors {
+
+        dev {
+            dimension "app"
+            applicationIdSuffix ".dev"
+        }
+
+        prod {
+            dimension "app"
+        }
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
