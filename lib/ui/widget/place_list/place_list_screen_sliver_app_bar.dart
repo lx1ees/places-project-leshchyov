@@ -108,13 +108,14 @@ class _PlaceListScreenSliverAppBarState
                   ),
                 ),
               ),
-              Visibility(
-                visible: widget.extraTitle.isNotEmpty,
-                child: Text(
+              if (widget.extraTitle.isNotEmpty)
+                Text(
                   widget.extraTitle,
-                  style: AppTypography.smallTextStyle.copyWith(fontSize: 8),
+                  style: AppTypography.smallTextStyle.copyWith(
+                    fontSize: 8,
+                    color: Theme.of(context).errorColor,
+                  ),
                 ),
-              ),
             ],
           ),
         ),
