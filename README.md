@@ -1,5 +1,5 @@
-# places
+Приложение Путиводитель. 
+Проект для курса Flutter от компании Surf
 
-A Flutter project for Surf course.
-
-Alexander Leshchyov
+Видеодемонстрация проекта:
+https://disk.yandex.ru/i/vg6sJTnmLEsWjQ
