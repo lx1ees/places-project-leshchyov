@@ -5,7 +5,7 @@
 Стэк:
 - BLoC / Elementary (стейтменеджмент)
 - DIO (сеть)
-- Drift (хранилище)
+- Drift, Shared Preferences (хранилище)
 - Yandex Mapkit (API карт)
 
 [Видеодемонстрация проекта](https://disk.yandex.ru/i/vg6sJTnmLEsWjQ)
